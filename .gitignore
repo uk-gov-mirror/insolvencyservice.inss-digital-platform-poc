@@ -134,3 +134,59 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+
+# Build results
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+artifacts/
+
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.userprefs
+
+# VS Code settings
+.vscode/
+.vs
+
+# MSTest and NUnit test results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+*.VisualState.xml
+TestResult.xml
+
+# ASP.NET scaffolding
+ScaffoldingReadMe.txt
+
+# NuGet packages
+*.nupkg
+*.snupkg
+**/packages/*
+!**/packages/build/
+
+# Azure and publish settings
+*.azurePubxml
+*.pubxml
+*.publishproj
+PublishScripts/
+
+# Others
+*.log
+*.tmp
+*.pidb
+*.svclog
+*.coverage
+*.coveragexml
+*.binlog
+project.lock.json
+project.fragment.lock.json
+
+# Database
+*.jfm
+*.dbmdl
+*.refactorlog
+*.publish.xml
