@@ -1,4 +1,4 @@
-using INSS.Forms.DRO.Components;
+using INSS.Forms.DRO.WebApp.Components;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -1,4 +1,4 @@
-using INSS.Forms.GeneralEnquiry.Components;
+using INSS.Forms.GeneralEnquiry.WebApp.Components;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -8,7 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Application\Contracts\INSS.Forms.Application.Contracts\INSS.Forms.Application.Contracts.csproj" />
-    <ProjectReference Include="..\..\Application\Services\INSS.Forms.Application.Services\INSS.Forms.Application.Services.csproj" />
+    <ProjectReference Include="..\..\Application\Services\INSS.Forms.Application.Services.Api\INSS.Forms.Application.Services.Api.csproj" />
   </ItemGroup>
 
 </Project>

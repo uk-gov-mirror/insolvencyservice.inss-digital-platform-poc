@@ -33,13 +33,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "INSS.Forms.GeneralEnquiry",
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "INSS.Forms.DRO", "INSS.Forms.DRO", "{41F4C7B7-82CA-4FFF-B731-7C66FDADF68B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "INSS.Forms.GeneralEnquiry", "Presentation\INSS.Forms.GeneralEnquiry\INSS.Forms.GeneralEnquiry.csproj", "{07D8DFEC-79AE-8405-BD44-973C684222BE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "INSS.Forms.GeneralEnquiry.WebApp", "Presentation\INSS.Forms.GeneralEnquiry\INSS.Forms.GeneralEnquiry.WebApp.csproj", "{07D8DFEC-79AE-8405-BD44-973C684222BE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "INSS.Forms.DRO", "Presentation\INSS.Forms.DRO\INSS.Forms.DRO\INSS.Forms.DRO.csproj", "{7E057976-499D-4304-8527-54A6FEDBB7AE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "INSS.Forms.DRO.WebApp", "Presentation\INSS.Forms.DRO\INSS.Forms.DRO\INSS.Forms.DRO.WebApp.csproj", "{7E057976-499D-4304-8527-54A6FEDBB7AE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Components", "Components", "{7F479297-BD8D-4EAF-BC64-1EC2B061F098}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "INSS.Forms.Components", "Presentation\Components\INSS.Forms.Components\INSS.Forms.Components.csproj", "{FEECFA2B-344C-4E32-B124-0F8D0BB99197}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "INSS.Forms.Presentation.Components", "Presentation\Components\INSS.Forms.Components\INSS.Forms.Presentation.Components.csproj", "{FEECFA2B-344C-4E32-B124-0F8D0BB99197}"
 EndProject
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "INSS.Forms.Infrastructure.Persistence.Database", "Infrastructure\Persistence\Database\INSS.Forms.Infrastructure.Persistence.Database.sqlproj", "{55B0B07C-7144-4232-8C26-CB44F1315787}"
 EndProject
