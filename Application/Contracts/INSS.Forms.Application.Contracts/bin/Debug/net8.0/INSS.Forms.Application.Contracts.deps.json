@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v8.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v8.0": {
+      "INSS.Forms.Application.Contracts/1.0.0": {
+        "runtime": {
+          "INSS.Forms.Application.Contracts.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "INSS.Forms.Application.Contracts/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

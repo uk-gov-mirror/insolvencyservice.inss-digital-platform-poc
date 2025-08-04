@@ -1,0 +1,11 @@
+D:\Dev\PoC\Apps\INSS.Forms\Application\Contracts\INSS.Forms.Application.Contracts\bin\Debug\net8.0\INSS.Forms.Application.Contracts.deps.json
+D:\Dev\PoC\Apps\INSS.Forms\Application\Contracts\INSS.Forms.Application.Contracts\bin\Debug\net8.0\INSS.Forms.Application.Contracts.dll
+D:\Dev\PoC\Apps\INSS.Forms\Application\Contracts\INSS.Forms.Application.Contracts\bin\Debug\net8.0\INSS.Forms.Application.Contracts.pdb
+D:\Dev\PoC\Apps\INSS.Forms\Application\Contracts\INSS.Forms.Application.Contracts\obj\Debug\net8.0\INSS.Forms.Application.Contracts.GeneratedMSBuildEditorConfig.editorconfig
+D:\Dev\PoC\Apps\INSS.Forms\Application\Contracts\INSS.Forms.Application.Contracts\obj\Debug\net8.0\INSS.Forms.Application.Contracts.AssemblyInfoInputs.cache
+D:\Dev\PoC\Apps\INSS.Forms\Application\Contracts\INSS.Forms.Application.Contracts\obj\Debug\net8.0\INSS.Forms.Application.Contracts.AssemblyInfo.cs
+D:\Dev\PoC\Apps\INSS.Forms\Application\Contracts\INSS.Forms.Application.Contracts\obj\Debug\net8.0\INSS.Forms.Application.Contracts.csproj.CoreCompileInputs.cache
+D:\Dev\PoC\Apps\INSS.Forms\Application\Contracts\INSS.Forms.Application.Contracts\obj\Debug\net8.0\INSS.Forms.Application.Contracts.dll
+D:\Dev\PoC\Apps\INSS.Forms\Application\Contracts\INSS.Forms.Application.Contracts\obj\Debug\net8.0\refint\INSS.Forms.Application.Contracts.dll
+D:\Dev\PoC\Apps\INSS.Forms\Application\Contracts\INSS.Forms.Application.Contracts\obj\Debug\net8.0\INSS.Forms.Application.Contracts.pdb
+D:\Dev\PoC\Apps\INSS.Forms\Application\Contracts\INSS.Forms.Application.Contracts\obj\Debug\net8.0\ref\INSS.Forms.Application.Contracts.dll

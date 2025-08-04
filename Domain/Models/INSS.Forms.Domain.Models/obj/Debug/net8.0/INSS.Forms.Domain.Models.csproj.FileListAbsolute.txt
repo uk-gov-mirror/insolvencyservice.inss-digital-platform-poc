@@ -1,0 +1,11 @@
+D:\Dev\PoC\Apps\INSS.Forms\Domain\Models\INSS.Forms.Domain.Models\bin\Debug\net8.0\INSS.Forms.Domain.Models.deps.json
+D:\Dev\PoC\Apps\INSS.Forms\Domain\Models\INSS.Forms.Domain.Models\bin\Debug\net8.0\INSS.Forms.Domain.Models.dll
+D:\Dev\PoC\Apps\INSS.Forms\Domain\Models\INSS.Forms.Domain.Models\bin\Debug\net8.0\INSS.Forms.Domain.Models.pdb
+D:\Dev\PoC\Apps\INSS.Forms\Domain\Models\INSS.Forms.Domain.Models\obj\Debug\net8.0\INSS.Forms.Domain.Models.GeneratedMSBuildEditorConfig.editorconfig
+D:\Dev\PoC\Apps\INSS.Forms\Domain\Models\INSS.Forms.Domain.Models\obj\Debug\net8.0\INSS.Forms.Domain.Models.AssemblyInfoInputs.cache
+D:\Dev\PoC\Apps\INSS.Forms\Domain\Models\INSS.Forms.Domain.Models\obj\Debug\net8.0\INSS.Forms.Domain.Models.AssemblyInfo.cs
+D:\Dev\PoC\Apps\INSS.Forms\Domain\Models\INSS.Forms.Domain.Models\obj\Debug\net8.0\INSS.Forms.Domain.Models.csproj.CoreCompileInputs.cache
+D:\Dev\PoC\Apps\INSS.Forms\Domain\Models\INSS.Forms.Domain.Models\obj\Debug\net8.0\INSS.Forms.Domain.Models.dll
+D:\Dev\PoC\Apps\INSS.Forms\Domain\Models\INSS.Forms.Domain.Models\obj\Debug\net8.0\refint\INSS.Forms.Domain.Models.dll
+D:\Dev\PoC\Apps\INSS.Forms\Domain\Models\INSS.Forms.Domain.Models\obj\Debug\net8.0\INSS.Forms.Domain.Models.pdb
+D:\Dev\PoC\Apps\INSS.Forms\Domain\Models\INSS.Forms.Domain.Models\obj\Debug\net8.0\ref\INSS.Forms.Domain.Models.dll

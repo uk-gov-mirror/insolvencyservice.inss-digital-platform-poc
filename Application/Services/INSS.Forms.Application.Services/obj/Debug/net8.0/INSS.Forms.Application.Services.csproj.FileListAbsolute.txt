@@ -1,0 +1,17 @@
+D:\Dev\PoC\Apps\INSS.Forms\Application\Services\INSS.Forms.Application.Services\bin\Debug\net8.0\INSS.Forms.Application.Services.deps.json
+D:\Dev\PoC\Apps\INSS.Forms\Application\Services\INSS.Forms.Application.Services\bin\Debug\net8.0\INSS.Forms.Application.Services.dll
+D:\Dev\PoC\Apps\INSS.Forms\Application\Services\INSS.Forms.Application.Services\bin\Debug\net8.0\INSS.Forms.Application.Services.pdb
+D:\Dev\PoC\Apps\INSS.Forms\Application\Services\INSS.Forms.Application.Services\bin\Debug\net8.0\INSS.Forms.Domain.Models.dll
+D:\Dev\PoC\Apps\INSS.Forms\Application\Services\INSS.Forms.Application.Services\bin\Debug\net8.0\INSS.Forms.Domain.Services.dll
+D:\Dev\PoC\Apps\INSS.Forms\Application\Services\INSS.Forms.Application.Services\bin\Debug\net8.0\INSS.Forms.Domain.Models.pdb
+D:\Dev\PoC\Apps\INSS.Forms\Application\Services\INSS.Forms.Application.Services\bin\Debug\net8.0\INSS.Forms.Domain.Services.pdb
+D:\Dev\PoC\Apps\INSS.Forms\Application\Services\INSS.Forms.Application.Services\obj\Debug\net8.0\INSS.Forms.Application.Services.csproj.AssemblyReference.cache
+D:\Dev\PoC\Apps\INSS.Forms\Application\Services\INSS.Forms.Application.Services\obj\Debug\net8.0\INSS.Forms.Application.Services.GeneratedMSBuildEditorConfig.editorconfig
+D:\Dev\PoC\Apps\INSS.Forms\Application\Services\INSS.Forms.Application.Services\obj\Debug\net8.0\INSS.Forms.Application.Services.AssemblyInfoInputs.cache
+D:\Dev\PoC\Apps\INSS.Forms\Application\Services\INSS.Forms.Application.Services\obj\Debug\net8.0\INSS.Forms.Application.Services.AssemblyInfo.cs
+D:\Dev\PoC\Apps\INSS.Forms\Application\Services\INSS.Forms.Application.Services\obj\Debug\net8.0\INSS.Forms.Application.Services.csproj.CoreCompileInputs.cache
+D:\Dev\PoC\Apps\INSS.Forms\Application\Services\INSS.Forms.Application.Services\obj\Debug\net8.0\INSS.For.0FAC9689.Up2Date
+D:\Dev\PoC\Apps\INSS.Forms\Application\Services\INSS.Forms.Application.Services\obj\Debug\net8.0\INSS.Forms.Application.Services.dll
+D:\Dev\PoC\Apps\INSS.Forms\Application\Services\INSS.Forms.Application.Services\obj\Debug\net8.0\refint\INSS.Forms.Application.Services.dll
+D:\Dev\PoC\Apps\INSS.Forms\Application\Services\INSS.Forms.Application.Services\obj\Debug\net8.0\INSS.Forms.Application.Services.pdb
+D:\Dev\PoC\Apps\INSS.Forms\Application\Services\INSS.Forms.Application.Services\obj\Debug\net8.0\ref\INSS.Forms.Application.Services.dll

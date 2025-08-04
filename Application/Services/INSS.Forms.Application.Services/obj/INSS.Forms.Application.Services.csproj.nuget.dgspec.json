@@ -1,0 +1,264 @@
+{
+  "format": 1,
+  "restore": {
+    "D:\\Dev\\inss-digital-platform-poc\\Apps\\INSS.Forms\\Application\\Services\\INSS.Forms.Application.Services\\INSS.Forms.Application.Services.csproj": {}
+  },
+  "projects": {
+    "D:\\Dev\\inss-digital-platform-poc\\Apps\\INSS.Forms\\Application\\Services\\INSS.Forms.Application.Services\\INSS.Forms.Application.Services.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\Dev\\inss-digital-platform-poc\\Apps\\INSS.Forms\\Application\\Services\\INSS.Forms.Application.Services\\INSS.Forms.Application.Services.csproj",
+        "projectName": "INSS.Forms.Application.Services",
+        "projectPath": "D:\\Dev\\inss-digital-platform-poc\\Apps\\INSS.Forms\\Application\\Services\\INSS.Forms.Application.Services\\INSS.Forms.Application.Services.csproj",
+        "packagesPath": "C:\\Users\\Gary.Griffiths\\.nuget\\packages\\",
+        "outputPath": "D:\\Dev\\inss-digital-platform-poc\\Apps\\INSS.Forms\\Application\\Services\\INSS.Forms.Application.Services\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\Gary.Griffiths\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "D:\\Dev\\inss-digital-platform-poc\\Apps\\INSS.Forms\\Domain\\Models\\INSS.Forms.Domain.Models\\INSS.Forms.Domain.Models.csproj": {
+                "projectPath": "D:\\Dev\\inss-digital-platform-poc\\Apps\\INSS.Forms\\Domain\\Models\\INSS.Forms.Domain.Models\\INSS.Forms.Domain.Models.csproj"
+              },
+              "D:\\Dev\\inss-digital-platform-poc\\Apps\\INSS.Forms\\Domain\\Services\\INSS.Forms.Domain.Services\\INSS.Forms.Domain.Services.csproj": {
+                "projectPath": "D:\\Dev\\inss-digital-platform-poc\\Apps\\INSS.Forms\\Domain\\Services\\INSS.Forms.Domain.Services\\INSS.Forms.Domain.Services.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.200"
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[8.0.17, 8.0.17]"
+            },
+            {
+              "name": "Microsoft.Net.Sdk.Compilers.Toolset",
+              "version": "[9.0.205, 9.0.205]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Ref",
+              "version": "[8.0.17, 8.0.17]"
+            },
+            {
+              "name": "Microsoft.WindowsDesktop.App.Ref",
+              "version": "[8.0.17, 8.0.17]"
+            }
+          ],
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.205/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\Dev\\inss-digital-platform-poc\\Apps\\INSS.Forms\\Domain\\Models\\INSS.Forms.Domain.Models\\INSS.Forms.Domain.Models.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\Dev\\inss-digital-platform-poc\\Apps\\INSS.Forms\\Domain\\Models\\INSS.Forms.Domain.Models\\INSS.Forms.Domain.Models.csproj",
+        "projectName": "INSS.Forms.Domain.Models",
+        "projectPath": "D:\\Dev\\inss-digital-platform-poc\\Apps\\INSS.Forms\\Domain\\Models\\INSS.Forms.Domain.Models\\INSS.Forms.Domain.Models.csproj",
+        "packagesPath": "C:\\Users\\Gary.Griffiths\\.nuget\\packages\\",
+        "outputPath": "D:\\Dev\\inss-digital-platform-poc\\Apps\\INSS.Forms\\Domain\\Models\\INSS.Forms.Domain.Models\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\Gary.Griffiths\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.200"
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[8.0.17, 8.0.17]"
+            },
+            {
+              "name": "Microsoft.Net.Sdk.Compilers.Toolset",
+              "version": "[9.0.205, 9.0.205]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Ref",
+              "version": "[8.0.17, 8.0.17]"
+            },
+            {
+              "name": "Microsoft.WindowsDesktop.App.Ref",
+              "version": "[8.0.17, 8.0.17]"
+            }
+          ],
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.205/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\Dev\\inss-digital-platform-poc\\Apps\\INSS.Forms\\Domain\\Services\\INSS.Forms.Domain.Services\\INSS.Forms.Domain.Services.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\Dev\\inss-digital-platform-poc\\Apps\\INSS.Forms\\Domain\\Services\\INSS.Forms.Domain.Services\\INSS.Forms.Domain.Services.csproj",
+        "projectName": "INSS.Forms.Domain.Services",
+        "projectPath": "D:\\Dev\\inss-digital-platform-poc\\Apps\\INSS.Forms\\Domain\\Services\\INSS.Forms.Domain.Services\\INSS.Forms.Domain.Services.csproj",
+        "packagesPath": "C:\\Users\\Gary.Griffiths\\.nuget\\packages\\",
+        "outputPath": "D:\\Dev\\inss-digital-platform-poc\\Apps\\INSS.Forms\\Domain\\Services\\INSS.Forms.Domain.Services\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\Gary.Griffiths\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.200"
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[8.0.17, 8.0.17]"
+            },
+            {
+              "name": "Microsoft.Net.Sdk.Compilers.Toolset",
+              "version": "[9.0.205, 9.0.205]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Ref",
+              "version": "[8.0.17, 8.0.17]"
+            },
+            {
+              "name": "Microsoft.WindowsDesktop.App.Ref",
+              "version": "[8.0.17, 8.0.17]"
+            }
+          ],
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.205/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

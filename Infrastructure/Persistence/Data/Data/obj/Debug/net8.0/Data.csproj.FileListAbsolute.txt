@@ -1,0 +1,11 @@
+D:\Dev\PoC\Apps\INSS.Forms\Infrastructure\Persistence\Data\Data\bin\Debug\net8.0\Data.deps.json
+D:\Dev\PoC\Apps\INSS.Forms\Infrastructure\Persistence\Data\Data\bin\Debug\net8.0\Data.dll
+D:\Dev\PoC\Apps\INSS.Forms\Infrastructure\Persistence\Data\Data\bin\Debug\net8.0\Data.pdb
+D:\Dev\PoC\Apps\INSS.Forms\Infrastructure\Persistence\Data\Data\obj\Debug\net8.0\Data.GeneratedMSBuildEditorConfig.editorconfig
+D:\Dev\PoC\Apps\INSS.Forms\Infrastructure\Persistence\Data\Data\obj\Debug\net8.0\Data.AssemblyInfoInputs.cache
+D:\Dev\PoC\Apps\INSS.Forms\Infrastructure\Persistence\Data\Data\obj\Debug\net8.0\Data.AssemblyInfo.cs
+D:\Dev\PoC\Apps\INSS.Forms\Infrastructure\Persistence\Data\Data\obj\Debug\net8.0\Data.csproj.CoreCompileInputs.cache
+D:\Dev\PoC\Apps\INSS.Forms\Infrastructure\Persistence\Data\Data\obj\Debug\net8.0\Data.dll
+D:\Dev\PoC\Apps\INSS.Forms\Infrastructure\Persistence\Data\Data\obj\Debug\net8.0\refint\Data.dll
+D:\Dev\PoC\Apps\INSS.Forms\Infrastructure\Persistence\Data\Data\obj\Debug\net8.0\Data.pdb
+D:\Dev\PoC\Apps\INSS.Forms\Infrastructure\Persistence\Data\Data\obj\Debug\net8.0\ref\Data.dll
