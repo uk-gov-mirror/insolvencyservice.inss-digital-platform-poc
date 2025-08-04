@@ -1,4 +1,6 @@
-﻿namespace DS.Forms.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace DS.Forms.Models
 {
     /// <summary>
     /// Represents a general enquiry form, including user, name, and address details.
@@ -8,12 +10,14 @@
         /// <summary>
         /// Gets or sets the unique instance identifier for this general enquiry.
         /// </summary>
-        public required Guid InstanceId { get; set; }
+        [Required]
+        public Guid InstanceId { get; set; }
 
         /// <summary>
         /// Gets or sets the user associated with this general enquiry.
         /// </summary>
-        public required User User { get; set; }
+        [Required]
+        public User User { get; set; } = new User();
 
         /// <summary>
         /// Gets or sets the name details for the general enquiry.

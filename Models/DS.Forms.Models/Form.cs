@@ -1,4 +1,6 @@
-﻿namespace DS.Forms.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace DS.Forms.Models
 {
     /// <summary>
     /// Represents the base class for all forms.
@@ -13,6 +15,8 @@
         /// <summary>
         /// Gets or sets the name of the form.
         /// </summary>
+        [MaxLength(255)]
+        [Required]
         public string FormName { get; set; } = string.Empty;
     }
 }

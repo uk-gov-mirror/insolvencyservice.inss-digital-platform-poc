@@ -1,4 +1,6 @@
-﻿namespace DS.Forms.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace DS.Forms.Models
 {
     /// <summary>
     /// Represents a person's name with first and last name properties.
@@ -8,11 +10,13 @@
         /// <summary>
         /// Gets or sets the first name.
         /// </summary>
+        [MaxLength(255)]
         public string FirstName { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the last name.
         /// </summary>
+        [MaxLength(255)]
         public string LastName { get; set; } = string.Empty;
     }
 }
