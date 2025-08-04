@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace Insolvency.Forms.Api.Controllers
+namespace DS.Forms.Api.Controllers
 {
     [ApiController]
     [Route("[controller]")]

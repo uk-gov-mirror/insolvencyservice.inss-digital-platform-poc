@@ -1,4 +1,4 @@
-﻿namespace Insolvency.Forms.Data
+﻿namespace DS.Forms.Data
 {
     public class Class1
     {

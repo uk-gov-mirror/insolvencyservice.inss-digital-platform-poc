@@ -1,4 +1,4 @@
-namespace Insolvency.Forms.Api
+namespace DS.Forms.Api
 {
     public class WeatherForecast
     {
