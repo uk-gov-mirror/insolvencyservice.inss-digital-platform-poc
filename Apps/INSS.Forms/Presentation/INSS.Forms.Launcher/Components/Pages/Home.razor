@@ -1,7 +1,31 @@
 ﻿@page "/"
+@inject IHttpContextAccessor HttpContextAccessor
 
-<PageTitle>Home</PageTitle>
+<PageTitle>Forms Launcher</PageTitle>
 
-<h1>Hello, world!</h1>
+<br />
 
-Welcome to your new app.
+<h1 class="govuk-heading-xl">@hostName</h1>
+
+<GDSTaskList />
+
+<GDSButton Text="Apply" />
+
+@code {
+    private string hostName;
+
+    // OnInitializedAsync is a lifecycle method in Blazor components that runs when the component is initialized. 
+    // It’s the asynchronous version of OnInitialized. Use it when you need to perform async operations (like fetching data from a service or API) during component initialization. 
+    // In this example we are simply retrieving the Host header from the HTTP context, so it does not need to be async, this is async just for demo/kb purposes.
+    protected override Task OnInitializedAsync()
+    {
+        var hostHeader = HttpContextAccessor.HttpContext?.Request.Headers["Host"].ToString();
+        if (!string.IsNullOrEmpty(hostHeader))
+        {
+            int colonIndex = hostHeader.IndexOf(':');
+            hostName = colonIndex > 0 ? hostHeader[..colonIndex] : hostHeader;
+        }
+
+        return Task.CompletedTask;
+    }
+}

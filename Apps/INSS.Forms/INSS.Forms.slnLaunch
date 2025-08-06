@@ -1,0 +1,15 @@
+[
+  {
+    "Name": "New Profile",
+    "Projects": [
+      {
+        "Path": "Presentation\\INSS.Forms.Runner\\INSS.Forms.Runner.WebApp.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "Presentation\\INSS.Forms.Launcher\\INSS.Forms.Launcher.WebApp.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]
