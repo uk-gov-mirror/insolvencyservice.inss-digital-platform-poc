@@ -16,8 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Fields\" />
-    <Folder Include="GDS\" />
+    <Folder Include="INSS\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
