@@ -8,13 +8,15 @@
 
 <h1 class="govuk-heading-xl">@hostName</h1>
 
-<GDSTaskList />
+<GdsTaskListField />
 
-<GDSButton Text="Apply" />
+<GdsButtonField>
+     Apply
+</GdsButtonField>
 
 @code {
     private string hostName = string.Empty;
-    private List<DigitalService> digitalServices;
+    private List<DigitalService>? digitalServices;
 
     // OnInitializedAsync is a lifecycle method in Blazor components that runs when the component is initialized. 
     // It’s the asynchronous version of OnInitialized. Use it when you need to perform async operations (like fetching data from a service or API) during component initialization. 
@@ -131,7 +133,7 @@
                                 {
                                     Form = GenerateForm("Company Details"),
                                     SortOrder = 1,
-                                }
+                                },
                                 new StepForm
                                 {
                                     Form = GenerateForm("Income"),

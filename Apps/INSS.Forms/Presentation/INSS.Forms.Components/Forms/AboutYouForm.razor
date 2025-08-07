@@ -1,0 +1,36 @@
+﻿@page "/about-you"
+
+<br />
+
+<h1 class="govuk-heading-xl">About You</h1>
+
+<div>
+    <PageFields IsVisible="true">
+        <GdsTextInputField Text="What is your name?" Name="person-name" @bind-Value="aboutYouForm.Name" />
+    </PageFields>
+
+    <PageFields IsVisible="true">
+        <GdsDateInputField text="What is your data of birth?" Name="person-dob" @bind-Value="aboutYouForm.DateOfBirth" Hint="For example, 27 3 2007" />
+    </PageFields>
+
+    <PageFields IsVisible="true">
+        <AddressFields Text="What is your address?" Name="person-address" @bind-Value="aboutYouForm.Address" />
+    </PageFields>
+
+    <PageFields IsVisible="true">
+        <GdsTextInputField Text="What is your telephone number?" Name="person-telephone" @bind-Value="aboutYouForm.Telephone" />
+    </PageFields>
+
+    <PageFields IsVisible="true">
+        <GdsTextInputField Text="What is your email address?" Type="person-email" Name="email" @bind-Value="aboutYouForm.Email" />
+    </PageFields>
+
+    <GdsButtonField Name="next-btn">
+        Next
+    </GdsButtonField>
+
+</div>
+
+@code{
+    private AboutYou aboutYouForm = new AboutYou();
+}
