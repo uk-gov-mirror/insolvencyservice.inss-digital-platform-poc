@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Domain\Models\INSS.Forms.Domain.Models\INSS.Forms.Domain.Models.csproj" />
     <ProjectReference Include="..\INSS.Forms.Components\INSS.Forms.Components.csproj" />
   </ItemGroup>
 
