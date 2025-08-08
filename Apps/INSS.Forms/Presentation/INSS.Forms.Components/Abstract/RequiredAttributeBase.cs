@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace INSS.Forms.Components.Abstract
 {
-    public class RequiredAttributeBase : ComponentBase
+    public abstract class RequiredAttributeBase : ComponentBase
     {
         [Parameter]
         [EditorRequired] // This makes the parameter mandatory

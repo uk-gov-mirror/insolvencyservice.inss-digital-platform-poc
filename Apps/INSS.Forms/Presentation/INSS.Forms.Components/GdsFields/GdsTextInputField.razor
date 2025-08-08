@@ -2,7 +2,7 @@
 
 <div class="govuk-form-group">
     <h1 class="govuk-label-wrapper">
-        <label class="govuk-label govuk-label--l" for="@inputId">
+        <label class="govuk-label @(SmallText ? "" : "govuk-label--l")" for="@inputId">
             @Text
         </label>
     </h1>
@@ -19,6 +19,9 @@
 @code {
     [Parameter]
     public string Text { get; set; } = string.Empty;
+
+    [Parameter]
+    public bool SmallText { get; set; } = false;
 
     [Parameter]
     public string Type { get; set; } = "text";
