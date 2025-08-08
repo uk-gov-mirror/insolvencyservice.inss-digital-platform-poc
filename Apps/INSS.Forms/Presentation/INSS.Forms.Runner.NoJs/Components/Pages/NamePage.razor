@@ -1,0 +1,24 @@
+﻿@page "/name"
+
+<form action="/process/name" method="post" name="frmName">
+    <div class="govuk-form-group">
+    <h1 class="govuk-label-wrapper">
+        <label class="govuk-label govuk-label--l" for="name">
+            What is your name?
+        </label>
+    </h1>
+        <input class="govuk-input"
+               id="name"
+               name="name"
+               type="text"
+               placeholder=""
+               title="Name"
+               value="">
+</div>
+
+
+    <button type="submit" class="govuk-button" data-module="govuk-button" id="name-submit" name="name-submit" title="Submit">
+        Next
+    </button>
+
+</form>

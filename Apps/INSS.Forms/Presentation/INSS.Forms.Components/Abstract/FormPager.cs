@@ -4,7 +4,10 @@ namespace INSS.Forms.Components.Abstract
 {
     public abstract class FormPager : ComponentBase
     {
-        public bool IsPageVisible(string pageName)
+        [Inject]
+        protected NavigationManager? NavigationManager { get; set; }
+
+        public bool PageVisibility(string pageName)
         {
             int index = Array.IndexOf(PageNames, pageName);
             return index == currentPageIndex;
@@ -14,6 +17,10 @@ namespace INSS.Forms.Components.Abstract
 
         public async Task Next()
         {
+            if(currentPageIndex == PageNames.Length -1)
+            {
+                NavigationManager?.NavigateTo("https://dro.local:6001/", forceLoad: true);
+            }
             if (currentPageIndex < PageNames.Length - 1)
             {
                 currentPageIndex++;
@@ -33,6 +40,8 @@ namespace INSS.Forms.Components.Abstract
         }
 
         public string[] PageNames { get; set; } = [];
+
+        public bool IsLastPage => currentPageIndex == PageNames.Length - 1;
 
         private int currentPageIndex = 0;
     }

@@ -1,69 +1,50 @@
-﻿   @page "/about-you"
-   @inherits FormPager
+﻿@rendermode RenderMode.InteractiveServer
+@page "/about-you"
+@inherits FormPager
 
-
-
-<br />
-
+<br />    
 <h1 class="govuk-heading-xl">About You</h1>
 
 <div>
-    <PageFields IsVisible="@IsPageVisible("name-page")">
+    <a href="#" class="govuk-back-link" @onclick="@Back">Back</a>
+
+    <PageFields IsVisible="@PageVisibility("name-page")">
         <GdsTextInputField Text="What is your name?" Name="person-name" @bind-Value="aboutYouForm.Name" />
     </PageFields>
 
-    <PageFields IsVisible="@IsPageVisible("dob-page")">
+    <PageFields IsVisible="@PageVisibility("dob-page")">
         <GdsDateInputField text="What is your data of birth?" Name="person-dob" @bind-Value="aboutYouForm.DateOfBirth" Hint="For example, 27 3 2007" />
     </PageFields>
 
-    <PageFields IsVisible="@IsPageVisible("address-page")">
+    <PageFields IsVisible="@PageVisibility("address-page")">
         <AddressFields Text="What is your address?" Name="person-address" @bind-Value="aboutYouForm.Address" />
     </PageFields>
 
-    <PageFields IsVisible="@IsPageVisible("telephone-page")">
+    <PageFields IsVisible="@PageVisibility("telephone-page")">
         <GdsTextInputField Text="What is your telephone number?" Name="person-telephone" @bind-Value="aboutYouForm.Telephone" />
     </PageFields>
 
-    <PageFields IsVisible="@IsPageVisible("email-page")">
+    <PageFields IsVisible="@PageVisibility("email-page")">
         <GdsTextInputField Text="What is your email address?" Type="person-email" Name="email" @bind-Value="aboutYouForm.Email" />
     </PageFields>
 
-    <GdsButtonField Name="next-btn" OnClick="@clickit">
-        Next
+    <GdsButtonField Name="next-btn" OnClick="@Next">
+        @(IsLastPage ? "Apply" : "Next")
     </GdsButtonField>
-
-    <button type="button" class="govuk-button" data-module="govuk-button" id="xx1" name="xx" @onclick="clickit">
-        HTML Button clickit
-    </button>
-
-    <button type="button" class="govuk-button" data-module="govuk-button" id="xx2" name="xx" @onclick="OnHtmlButtonClick">
-        HTML Button OnHtmlButtonClick
-    </button>
 </div>
 
 @code {
     private AboutYou aboutYouForm = new AboutYou();
 
-    private void clickit()
-    {
-        int x = 0;
-    }
-
-    private void OnHtmlButtonClick()
-    {
-        // Add your server-side logic here
-        Console.WriteLine("HTML Button clicked!");
-    }
-
     protected override void OnInitialized()
     {
         PageNames = new string[]
         {
-                "name-page",
-                "dob-page",
-                "address-page",
-                "telephone-page",
-                "email-page"
+            "name-page",
+            "dob-page",
+            "address-page",
+            "telephone-page",
+            "email-page"
         };
     }
 }
