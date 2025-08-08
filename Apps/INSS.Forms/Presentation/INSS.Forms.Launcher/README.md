@@ -15,6 +15,8 @@ This project is a Blazor application targeting .NET 8.
 	127.0.0.1 dcrs.local
 
 2.  **Generate Self-Signed Certificates**  
+	**Note:** Only generate certificates if new ones are needed for development. There are already certificates within the SelfSignedCerts folder.
+	
 	Run as administrator: PowerShell
 	``` 
 	New-SelfSignedCertificate -DnsName "dro.local" -CertStoreLocation "cert:\LocalMachine\My"
@@ -22,6 +24,8 @@ This project is a Blazor application targeting .NET 8.
 	New-SelfSignedCertificate -DnsName "dcrs.local" -CertStoreLocation "cert:\LocalMachine\My"
  	
 3. **Export Certificates**  
+	**Note:** Only export the certificates if new ones are needed for development. There are already certificates within the SelfSignedCerts folder.
+
 	Open the Certificates MMC snap-in:  
 	- Run `certlm.msc`  
 	- Navigate to Personal > Certificates  
@@ -29,7 +33,12 @@ This project is a Blazor application targeting .NET 8.
 	- Export as a `.pfx` file (e.g. dcrs.locaL.pfx) with a password using AES256 encryption.
 
 4. **Trust the Certificates**  
-	Double-click the exported .pfx files and follow the wizard to import them into Local Machine\Trusted Root Certification Authorities.
+	- Using File Explorer, navigate to the exported `.pfx` files in the `SelfSignedCerts` folder.
+	- Double-click each of the exported .pfx files
+		- Import to Local Machine (not current user)
+		- Supply the password, this can be found in appSettings.Development.json under Certificates:SelfSignedPassword
+		- Check the boxes for 'Mark the key as exportable' and 'Include all extended properties'
+		- Place all certificates in the following store: Trusted Route Certification Authorities
 
 ## Build and Run Instructions
 

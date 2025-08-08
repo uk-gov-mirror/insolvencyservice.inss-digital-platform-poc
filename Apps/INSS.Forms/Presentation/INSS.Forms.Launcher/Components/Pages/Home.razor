@@ -1,4 +1,5 @@
 ﻿@page "/"
+@using INSS.Forms.Domain.Models
 @inject IHttpContextAccessor HttpContextAccessor
 
 <PageTitle>Forms Launcher</PageTitle>
@@ -7,12 +8,15 @@
 
 <h1 class="govuk-heading-xl">@hostName</h1>
 
-<GDSTaskList />
+<GdsTaskListField />
 
-<GDSButton Text="Apply" />
+<GdsButtonField>
+     Apply
+</GdsButtonField>
 
 @code {
-    private string hostName;
+    private string hostName = string.Empty;
+    private List<DigitalService>? digitalServices;
 
     // OnInitializedAsync is a lifecycle method in Blazor components that runs when the component is initialized. 
     // It’s the asynchronous version of OnInitialized. Use it when you need to perform async operations (like fetching data from a service or API) during component initialization. 
@@ -26,6 +30,130 @@
             hostName = colonIndex > 0 ? hostHeader[..colonIndex] : hostHeader;
         }
 
+        digitalServices = GenerateDigitalServiceData();
+
         return Task.CompletedTask;
     }
+
+    private List<DigitalService> GenerateDigitalServiceData()
+    {
+        return new List<DigitalService>
+        {
+            new DigitalService
+            {
+                Id = Guid.NewGuid(),
+                Name = "dro.local",
+                Title = "Debt Relief Order",
+                Steps = new List<DigitalServiceStep>
+                {
+                    new DigitalServiceStep
+                    {
+                        SortOrder = 1,
+                        Step = new Step
+                        {
+                            Id = Guid.NewGuid(),
+                            Name = "Personal Information",
+                            Description = "Please provide your personal information to proceed with the application.",
+                            StepForms = new List<StepForm>
+                            {
+                                new StepForm
+                                {
+                                    Form = GenerateForm("About You"),
+                                    SortOrder = 1,
+                                },
+                                new StepForm
+                                {
+                                    Form = GenerateForm("Company Details"),
+                                    SortOrder = 2,
+                                }
+                            }
+                        }
+                    },
+                    new DigitalServiceStep
+                    {
+                        SortOrder = 2,
+                        Step = new Step
+                        {
+                            Id = Guid.NewGuid(),
+                            Name = "Financial Information",
+                            Description = "Please provide your financial information to proceed with the application.",
+                            StepForms = new List<StepForm>
+                            {
+                                new StepForm
+                                {
+                                    Form = GenerateForm("Income"),
+                                    SortOrder = 1,
+                                },
+                                new StepForm
+                                {
+                                    Form = GenerateForm("Debts"),
+                                    SortOrder = 2,
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            new DigitalService
+            {
+                Id = Guid.NewGuid(),
+                Name = "dcrs.local",
+                Title = "Director Conduct Reporting Service",
+                Steps = new List<DigitalServiceStep>
+                {
+                    new DigitalServiceStep
+                    {
+                        SortOrder = 1,
+                        Step = new Step
+                        {
+                            Id = Guid.NewGuid(),
+                            Name = "Personal Information",
+                            Description = "Please provide your personal information to proceed with the application.",
+                            StepForms = new List<StepForm>
+                            {
+                                new StepForm
+                                {
+                                    Form = GenerateForm("About You"),
+                                    SortOrder = 1,
+                                }
+                            },
+                        }
+                    },
+                    new DigitalServiceStep
+                    {
+                        SortOrder = 2,
+                        Step = new Step
+                        {
+                            Id = Guid.NewGuid(),
+                            Name = "Financial Information",
+                            Description = "Please provide your company and financial information to proceed with the application.",
+                            StepForms = new List<StepForm>
+                            {
+                                new StepForm
+                                {
+                                    Form = GenerateForm("Company Details"),
+                                    SortOrder = 1,
+                                },
+                                new StepForm
+                                {
+                                    Form = GenerateForm("Income"),
+                                    SortOrder = 2,
+                                },
+                            },
+                        }
+                    }
+                }
+            }
+        };
+    }
+
+    private static Form GenerateForm(string name)
+    {
+        return new Form
+            {
+                Id = Guid.NewGuid(),
+                FormName = name
+            };
+    }
+
 }

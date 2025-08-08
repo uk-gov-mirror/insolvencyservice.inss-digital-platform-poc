@@ -1,0 +1,111 @@
+﻿@inherits RequiredAttributeBase
+
+<div class="govuk-form-group">
+    <fieldset class="govuk-fieldset" role="group" aria-describedby="passport-issued-hint">
+        <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+            <h1 class="govuk-fieldset__heading">
+                @Text
+            </h1>
+        </legend>
+        <div id="@hintId" class="govuk-hint">
+            @Hint
+        </div>
+        <div class="govuk-date-input" id="@GenerateElementId()">
+            <div class="govuk-date-input__item">
+                <div class="govuk-form-group">
+                    <label class="govuk-label govuk-date-input__label" for="@dayInputId">
+                        Day
+                    </label>
+                    <input 
+                    class="govuk-input govuk-date-input__input govuk-input--width-2" 
+                    id="@dayInputId" 
+                    name="@dayInputName" 
+                    type="text" 
+                    inputmode="numeric" 
+                    title="Day"
+                    placeholder=""
+                    value="@Value?.Day"
+                    @oninput="OnInputChanged"
+                    >
+                </div>
+            </div>
+            <div class="govuk-date-input__item">
+                <div class="govuk-form-group">
+                    <label class="govuk-label govuk-date-input__label" for="@monthInputId">
+                        Month
+                    </label>
+                    <input 
+                    class="govuk-input govuk-date-input__input govuk-input--width-2" 
+                    id="@monthInputId" 
+                    name="@monthInputName" 
+                    type="text" 
+                    inputmode="numeric" 
+                    placeholder=""
+                    title="Month"
+                    value="@Value?.Month"
+                    @oninput="OnInputChanged"
+                    >
+                </div>
+            </div>
+            <div class="govuk-date-input__item">
+                <div class="govuk-form-group">
+                    <label class="govuk-label govuk-date-input__label" for="@yearInputId">
+                        Year
+                    </label>
+                    <input 
+                    class="govuk-input govuk-date-input__input govuk-input--width-4" 
+                    id="@yearInputId" 
+                    name="@yearInputName" 
+                    type="text" 
+                    inputmode="numeric" 
+                    title="Year"
+                    placeholder=""
+                    value="@Value?.Year"
+                    @oninput="OnInputChanged"
+                    >
+                </div>
+            </div>
+        </div>
+    </fieldset>
+</div>
+
+@code {
+
+    [Parameter]
+    public string Text { get; set; } = string.Empty;
+
+    [Parameter]
+    public string Hint { get; set; } = string.Empty;
+
+    [Parameter]
+    public DateTime? Value { get; set; }
+
+    [Parameter]
+    public EventCallback<DateTime?> ValueChanged { get; set; }
+
+
+    private string? _elementId;
+    private string elementId => _elementId ??= GenerateElementId();
+
+    private string dayInputId => $"{elementId}-day";
+    private string monthInputId => $"{elementId}-month";
+    private string yearInputId => $"{elementId}-year";
+    private string dayInputName => $"{GenerateElementName()}-day";
+    private string monthInputName => $"{GenerateElementName()}-month";
+    private string yearInputName => $"{GenerateElementName()}-year";
+    private string hintId => $"{GenerateElementName()}-hint";
+
+    private async Task OnInputChanged(ChangeEventArgs e)
+    {
+        // Parse the input and update Value accordingly
+        // This is a placeholder; you should implement logic to parse day/month/year fields
+        if (DateTime.TryParse(e.Value?.ToString(), out var parsedDate))
+        {
+            await ValueChanged.InvokeAsync(parsedDate);
+        }
+        else
+        {
+            await ValueChanged.InvokeAsync(null);
+        }
+    }
+}

@@ -5,7 +5,7 @@ namespace INSS.Forms.Domain.Models
     /// <summary>
     /// Represents the base class for all forms.
     /// </summary>
-    public abstract class Form
+    public class Form
     {
         /// <summary>
         /// Gets or sets the unique identifier for the form.
