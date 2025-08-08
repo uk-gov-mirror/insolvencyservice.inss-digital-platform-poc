@@ -1,5 +1,5 @@
 ﻿@inherits RequiredAttributeBase
-<button type="submit" class="govuk-button" data-module="govuk-button" id="@GenerateElementId()" name="@GenerateElementName()" title="@ChildContent">
+<button type="submit" class="govuk-button" data-module="govuk-button" id="@GenerateElementId()" name="@GenerateElementName()" title="@ChildContent" @onclick="OnClick">
     @ChildContent
 </button>
 
@@ -7,4 +7,7 @@
 
     [Parameter]
     public RenderFragment ChildContent { get; set; } = builder => builder.AddContent(0, "Submit");
+
+    [Parameter]
+    public EventCallback<MouseEventArgs> OnClick { get; set; }
 }
