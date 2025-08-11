@@ -24,9 +24,10 @@
                     inputmode="numeric" 
                     title="Day"
                     placeholder=""
-                    value="@Value?.Day"
-                    @oninput="OnInputChanged"
-                    >
+                    @bind="Day"
+                    min="1"
+                    max="31"
+                    />
                 </div>
             </div>
             <div class="govuk-date-input__item">
@@ -42,9 +43,10 @@
                     inputmode="numeric" 
                     placeholder=""
                     title="Month"
-                    value="@Value?.Month"
-                    @oninput="OnInputChanged"
-                    >
+                    @bind="Month"
+                    min="1"
+                    max="12"
+                    />
                 </div>
             </div>
             <div class="govuk-date-input__item">
@@ -60,9 +62,9 @@
                     inputmode="numeric" 
                     title="Year"
                     placeholder=""
-                    value="@Value?.Year"
-                    @oninput="OnInputChanged"
-                    >
+                    @bind="Year"
+                    min="1900"
+                    max="@DateTime.Now.Year"/>
                 </div>
             </div>
         </div>
@@ -83,7 +85,6 @@
     [Parameter]
     public EventCallback<DateTime?> ValueChanged { get; set; }
 
-
     private string? _elementId;
     private string elementId => _elementId ??= GenerateElementId();
 
@@ -95,17 +96,68 @@
     private string yearInputName => $"{GenerateElementName()}-year";
     private string hintId => $"{GenerateElementName()}-hint";
 
-    private async Task OnInputChanged(ChangeEventArgs e)
+    private async Task TryUpdateValue()
     {
-        // Parse the input and update Value accordingly
-        // This is a placeholder; you should implement logic to parse day/month/year fields
-        if (DateTime.TryParse(e.Value?.ToString(), out var parsedDate))
+        if (Day.HasValue && Month.HasValue && Year.HasValue
+        && DateTime.TryParse($"{Year}-{Month}-{Day}", out var newDate))
         {
-            await ValueChanged.InvokeAsync(parsedDate);
+            Value = newDate;
+            await ValueChanged.InvokeAsync(Value);
         }
         else
         {
+            Value = null;
             await ValueChanged.InvokeAsync(null);
         }
     }
+
+    private int? _day;
+    private int? _month;    
+    private int? _year;
+
+    private int? Day
+    {
+        get => _day;
+        set
+        {
+            _day = value;
+            Task.Run(() => TryUpdateValue());
+        }
+    }
+
+    private int? Month
+    {
+        get => _month;
+        set
+        {
+            _month = value;
+            Task.Run(() => TryUpdateValue());
+        }
+    }   
+
+    private int? Year
+    {
+        get => _year;
+        set
+        {
+            _year = value;
+            Task.Run(() => TryUpdateValue());
+        }
+    }
+
+    protected override void OnParametersSet()
+    {
+        if(Value.HasValue)
+        {
+            Day = Value.Value.Day;
+            Month = Value.Value.Month;
+            Year = Value.Value.Year;
+        }else
+        {
+            Day = null;
+            Month = null;
+            Year = null;
+        }
+    }
+
 }
