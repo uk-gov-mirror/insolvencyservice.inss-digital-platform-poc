@@ -1,77 +1,26 @@
-﻿<dl class="govuk-summary-list">
-    <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-            Name
-        </dt>
-        <dd class="govuk-summary-list__value">
-            @AboutYouData?.Name
-        </dd>
-        <dd class="govuk-summary-list__actions">
-            <a class="govuk-link" href="#">Change<span class="govuk-visually-hidden"> name</span></a>
-        </dd>
-    </div>
-    <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-            Date of birth
-        </dt>
-        <dd class="govuk-summary-list__value">
-            @AboutYouData?.DateOfBirth
-        </dd>
-        <dd class="govuk-summary-list__actions">
-            <a class="govuk-link" href="#">Change<span class="govuk-visually-hidden"> date of birth</span></a>
-        </dd>
-    </div>
-    <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-            Address
-        </dt>
-        <dd class="govuk-summary-list__value">
-            @AboutYouData?.Address.Address1<br />
-            @AboutYouData?.Address.Address2<br /> 
-            @AboutYouData?.Address.Town<br />
-            @AboutYouData?.Address.Postcode<br />
-        </dd>
-        <dd class="govuk-summary-list__actions">
-            <a class="govuk-link" href="#">Change<span class="govuk-visually-hidden"> address</span></a>
-        </dd>
-    </div>
-    <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-            Telephone
-        </dt>
-        <dd class="govuk-summary-list__value">
-            @AboutYouData?.Telephone
-        </dd>
-        <dd class="govuk-summary-list__actions">
-            <a class="govuk-link" href="#">Change<span class="govuk-visually-hidden"> telephone</span></a>
-        </dd>
-    </div>
-    <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-            Email
-        </dt>
-        <dd class="govuk-summary-list__value">
-            @AboutYouData?.Email
-        </dd>
-        <dd class="govuk-summary-list__actions">
-            <LinkButtonField
-                Text="Change"
-                AriaLabel="Change email address"
-                NextParameter="email-page"
-                OnNext="OnNext"
-                Name="email-change"
-                OnClick='() => OnNext.InvokeAsync("email-page")'/>
-        </dd>
-    </div>
+﻿@inherits SummaryBase<AboutYou>
+
+<dl class="govuk-summary-list">
+
+    <SummaryRow Name="name" Text="Name" Values="@GetValue(FormData?.Name)" OnClick='() => OnNext.InvokeAsync("name-page")' />
+
+    <SummaryRow Name="dob" Text="Date of birth" Values="@GetValue(FormData?.DateOfBirth?.ToString("dd MMM yyyy"))" OnClick='() => OnNext.InvokeAsync("dob-page")' />
+
+    <SummaryRow 
+        Name="address" 
+        Text="Address"
+        Values="@(new[] {
+            FormData?.Address?.Address1 ?? string.Empty,
+            FormData?.Address?.Address2 ?? string.Empty,
+            FormData?.Address?.Town ?? string.Empty,
+            FormData?.Address?.Postcode ?? string.Empty
+        })"
+        OnClick='() => OnNext.InvokeAsync("address-page")' 
+     />
+
+    <SummaryRow Name="telephone" Text="Telephone" Values="@GetValue(FormData?.Telephone)" OnClick='() => OnNext.InvokeAsync("telephone-page")' />
+
+    <SummaryRow Name="email" Text="Email" Values="@GetValue(FormData?.Email)" OnClick='() => OnNext.InvokeAsync("email-page")' />
+
 </dl>
-
-
-
-@code {
-    [Parameter]
-    public AboutYou? AboutYouData { get; set; }
-
-    [Parameter]
-    public EventCallback<string> OnNext { get; set; }
-}
 

@@ -1,6 +1,6 @@
 ﻿@rendermode RenderMode.InteractiveServer
 @page "/about-you"
-@inherits FormPager
+@inherits FormPagerBase
 
 <br />    
 <h1 class="govuk-heading-xl">About You</h1>
@@ -29,7 +29,7 @@
     </PageFields>
 
     <PageFields IsVisible="@PageVisibility("summary-page")">
-        <AboutYouSummary AboutYouData="@aboutYouForm" OnNext="@(page => Next(page))" />
+        <AboutYouSummary FormData="@aboutYouForm" OnNext="@(page => Next(page))" />
     </PageFields>
 
     <GdsButtonField Name="next-btn" OnClick="@Next">

@@ -1,26 +1,26 @@
 ﻿@inherits RequiredAttributeBase
 
-<div class="govuk-form-group">
-    <fieldset class="govuk-fieldset" role="group" aria-describedby="passport-issued-hint">
+<div class="govuk-form-group" id="@GenerateElementName("date-container")">
+    <fieldset class="govuk-fieldset" role="group" aria-describedby="@GenerateElementName("hint")">
         <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-            <h1 class="govuk-fieldset__heading">
+            <InputTextHeading Name="heading-date">
                 @Text
-            </h1>
+            </InputTextHeading>
         </legend>
-        <div id="@hintId" class="govuk-hint">
+        <div id="@GenerateElementName("hint")" class="govuk-hint">
             @Hint
         </div>
-        <div class="govuk-date-input" id="@GenerateElementId()">
-            <div class="govuk-date-input__item">
-                <div class="govuk-form-group">
-                    <label class="govuk-label govuk-date-input__label" for="@dayInputId">
+        <div class="govuk-date-input" id="@GenerateElementId("date")">
+            <div class="govuk-date-input__item" id="@GenerateElementId("date-day-item")">
+                <div class="govuk-form-group" id="@GenerateElementId("date-day-item-group")">
+                    <label class="govuk-label govuk-date-input__label" for="@GenerateElementId("date-day-input")">
                         Day
                     </label>
                     <input 
                     class="govuk-input govuk-date-input__input govuk-input--width-2" 
-                    id="@dayInputId" 
-                    name="@dayInputName" 
-                    type="text" 
+                    id="@GenerateElementId("date-day-input")" 
+                    name="@GenerateElementName("date-day-input")" 
+                    type="number" 
                     inputmode="numeric" 
                     title="Day"
                     placeholder=""
@@ -32,14 +32,14 @@
             </div>
             <div class="govuk-date-input__item">
                 <div class="govuk-form-group">
-                    <label class="govuk-label govuk-date-input__label" for="@monthInputId">
+                    <label class="govuk-label govuk-date-input__label" for="@GenerateElementId("date-month-input")">
                         Month
                     </label>
                     <input 
                     class="govuk-input govuk-date-input__input govuk-input--width-2" 
-                    id="@monthInputId" 
-                    name="@monthInputName" 
-                    type="text" 
+                    id="@GenerateElementId("date-month-input")" 
+                    name="@GenerateElementName("date-month-input")" 
+                    type="number" 
                     inputmode="numeric" 
                     placeholder=""
                     title="Month"
@@ -51,14 +51,14 @@
             </div>
             <div class="govuk-date-input__item">
                 <div class="govuk-form-group">
-                    <label class="govuk-label govuk-date-input__label" for="@yearInputId">
+                    <label class="govuk-label govuk-date-input__label" for="@GenerateElementId("date-year-input")">
                         Year
                     </label>
                     <input 
                     class="govuk-input govuk-date-input__input govuk-input--width-4" 
-                    id="@yearInputId" 
-                    name="@yearInputName" 
-                    type="text" 
+                    id="@GenerateElementId("date-year-input")" 
+                    name="@GenerateElementName("date-year-input")" 
+                    type="number" 
                     inputmode="numeric" 
                     title="Year"
                     placeholder=""
@@ -84,17 +84,6 @@
 
     [Parameter]
     public EventCallback<DateTime?> ValueChanged { get; set; }
-
-    private string? _elementId;
-    private string elementId => _elementId ??= GenerateElementId();
-
-    private string dayInputId => $"{elementId}-day";
-    private string monthInputId => $"{elementId}-month";
-    private string yearInputId => $"{elementId}-year";
-    private string dayInputName => $"{GenerateElementName()}-day";
-    private string monthInputName => $"{GenerateElementName()}-month";
-    private string yearInputName => $"{GenerateElementName()}-year";
-    private string hintId => $"{GenerateElementName()}-hint";
 
     private async Task TryUpdateValue()
     {
