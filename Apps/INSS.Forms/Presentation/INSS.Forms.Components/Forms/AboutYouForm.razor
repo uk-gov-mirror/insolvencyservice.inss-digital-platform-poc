@@ -29,10 +29,10 @@
     </PageFields>
 
     <PageFields IsVisible="@PageVisibility("summary-page")">
-        <SummaryFields AboutYouSummary="@aboutYouForm"/>
+        <AboutYouSummary AboutYouData="@aboutYouForm" OnNext="@(page => Next(page))" />
     </PageFields>
 
-    <GdsButtonField Name="next-btn" OnClick="@NextAction">
+    <GdsButtonField Name="next-btn" OnClick="@Next">
         @(IsLastPage ? "Apply" : "Next")
     </GdsButtonField>
 
@@ -53,25 +53,6 @@
             "email-page",
             "summary-page"
         };
-    }
-
-    private async Task NextAction()
-    {
-        if(!IsLastPage)
-        {
-            await Next();
-        }
-        else
-        {
-            // Submit to database (Apply)
-            Console.WriteLine();
-            Console.WriteLine($"Name: {aboutYouForm.Name}");
-            Console.WriteLine($"DOB: {aboutYouForm.DateOfBirth.ToString()}");
-            Console.WriteLine($"Address: {aboutYouForm.Address?.Address1}, {aboutYouForm.Address?.Address2}, {aboutYouForm.Address?.Town}, {aboutYouForm.Address?.Postcode}");
-            Console.WriteLine($"Telephone: {aboutYouForm.Telephone}");
-            Console.WriteLine($"Email: {aboutYouForm.Email}");
-            await Next();
-        }
     }
 }
 

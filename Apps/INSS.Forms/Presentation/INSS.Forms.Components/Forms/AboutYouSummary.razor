@@ -4,7 +4,7 @@
             Name
         </dt>
         <dd class="govuk-summary-list__value">
-            @AboutYouSummary?.Name
+            @AboutYouData?.Name
         </dd>
         <dd class="govuk-summary-list__actions">
             <a class="govuk-link" href="#">Change<span class="govuk-visually-hidden"> name</span></a>
@@ -15,7 +15,7 @@
             Date of birth
         </dt>
         <dd class="govuk-summary-list__value">
-            @AboutYouSummary?.DateOfBirth
+            @AboutYouData?.DateOfBirth
         </dd>
         <dd class="govuk-summary-list__actions">
             <a class="govuk-link" href="#">Change<span class="govuk-visually-hidden"> date of birth</span></a>
@@ -26,10 +26,10 @@
             Address
         </dt>
         <dd class="govuk-summary-list__value">
-            @AboutYouSummary?.Address.Address1<br />
-            @AboutYouSummary?.Address.Address2<br /> 
-            @AboutYouSummary?.Address.Town<br />
-            @AboutYouSummary?.Address.Postcode<br />
+            @AboutYouData?.Address.Address1<br />
+            @AboutYouData?.Address.Address2<br /> 
+            @AboutYouData?.Address.Town<br />
+            @AboutYouData?.Address.Postcode<br />
         </dd>
         <dd class="govuk-summary-list__actions">
             <a class="govuk-link" href="#">Change<span class="govuk-visually-hidden"> address</span></a>
@@ -40,10 +40,10 @@
             Telephone
         </dt>
         <dd class="govuk-summary-list__value">
-            @AboutYouSummary?.Telephone
+            @AboutYouData?.Telephone
         </dd>
         <dd class="govuk-summary-list__actions">
-            <a class="govuk-link" href="#">Change<span class="govuk-visually-hidden"> Telephone</span></a>
+            <a class="govuk-link" href="#">Change<span class="govuk-visually-hidden"> telephone</span></a>
         </dd>
     </div>
     <div class="govuk-summary-list__row">
@@ -51,16 +51,27 @@
             Email
         </dt>
         <dd class="govuk-summary-list__value">
-            @AboutYouSummary?.Email
+            @AboutYouData?.Email
         </dd>
         <dd class="govuk-summary-list__actions">
-            <a class="govuk-link" href="#">Change<span class="govuk-visually-hidden"> Email</span></a>
+            <LinkButtonField
+                Text="Change"
+                AriaLabel="Change email address"
+                NextParameter="email-page"
+                OnNext="OnNext"
+                Name="email-change"
+                OnClick='() => OnNext.InvokeAsync("email-page")'/>
         </dd>
     </div>
 </dl>
 
+
+
 @code {
     [Parameter]
-    public AboutYou? AboutYouSummary { get; set; }
+    public AboutYou? AboutYouData { get; set; }
+
+    [Parameter]
+    public EventCallback<string> OnNext { get; set; }
 }
 
