@@ -1,0 +1,12 @@
+﻿@inherits RequiredAttributeBase
+
+<div class="govuk-grid-row" id="@GenerateElementId">
+    @ChildContent
+</div>
+
+
+@code {
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+}

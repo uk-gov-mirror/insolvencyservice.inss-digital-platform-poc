@@ -1,13 +1,23 @@
 ﻿@inherits RequiredAttributeBase
-<button type="submit" class="govuk-button" data-module="govuk-button" id="@GenerateElementId()" name="@GenerateElementName()" title="@ChildContent" @onclick="OnClick">
+<button type="submit"
+        class="govuk-button @(IsDisabled ? "govuk-button--disabled" : "")"
+        data-module="govuk-button"
+        id="@GenerateElementId("button")"
+        name="@GenerateElementName("button")"
+        title="@ChildContent"
+        @onclick="OnClick"
+        disabled="@IsDisabled"
+        aria-disabled="@IsDisabled">
     @ChildContent
 </button>
 
 @code {
-
     [Parameter]
     public RenderFragment ChildContent { get; set; } = builder => builder.AddContent(0, "Submit");
 
     [Parameter]
     public EventCallback<MouseEventArgs> OnClick { get; set; }
+
+    [Parameter]
+    public bool IsDisabled { get; set; } = false;
 }

@@ -1,0 +1,10 @@
+﻿@inherits RequiredAttributeBase
+
+<h1 class="govuk-heading-l" id="@GenerateElementId">
+    @ChildContent
+</h1>
+
+@code {
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+}

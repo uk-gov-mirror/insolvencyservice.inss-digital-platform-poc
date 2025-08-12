@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace INSS.Forms.Domain.Models
+namespace INSS.Forms.Domain.Models.Configuration
 {
     /// <summary>
-    /// Represents a digital service with a unique identifier, name, title, and associated steps.
+    /// Represents a digital service with a unique identifier, name, title, and associated sections.
     /// </summary>
     public class DigitalService
     {
@@ -28,8 +28,8 @@ namespace INSS.Forms.Domain.Models
         public string Title { get; set; } = string.Empty;
 
         /// <summary>
-        /// Gets or sets the collection of steps associated with this digital service.
+        /// Gets or sets the collection of form sections associated with this digital service.
         /// </summary>
-        public List<DigitalServiceStep> Steps { get; set; } = new();
+        public List<DigitalServiceSection> DigitalServiceSections { get; set; } = new();
     }
 }

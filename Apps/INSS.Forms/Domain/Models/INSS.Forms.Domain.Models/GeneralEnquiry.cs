@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using INSS.Forms.Domain.Models.Configuration;
+using System.ComponentModel.DataAnnotations;
 
 namespace INSS.Forms.Domain.Models
 {

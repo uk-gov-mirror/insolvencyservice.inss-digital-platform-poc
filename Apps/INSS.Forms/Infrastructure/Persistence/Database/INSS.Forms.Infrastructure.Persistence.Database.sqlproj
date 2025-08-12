@@ -60,8 +60,8 @@
   <ItemGroup>
     <Build Include="digtal_service.sql" />
     <Build Include="form.sql" />
-    <Build Include="digital_service_step.sql" />
-    <Build Include="step.sql" />
-    <Build Include="step_form.sql" />
+    <Build Include="digital_service_section.sql" />
+    <Build Include="section.sql" />
+    <Build Include="section_form.sql" />
   </ItemGroup>
 </Project>
