@@ -1,55 +1,28 @@
-﻿<ul class="govuk-task-list">
-    <li class="govuk-task-list__item govuk-task-list__item--with-link">
-        <div class="govuk-task-list__name-and-hint">
-            <a class="govuk-link govuk-task-list__link" href="https://localhost:7240/about-you" aria-describedby="company-details-1-status">
-                About You
-            </a>
-        </div>
-        <div class="govuk-task-list__status" id="company-details-1-status">
-            Completed
-        </div>
-    </li>
-    <li class="govuk-task-list__item govuk-task-list__item--with-link">
-        <div class="govuk-task-list__name-and-hint">
-            <a class="govuk-link govuk-task-list__link" href="https://localhost:7240/income" aria-describedby="company-details-2-status">
-                Income
-            </a>
-        </div>
-        <div class="govuk-task-list__status" id="company-details-2-status">
-            <strong class="govuk-tag govuk-tag--blue">
-                Incomplete
-            </strong>
-        </div>
-    </li>
-    <li class="govuk-task-list__item govuk-task-list__item--with-link">
-        <div class="govuk-task-list__name-and-hint">
-            <a class="govuk-link govuk-task-list__link" href="#" aria-describedby="company-details-3-hint company-details-3-status">
-                Debts
-            </a>
-            <div id="company-details-3-hint" class="govuk-task-list__hint">
-                Include 5 years of the company’s relevant financial information
+﻿@inherits RequiredAttributeBase
+
+<ul class="govuk-task-list" id="@GenerateElementId("list")">
+    @foreach(var item in Items)
+    {
+        <li class="govuk-task-list__item govuk-task-list__item--with-link" id="@GenerateElementId($"list-item", item.Id.ToString("N"))">
+            <div class="govuk-task-list__name-and-hint" id="@GenerateElementId($"list-item-hint", item.Id.ToString("N"))">
+                <a class="govuk-link govuk-task-list__link" 
+                href="@item.HRef"
+                aria-describedby="@GenerateElementId($"list-item-status", item.Id.ToString("N"))"
+                id="@GenerateElementId($"list-item-link", item.Id.ToString("N"))">
+                    @item.Title
+                </a>
             </div>
-        </div>
-        <div class="govuk-task-list__status" id="company-details-3-status">
-            <strong class="govuk-tag govuk-tag--blue">
-                Incomplete
-            </strong>
-        </div>
-    </li>
-    <li class="govuk-task-list__item govuk-task-list__item--with-link">
-        <div class="govuk-task-list__name-and-hint">
-            <a class="govuk-link govuk-task-list__link" href="#" aria-describedby="company-details-4-status">
-                Company Information
-            </a>
-        </div>
-        <div class="govuk-task-list__status" id="company-details-4-status">
-            <strong class="govuk-tag govuk-tag--blue">
-                Incomplete
-            </strong>
-        </div>
-    </li>
+            <div class="govuk-task-list__status" id="@GenerateElementId($"list-item-status", item.Id.ToString("N"))">
+                @item.Status
+            </div>
+        </li>
+    }
 </ul>
 
 @code {
 
+    [EditorRequired]
+    [Parameter] public IReadOnlyList<TaskListItem> Items { get; set; } = Array.Empty<TaskListItem>();
+
 }
+

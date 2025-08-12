@@ -1,22 +1,49 @@
 ﻿@page "/"
-@using INSS.Forms.Domain.Models
 @inject IHttpContextAccessor HttpContextAccessor
+@inject IConfiguration Configuration
 
 <PageTitle>Forms Launcher</PageTitle>
 
 <br />
 
-<h1 class="govuk-heading-xl">@hostName</h1>
+<GridContainerLayout Name="grid-container">
 
-<GdsTaskListField />
+    @if (errors.Any())
+    {
+        <SummaryErrors Title="Service Error" Errors="@errors" Name="summary-error" />
+    }
 
-<GdsButtonField name="apply-btn">
-     Apply
-</GdsButtonField>
+    @if (digitalService != null)
+    {
+        <RowTwoThirdsLayout Name="row-ds">
+            <HeadingText Name="heading-ds">@digitalService.Title</HeadingText>
+        </RowTwoThirdsLayout>
+
+        @foreach (var digitalServiceSection in digitalService.DigitalServiceSections.OrderBy(section => section.SortOrder))
+        {
+            <RowTwoThirdsLayout Name="row-section">
+                <SubHeadingText Name="section-name">@digitalServiceSection.Section.Name</SubHeadingText>
+                <ParagraphText Name="section-description">@digitalServiceSection.Section.Description</ParagraphText>
+            </RowTwoThirdsLayout>
+
+            <GdsTaskListField 
+                Name="section-forms" 
+                Items="@GetTaskListItems(digitalServiceSection.Section.SectionForms.OrderBy(f => f.SortOrder))" 
+            />
+        }
+
+        <GdsButtonField Name="apply-btn" IsDisabled="true">
+            Apply
+        </GdsButtonField>
+    }
+
+</GridContainerLayout>
+
 
 @code {
-    private string hostName = string.Empty;
-    private List<DigitalService>? digitalServices;
+
+    private DigitalService? digitalService = null;
+    private List<string> errors = new();
 
     // OnInitializedAsync is a lifecycle method in Blazor components that runs when the component is initialized. 
     // It’s the asynchronous version of OnInitialized. Use it when you need to perform async operations (like fetching data from a service or API) during component initialization. 
@@ -24,15 +51,39 @@
     protected override Task OnInitializedAsync()
     {
         var hostHeader = HttpContextAccessor.HttpContext?.Request.Headers["Host"].ToString();
+        string hostName = string.Empty;
         if (!string.IsNullOrEmpty(hostHeader))
         {
             int colonIndex = hostHeader.IndexOf(':');
             hostName = colonIndex > 0 ? hostHeader[..colonIndex] : hostHeader;
         }
 
-        digitalServices = GenerateDigitalServiceData();
+        List<DigitalService>? digitalServices = GenerateDigitalServiceData();
+
+        digitalService = digitalServices
+            .SingleOrDefault(ds => ds.Name.ToUpperInvariant() == hostName.ToUpperInvariant());
+
+        if (digitalService == null)
+        {
+            errors.Add($"Service not found for host: {hostName}");
+        }
 
         return Task.CompletedTask;
+    }
+
+    private IReadOnlyList<TaskListItem> GetTaskListItems(IOrderedEnumerable<SectionForm> sectionForms)
+    {
+        string formRunnerBaseUrl = Configuration["FormRunner-BaseUrl"] 
+            ?? throw new InvalidOperationException("The 'FormRunner-BaseUrl' configuration value is missing.");
+
+        return sectionForms.Select(
+            sf => new TaskListItem
+                {
+                    Id = sf.Form.Id,
+                    Title = sf.Form.FormName,
+                    HRef = new Uri(new Uri(formRunnerBaseUrl), sf.Form.UriPath).ToString(),
+                    Status = "Incomplete"
+                }).ToList();
     }
 
     private List<DigitalService> GenerateDigitalServiceData()
@@ -44,49 +95,49 @@
                 Id = Guid.NewGuid(),
                 Name = "dro.local",
                 Title = "Debt Relief Order",
-                Steps = new List<DigitalServiceStep>
+                DigitalServiceSections = new List<DigitalServiceSection>
                 {
-                    new DigitalServiceStep
+                    new DigitalServiceSection
                     {
                         SortOrder = 1,
-                        Step = new Step
+                        Section = new Section
                         {
                             Id = Guid.NewGuid(),
                             Name = "Personal Information",
                             Description = "Please provide your personal information to proceed with the application.",
-                            StepForms = new List<StepForm>
+                            SectionForms = new List<SectionForm>
                             {
-                                new StepForm
+                                new SectionForm
                                 {
-                                    Form = GenerateForm("About You"),
+                                    Form = GenerateForm("About You", "about-you"),
                                     SortOrder = 1,
                                 },
-                                new StepForm
+                                new SectionForm
                                 {
-                                    Form = GenerateForm("Company Details"),
+                                    Form = GenerateForm("Company Details", "company-details"),
                                     SortOrder = 2,
                                 }
                             }
                         }
                     },
-                    new DigitalServiceStep
+                    new DigitalServiceSection
                     {
                         SortOrder = 2,
-                        Step = new Step
+                        Section = new Section
                         {
                             Id = Guid.NewGuid(),
                             Name = "Financial Information",
                             Description = "Please provide your financial information to proceed with the application.",
-                            StepForms = new List<StepForm>
+                            SectionForms = new List<SectionForm>
                             {
-                                new StepForm
+                                new SectionForm
                                 {
-                                    Form = GenerateForm("Income"),
+                                    Form = GenerateForm("Income", "income"),
                                     SortOrder = 1,
                                 },
-                                new StepForm
+                                new SectionForm
                                 {
-                                    Form = GenerateForm("Debts"),
+                                    Form = GenerateForm("Debts", "debts"),
                                     SortOrder = 2,
                                 }
                             }
@@ -99,44 +150,44 @@
                 Id = Guid.NewGuid(),
                 Name = "dcrs.local",
                 Title = "Director Conduct Reporting Service",
-                Steps = new List<DigitalServiceStep>
+                DigitalServiceSections = new List<DigitalServiceSection>
                 {
-                    new DigitalServiceStep
+                    new DigitalServiceSection
                     {
                         SortOrder = 1,
-                        Step = new Step
+                        Section = new Section
                         {
                             Id = Guid.NewGuid(),
                             Name = "Personal Information",
                             Description = "Please provide your personal information to proceed with the application.",
-                            StepForms = new List<StepForm>
+                            SectionForms = new List<SectionForm>
                             {
-                                new StepForm
+                                new SectionForm
                                 {
-                                    Form = GenerateForm("About You"),
+                                    Form = GenerateForm("About You", "about-you"),
                                     SortOrder = 1,
                                 }
                             },
                         }
                     },
-                    new DigitalServiceStep
+                    new DigitalServiceSection
                     {
                         SortOrder = 2,
-                        Step = new Step
+                        Section = new Section
                         {
                             Id = Guid.NewGuid(),
                             Name = "Financial Information",
                             Description = "Please provide your company and financial information to proceed with the application.",
-                            StepForms = new List<StepForm>
+                            SectionForms = new List<SectionForm>
                             {
-                                new StepForm
+                                new SectionForm
                                 {
-                                    Form = GenerateForm("Company Details"),
+                                    Form = GenerateForm("Company Details", "company-details"),
                                     SortOrder = 1,
                                 },
-                                new StepForm
+                                new SectionForm
                                 {
-                                    Form = GenerateForm("Income"),
+                                    Form = GenerateForm("Income", "income"),
                                     SortOrder = 2,
                                 },
                             },
@@ -147,12 +198,13 @@
         };
     }
 
-    private static Form GenerateForm(string name)
+    private static Form GenerateForm(string name, string uriPath)
     {
         return new Form
             {
                 Id = Guid.NewGuid(),
-                FormName = name
+                FormName = name,
+                UriPath = uriPath
             };
     }
 

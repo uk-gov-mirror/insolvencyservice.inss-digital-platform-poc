@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace INSS.Forms.Domain.Models
+namespace INSS.Forms.Domain.Models.Configuration
 {
     /// <summary>
     /// Represents the base class for all forms.
@@ -18,5 +18,12 @@ namespace INSS.Forms.Domain.Models
         [MaxLength(255)]
         [Required]
         public string FormName { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Gets or sets the URI path to the form.
+        /// </summary>
+        [MaxLength(2048)]
+        [Required]
+        public string UriPath { get; set; } = string.Empty;
     }
 }

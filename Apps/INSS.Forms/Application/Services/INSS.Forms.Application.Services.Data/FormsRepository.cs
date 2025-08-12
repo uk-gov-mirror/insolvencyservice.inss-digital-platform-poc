@@ -1,4 +1,4 @@
-﻿using INSS.Forms.Domain.Models;
+﻿using INSS.Forms.Domain.Models.Configuration;
 using Microsoft.EntityFrameworkCore;
 
 namespace INSS.Forms.Application.Services.Data
@@ -13,14 +13,14 @@ namespace INSS.Forms.Application.Services.Data
         }
 
         /// <summary>
-        /// Retrieves all StepForm entities associated with a given DigitalService Id.
+        /// Retrieves all SectionForm entities associated with a given DigitalService Id.
         /// </summary>
         /// <param name="digitalServiceId">The Id of the DigitalService.</param>
-        /// <returns>A list of StepForm entities.</returns>
-        public async Task<List<StepForm>> GetStepFormsForDigitalServiceAsync(Guid digitalServiceId)
+        /// <returns>A list of SectionForm entities.</returns>
+        public async Task<List<SectionForm>> GetStepFormsForDigitalServiceAsync(Guid digitalServiceId)
         {
-            return await _context.Set<StepForm>()
-                .Include(sf => sf.Step)
+            return await _context.Set<SectionForm>()
+                .Include(sf => sf.Section)
                 .Include(sf => sf.Form)
                 .Where(sf => sf.Form is DigitalServiceForm && ((DigitalServiceForm)sf.Form).DigitalServiceId == digitalServiceId)
                 .ToListAsync();
