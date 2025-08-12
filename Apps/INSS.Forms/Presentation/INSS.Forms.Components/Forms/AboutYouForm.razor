@@ -13,7 +13,7 @@
     </PageFields>
 
     <PageFields IsVisible="@PageVisibility("dob-page")">
-        <GdsDateInputField text="What is your data of birth?" Name="person-dob" @bind-Value="aboutYouForm.DateOfBirth" Hint="For example, 27 3 2007" />
+        <GdsDateInputField text="What is your date of birth?" Name="person-dob" Hint="For example, 27 3 2007" @bind-Value="aboutYouForm.DateOfBirth"/>
     </PageFields>
 
     <PageFields IsVisible="@PageVisibility("address-page")">
@@ -28,13 +28,19 @@
         <GdsTextInputField Text="What is your email address?" Type="person-email" Name="email" @bind-Value="aboutYouForm.Email" />
     </PageFields>
 
-    <GdsButtonField Name="next-btn" OnClick="@Next">
+    <PageFields IsVisible="@PageVisibility("summary-page")">
+        <SummaryFields AboutYouSummary="@aboutYouForm"/>
+    </PageFields>
+
+    <GdsButtonField Name="next-btn" OnClick="@NextAction">
         @(IsLastPage ? "Apply" : "Next")
     </GdsButtonField>
+
 </div>
 
 @code {
     private AboutYou aboutYouForm = new AboutYou();
+    private DateTime SelectedDate { get; set; } = DateTime.Now;
 
     protected override void OnInitialized()
     {
@@ -44,7 +50,28 @@
             "dob-page",
             "address-page",
             "telephone-page",
-            "email-page"
+            "email-page",
+            "summary-page"
         };
     }
+
+    private async Task NextAction()
+    {
+        if(!IsLastPage)
+        {
+            await Next();
+        }
+        else
+        {
+            // Submit to database (Apply)
+            Console.WriteLine();
+            Console.WriteLine($"Name: {aboutYouForm.Name}");
+            Console.WriteLine($"DOB: {aboutYouForm.DateOfBirth.ToString()}");
+            Console.WriteLine($"Address: {aboutYouForm.Address?.Address1}, {aboutYouForm.Address?.Address2}, {aboutYouForm.Address?.Town}, {aboutYouForm.Address?.Postcode}");
+            Console.WriteLine($"Telephone: {aboutYouForm.Telephone}");
+            Console.WriteLine($"Email: {aboutYouForm.Email}");
+            await Next();
+        }
+    }
 }
+
