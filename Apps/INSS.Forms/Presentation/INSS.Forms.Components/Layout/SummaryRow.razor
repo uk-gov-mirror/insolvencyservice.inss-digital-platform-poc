@@ -1,0 +1,40 @@
+﻿@inherits RequiredAttributeBase
+
+<div class="govuk-summary-list__row" id="@GenerateElementId("summary-row")">
+    <dt class="govuk-summary-list__key" id="@GenerateElementId("summary-row-label")">
+        @Text
+    </dt>
+    <dd class="govuk-summary-list__value" id="@GenerateElementId("list-row-value")">
+        @foreach (var value in Values)
+        {
+            <span>@value</span>
+            @if (value != Values.Last())
+            {
+                <br />
+            }
+        }
+    </dd>
+    <dd class="govuk-summary-list__actions" id="@GenerateElementId("list-row-action")">
+        <LinkButtonField Text="Change"
+                         AriaLabel="@ariaLabel"
+                         Name="@linkButtonName"
+                         OnClick='OnClick' />
+    </dd>
+</div>
+
+@code {
+
+    [Parameter]
+    public string Text { get; set; } = string.Empty;
+
+    [Parameter]
+    public string[] Values { get; set; } = [];
+
+    [Parameter]
+    public EventCallback<MouseEventArgs> OnClick { get; set; }
+
+    private string ariaLabel => $"Change {Text.ToLower()}";
+
+    private string linkButtonName => $"{Text.ToLower()}-change";
+}
+

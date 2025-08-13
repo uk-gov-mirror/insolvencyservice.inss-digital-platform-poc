@@ -32,3 +32,11 @@ body {
     margin: 0;
 }
 
+/*Styling form summary button component*/
+.link-button {
+    all: unset;
+    color: #1d70b8;
+    text-decoration: underline;
+    cursor: pointer
+}
+

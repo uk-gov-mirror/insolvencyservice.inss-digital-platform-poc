@@ -1,0 +1,21 @@
+﻿@inherits RequiredAttributeBase
+
+<button id="@GenerateElementId"
+        class="govuk-link govuk-link--no-visited-state link-button"
+        role="link"
+        tabindex="0"
+        aria-label="@AriaLabel"
+        @onclick="OnClick">
+    @Text
+</button>
+
+@code {
+    [Parameter]
+    public string AriaLabel { get; set; } = string.Empty;   
+
+    [Parameter]
+    public string Text { get; set; } = string.Empty;
+
+    [Parameter]
+    public EventCallback<MouseEventArgs> OnClick { get; set; }
+}

@@ -16,11 +16,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\" />
+    <ProjectReference Include="..\..\Domain\Models\INSS.Forms.Domain.Models\INSS.Forms.Domain.Models.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Domain\Models\INSS.Forms.Domain.Models\INSS.Forms.Domain.Models.csproj" />
+    <Folder Include="wwwroot\" />
   </ItemGroup>
 
 </Project>
