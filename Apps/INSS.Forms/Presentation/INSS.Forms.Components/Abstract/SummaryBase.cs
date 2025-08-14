@@ -13,14 +13,12 @@ namespace INSS.Forms.Components.Abstract
         /// Gets or sets the form data to be summarized.
         /// </summary>
         [Parameter]
-        [EditorRequired]
-        public T FormData { get; set; }
+        public T? FormData { get; set; }
 
         /// <summary>
         /// Event callback triggered when the user proceeds to the next step.
         /// </summary>
         [Parameter]
-        [EditorRequired]
         public EventCallback<string> OnNext { get; set; }
 
         /// <summary>
@@ -33,6 +31,11 @@ namespace INSS.Forms.Components.Abstract
         public string[] GetValue(string? value)
         {
             return string.IsNullOrEmpty(value) ? [] : new[] { value };
+        }
+
+        public bool IsVisible(Func<bool> isVisible)
+        {
+            return isVisible != null && isVisible();
         }
     }
 }
