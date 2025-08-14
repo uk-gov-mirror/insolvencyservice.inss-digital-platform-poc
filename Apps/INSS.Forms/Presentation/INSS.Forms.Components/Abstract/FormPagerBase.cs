@@ -13,15 +13,43 @@ namespace INSS.Forms.Components.Abstract
         [Inject]
         protected NavigationManager? NavigationManager { get; set; }
 
+        private LastAction lastAction = LastAction.Next;
+
+        public enum LastAction
+        {
+            Back,
+            Next
+        }
+
         /// <summary>
         /// Determines whether the specified page is currently visible.
         /// </summary>
         /// <param name="pageName">The name of the page to check.</param>
+        /// <param name="overrideIfTrue">Optionally pass in logic that can override a true result and always return false.</param>
         /// <returns><c>true</c> if the page is currently visible; otherwise, <c>false</c>.</returns>
-        public bool PageVisibility(string pageName)
+        public bool PageVisibility(string pageName, Func<bool>? overrideIfTrue = null)
         {
             int index = Array.IndexOf(PageNames, pageName);
-            return index == currentPageIndex;
+            var visible = index == currentPageIndex;
+
+            if (visible)
+            {
+                if (overrideIfTrue != null && overrideIfTrue())
+                {
+                    visible = false;
+
+                    if(lastAction == LastAction.Back)
+                    {
+                        _ = Back();
+                    }
+                    else
+                    {
+                        _ = Next();
+                    }
+                }
+            }
+
+            return visible;
         }
 
         /// <summary>
@@ -36,6 +64,8 @@ namespace INSS.Forms.Components.Abstract
         /// <param name="pageName">Optional. The name of the page to navigate to.</param>
         public async Task Next(string pageName = "")
         {
+            lastAction = LastAction.Next;
+
             if (pageName.Length > 0)
             {
                 int index = Array.IndexOf(PageNames, pageName);
@@ -72,6 +102,8 @@ namespace INSS.Forms.Components.Abstract
         /// </summary>
         public async Task Back()
         {
+            lastAction = LastAction.Back;
+
             if (currentPageIndex > 0)
             {
                 currentPageIndex--;
@@ -89,6 +121,11 @@ namespace INSS.Forms.Components.Abstract
         /// Gets a value indicating whether the current page is the last page.
         /// </summary>
         public bool IsLastPage => currentPageIndex == PageNames.Length - 1;
+
+        /// <summary>
+        /// Gets a value indicating whether the current page is the first page.
+        /// </summary>
+        public bool IsFirstPage => currentPageIndex == 0;
 
         /// <summary>
         /// The index of the currently visible page.

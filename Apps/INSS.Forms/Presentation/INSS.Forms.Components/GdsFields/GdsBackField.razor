@@ -1,0 +1,15 @@
+﻿@inherits RequiredAttributeBase
+
+<a href="#" class="govuk-back-link" @onclick="OnClick" id="@GenerateElementId("back")" style="display: @displayStyle">Back</a>
+
+
+@code {
+
+    [Parameter]
+    public EventCallback<MouseEventArgs> OnClick { get; set; }
+
+    [Parameter]
+    public bool IsVisible { get; set; } = true;
+
+    private string displayStyle => IsVisible ? "block;" : "none;";
+}

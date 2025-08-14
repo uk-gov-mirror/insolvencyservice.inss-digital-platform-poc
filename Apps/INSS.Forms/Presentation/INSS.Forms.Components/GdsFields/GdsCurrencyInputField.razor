@@ -1,0 +1,52 @@
+﻿@inherits RequiredAttributeBase
+
+<div class="govuk-form-group">
+    <h1 class="govuk-label-wrapper">
+        <label class="govuk-label @(SmallText ? "" : "govuk-label--l")" for="@GenerateElementId("currency-input")">
+            @Text
+        </label>
+    </h1>
+    <div class="govuk-input__wrapper">
+        <span class="govuk-input__prefix">£</span>
+        <input class="govuk-input govuk-input--width-10"
+               id="@GenerateElementId("currency-input")"
+               name="@GenerateElementName("currency-input")"
+               type="text"
+               inputmode="decimal"
+               pattern="^\d+(\.\d{1,2})?$"
+               placeholder="@Placeholder"
+               title="@Text"
+               value="@(Value.HasValue ? Value.Value.ToString("0.00") : "")"
+               @oninput="OnInputChanged"
+               aria-label="Amount in pounds">
+        </div>
+</div>
+
+@code {
+    [Parameter]
+    public string Text { get; set; } = string.Empty;
+
+    [Parameter]
+    public bool SmallText { get; set; } = false;
+
+    [Parameter]
+    public string? Placeholder { get; set; } = string.Empty;
+
+    [Parameter]
+    public decimal? Value { get; set; }
+
+    [Parameter]
+    public EventCallback<decimal?> ValueChanged { get; set; }
+
+    private async Task OnInputChanged(ChangeEventArgs e)
+    {
+        if (decimal.TryParse(e.Value?.ToString(), out var result))
+        {
+            await ValueChanged.InvokeAsync(result);
+        }
+        else
+        {
+            await ValueChanged.InvokeAsync(null);
+        }
+    }
+}

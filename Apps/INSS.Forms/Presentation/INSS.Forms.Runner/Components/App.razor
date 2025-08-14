@@ -20,18 +20,8 @@
 </head>
 
 <body>
-    <Router AppAssembly="@typeof(Program).Assembly"
-            AdditionalAssemblies="new[] { typeof(INSS.Forms.Components.RegisterSharedComponents).Assembly }">
-        <Found Context="routeData">
-            <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
-            <FocusOnNavigate RouteData="@routeData" Selector="h1" />
-        </Found>
-        <NotFound>
-            <LayoutView Layout="@typeof(MainLayout)">
-                <p>Sorry, there's nothing at this address.</p>
-            </LayoutView>
-        </NotFound>
-    </Router>
+    <HeadOutlet @rendermode="RenderMode.InteractiveServer" />
+    <Routes @rendermode="RenderMode.InteractiveServer" />
 
     <script src="_framework/blazor.web.js"></script>
 </body>
