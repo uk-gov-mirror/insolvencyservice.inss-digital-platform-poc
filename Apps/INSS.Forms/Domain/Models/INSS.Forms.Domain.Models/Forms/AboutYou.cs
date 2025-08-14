@@ -1,9 +1,11 @@
-﻿namespace INSS.Forms.Domain.Models
+﻿using INSS.Forms.Domain.Models.Abstract;
+
+namespace INSS.Forms.Domain.Models.Forms
 {
     /// <summary>
     /// Represents information about a person completing the form.
     /// </summary>
-    public class AboutYou
+    public class AboutYou : FormBase
     {
         /// <summary>
         /// Gets or sets the name of the person.

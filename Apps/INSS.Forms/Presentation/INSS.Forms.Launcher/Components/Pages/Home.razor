@@ -48,7 +48,7 @@
     // OnInitializedAsync is a lifecycle method in Blazor components that runs when the component is initialized. 
     // It’s the asynchronous version of OnInitialized. Use it when you need to perform async operations (like fetching data from a service or API) during component initialization. 
     // In this example we are simply retrieving the Host header from the HTTP context, so it does not need to be async, this is async just for demo/kb purposes.
-    protected override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
         var hostHeader = HttpContextAccessor.HttpContext?.Request.Headers["Host"].ToString();
         string hostName = string.Empty;
@@ -68,7 +68,7 @@
             errors.Add($"Service not found for host: {hostName}");
         }
 
-        return Task.CompletedTask;
+        await base.OnInitializedAsync();
     }
 
     private IReadOnlyList<TaskListItem> GetTaskListItems(IOrderedEnumerable<SectionForm> sectionForms)
@@ -132,12 +132,12 @@
                             {
                                 new SectionForm
                                 {
-                                    Form = GenerateForm("Income", "income"),
+                                    Form = GenerateForm("Individual's Income", "individuals-income"),
                                     SortOrder = 1,
                                 },
                                 new SectionForm
                                 {
-                                    Form = GenerateForm("Debts", "debts"),
+                                    Form = GenerateForm("Individual's Debts", "individuals-debts"),
                                     SortOrder = 2,
                                 }
                             }
@@ -187,7 +187,7 @@
                                 },
                                 new SectionForm
                                 {
-                                    Form = GenerateForm("Income", "income"),
+                                    Form = GenerateForm("Individual's Income", "individuals-income"),
                                     SortOrder = 2,
                                 },
                             },

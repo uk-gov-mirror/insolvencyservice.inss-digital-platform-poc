@@ -1,0 +1,55 @@
+﻿@inherits ListBase<IndividualsDebts>
+
+<HeadingText Name="heading-individuals-debts-list">@($"You have added {FormData.Debts.Count} debt{((FormData.Debts.Count > 1 ? "s" : ""))}")</HeadingText>
+
+<div class="govuk-form-group">
+
+    <dl class="govuk-summary-list hmrc-list-with-actions hmrc-list-with-actions--short">
+
+        @foreach (var debt in FormData.Debts.Select((item, index) => new { Index = index, Item = item}))
+        {
+            <ListRow 
+                Name="list-row" 
+                Key="@debt.Index.ToString()" 
+                Text="@debt.Item.CreditorName"
+                OnChangeClick='() => OnChange.InvokeAsync("creditor-name-page")'
+                OnRemoveClick='() => OnRemove.InvokeAsync("remove-creditor-page")' 
+            />
+        }
+    </dl>
+
+    <fieldset class="govuk-fieldset" aria-describedby="add-another-hint">
+        <legend class="govuk-fieldset__legend govuk-fieldset__legend govuk-fieldset__legend--m">
+            @AddNewText
+        </legend>
+        <div id="add-another-hint" class="govuk-hint">
+            @AddNewHint
+        </div>
+        <div class="govuk-radios govuk-radios--inline" data-module="govuk-radios">
+            <div class="govuk-radios__item">
+                <input class="govuk-radios__input" id="add-another" name="add-another" type="radio" value="Yes">
+                <label class="govuk-label govuk-radios__label" for="add-another">
+                    Yes
+                </label>
+            </div>
+            <div class="govuk-radios__item">
+                <input class="govuk-radios__input" id="add-another-2" name="add-another" type="radio" value="No">
+                <label class="govuk-label govuk-radios__label" for="add-another-2">
+                    No
+                </label>
+            </div>
+        </div>
+    </fieldset>
+
+</div>
+
+@code{
+
+    [Parameter]
+    [EditorRequired]
+    public string AddNewText { get; set; } = string.Empty;
+
+    [Parameter]
+    public string AddNewHint { get; set; } = string.Empty;
+
+}
