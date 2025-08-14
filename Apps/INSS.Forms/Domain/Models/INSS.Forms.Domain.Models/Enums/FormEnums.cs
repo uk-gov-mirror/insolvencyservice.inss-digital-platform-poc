@@ -25,4 +25,16 @@ namespace INSS.Forms.Domain.Models.Enums
         [Description("Ad-Hoc")]
         adhoc
     }
+
+    public enum CompanyType
+    {
+        [Description("Limited Company")]
+        LimitedCompany,
+
+        [Description("Registered Charity")]
+        RegisteredCharity,
+
+        [Description("Other")]
+        Other
+    }
 }

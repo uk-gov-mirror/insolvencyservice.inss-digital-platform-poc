@@ -12,7 +12,7 @@
 </PageFields>
 
 <PageFields IsVisible="@PageVisibility("payment-frequency-page")">
-    <GdsDCRadioButtonsField Name="payment-frequency"
+    <GdsRadioButtonsField Name="payment-frequency"
         Text="How often do you make the payments?"
         Items="@paymentFrequencyOptions"
         Value="@individualsDebts.Debts[debtIndex].PaymentFrequency.ToString()"
