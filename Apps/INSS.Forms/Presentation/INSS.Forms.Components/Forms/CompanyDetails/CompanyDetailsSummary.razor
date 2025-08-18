@@ -1,0 +1,38 @@
+﻿@inherits SummaryBase<CompanyDetails>
+
+<dl class="govuk-summary-list" id="@GenerateElementId()">
+
+    <SummaryRow Name=@EntityNames.CompanyName Text="Company Name" Values="@GetValue(FormData?.CompanyName)" OnClick='() => OnNext.InvokeAsync(EntityNames.CompanyName)' />
+
+    <SummaryRow Name=@EntityNames.CompanyType Text="Company Type" Values="@GetValue(FormData?.CompanyType?.GetDescription())" OnClick='() => OnNext.InvokeAsync(EntityNames.CompanyType)' />
+
+    <SummaryRow Name=@EntityNames.CompaniesHouseReferenceNumber IsVisible="@IsVisible(IsCompanyRefVisible)" Text="Companies House Ref" Values="@GetValue(FormData?.CompaniesHouseReferenceNumber)" OnClick='() => OnNext.InvokeAsync(EntityNames.CompaniesHouseReferenceNumber)' />
+
+    <SummaryRow Name=@EntityNames.CharityReferenceNumber IsVisible="@IsVisible(IsCompanyCharityRefVisible)" Text="Charity Ref" Values="@GetValue(FormData?.CharityReferenceNumber)" OnClick='() => OnNext.InvokeAsync(EntityNames.CharityReferenceNumber)' />
+
+    <SummaryRow 
+        Name=@EntityNames.CompanyAddress
+        Text="Address"
+        Values="@(new[] {
+                FormData?.CompanyAddress?.Address1 ?? string.Empty,
+                FormData?.CompanyAddress?.Address2 ?? string.Empty,
+                FormData?.CompanyAddress?.Town ?? string.Empty,
+                FormData?.CompanyAddress?.Postcode ?? string.Empty
+            })"
+            OnClick='() => OnNext.InvokeAsync(EntityNames.CompanyAddress)' />
+
+    <SummaryRow Name=@EntityNames.CompanyTelephone Text="Telephone" Values="@GetValue(FormData?.CompanyTelephone)" OnClick='() => OnNext.InvokeAsync(EntityNames.CompanyTelephone)' />
+
+</dl>
+
+@code {
+    private bool IsCompanyRefVisible()
+    {
+        return FormData?.CompanyType == CompanyType.LimitedCompany;
+    }
+
+    private bool IsCompanyCharityRefVisible()
+    {
+        return FormData?.CompanyType == CompanyType.RegisteredCharity;
+    }
+}

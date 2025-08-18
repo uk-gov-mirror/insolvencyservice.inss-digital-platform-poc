@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using INSS.Forms.Domain.Models.Constants;
+using Microsoft.AspNetCore.Components;
 
 namespace INSS.Forms.Components.Abstract
 {
@@ -25,20 +26,29 @@ namespace INSS.Forms.Components.Abstract
         /// Determines whether the specified page is currently visible.
         /// </summary>
         /// <param name="pageName">The name of the page to check.</param>
-        /// <param name="overrideIfTrue">Optionally pass in logic that can override a true result and always return false.</param>
+        /// <param name="forceHide">Optionally pass in logic that will force the page to be hidden if true.</param>
         /// <returns><c>true</c> if the page is currently visible; otherwise, <c>false</c>.</returns>
-        public bool PageVisibility(string pageName, Func<bool>? overrideIfTrue = null)
+        public bool PageVisibility(string pageName, Func<bool>? forceHide = null)
         {
             int index = Array.IndexOf(PageNames, pageName);
             var visible = index == currentPageIndex;
 
             if (visible)
             {
-                if (overrideIfTrue != null && overrideIfTrue())
+                if(pageName == EntityNames.ListChange)
+                {
+                    var hide = forceHide?.Invoke();
+                }
+                else if (pageName == EntityNames.ListChange && (forceHide is null || forceHide() == false))
+                {
+                    var x = 1;
+                }
+
+                if (forceHide != null && forceHide())
                 {
                     visible = false;
 
-                    if(lastAction == LastAction.Back)
+                    if (lastAction == LastAction.Back)
                     {
                         _ = Back();
                     }
@@ -126,6 +136,11 @@ namespace INSS.Forms.Components.Abstract
         /// Gets a value indicating whether the current page is the first page.
         /// </summary>
         public bool IsFirstPage => currentPageIndex == 0;
+
+        public bool IsCurrentPage(string pageName)
+        {
+            return PageVisibility(pageName);
+        }
 
         /// <summary>
         /// The index of the currently visible page.

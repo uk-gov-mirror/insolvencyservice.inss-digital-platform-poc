@@ -1,4 +1,4 @@
-﻿namespace INSS.Forms.Domain.Models
+﻿namespace INSS.Forms.Domain.Models.Composite
 {
     /// <summary>
     /// Represents a postal address.

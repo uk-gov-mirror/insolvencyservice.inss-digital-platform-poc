@@ -1,39 +1,17 @@
-﻿@inherits RequiredAttributeBase
+﻿@inherits InssComponentBase
 
-<div class="govuk-summary-list__row" id="@GenerateElementId("list-row")">
-    <dt class="govuk-summary-list__key govuk-!-font-weight-regular hmrc-summary-list__key" id="@GenerateElementId("list-row-label")">
+<div class="govuk-summary-list__row" id="@GenerateElementId()">
+    <dt class="govuk-summary-list__key govuk-!-font-weight-regular hmrc-summary-list__key" id="@GenerateElementId("label")">
         @Text
     </dt>
-    <dd class="govuk-summary-list__actions hmrc-summary-list__actions" id="@GenerateElementId("list-row-action")">
-        <ul class="govuk-summary-list__actions-list" id="@GenerateElementId("list-row-action-list")">
-            <li class="govuk-summary-list__actions-list-item" id="@GenerateElementId("list-row-action-list-change", "@Key")">
-                <LinkButtonField Text="Change"
-                    AriaLabel='@($"Change {Text}")'
-                    Name='@($"{Text.ToLower()}-change")'
-                    OnClick="OnChangeClick" />
-@*                 <a class="govuk-link" href="#">
-                    <span aria-hidden="true">
-                        Change
-                    </span>
-                    <span class="govuk-visually-hidden">
-                        Change @Text
-                    </span>
-                </a>
- *@            </li>
-            <li class="govuk-summary-list__actions-list-item" id="@GenerateElementId("list-row-action-list-remove", "@Key")">
-                <LinkButtonField Text="Remove"
-                    AriaLabel='@($"Remove {Text}")'
-                    Name='@($"{Text.ToLower()}-remove")'
-                    OnClick="OnRemoveClick" />
-   @*              <a class="govuk-link" href="#">
-                    <span aria-hidden="true">
-                        Remove
-                    </span>
-                    <span class="govuk-visually-hidden">
-                        Remove @Text from the list
-                    </span>
-                </a>
- *@            </li>
+    <dd class="govuk-summary-list__actions hmrc-summary-list__actions" id="@GenerateElementId("action")">
+        <ul class="govuk-summary-list__actions-list" id="@GenerateElementId("action-list")">
+            <li class="govuk-summary-list__actions-list-item" id="@GenerateElementId("action-change", "@Key")">
+                <a class="govuk-link" href="#" @onclick="OnChangeClick">Change <span class="govuk-visually-hidden">'@($"Change {Text}")'</span></a>
+            </li>
+            <li class="govuk-summary-list__actions-list-item" id="@GenerateElementId("action-remove", "@Key")">
+                <a class="govuk-link govuk-link--no-visited-state" href="#" @onclick="OnRemoveClick">Remove <span class="govuk-visually-hidden">'@($"Remove {Text}")'</span></a>
+            </li>
         </ul>
     </dd>
 </div>
@@ -51,5 +29,24 @@
     
     [Parameter]
     public EventCallback<MouseEventArgs> OnRemoveClick { get; set; }
+
+
+    // ************  ON REMOVE ASK CONFIRMATION ************
+    // ************  ON REMOVE ASK CONFIRMATION ************
+    // ************  ON REMOVE ASK CONFIRMATION ************
+    // ************  ON REMOVE ASK CONFIRMATION ************
+    // ************  ON REMOVE ASK CONFIRMATION ************
+
+    //*************************************************************************************************************************************/
+    //*************************************************************************************************************************************/
+    //*************************************************************************************************************************************/
+    //*************************************************************************************************************************************/
+    // ************** Remove Nav service, commit then do nav service after confirmation form is pushed.  do it as a new pr ************
+    //*************************************************************************************************************************************/
+    //*************************************************************************************************************************************/
+    //*************************************************************************************************************************************/
+    //*************************************************************************************************************************************/
+    //*************************************************************************************************************************************/
 }
 
+ 

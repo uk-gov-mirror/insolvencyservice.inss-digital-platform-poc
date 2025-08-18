@@ -1,6 +1,6 @@
-﻿@inherits RequiredAttributeBase
+﻿@inherits InssComponentBase
 
-<ul class="govuk-task-list" id="@GenerateElementId("list")">
+<ul class="govuk-task-list" id="@GenerateElementId()">
     @foreach(var item in Items)
     {
         <li class="govuk-task-list__item govuk-task-list__item--with-link" id="@GenerateElementId($"list-item", item.Id.ToString("N"))">

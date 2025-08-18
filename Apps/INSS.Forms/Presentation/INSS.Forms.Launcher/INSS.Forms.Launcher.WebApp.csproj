@@ -6,6 +6,25 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <UseRazorSourceGenerator>true</UseRazorSourceGenerator>
+    <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+
+    <!--
+    Inspect this path to view the c# files generated from your Razor components.
+    This can be usefiul for debugging purposes and identifying bottlenecks.
+    -->
+    <CompilerGeneratedFilesOutputPath>$(BaseIntermediateOutputPath)Generated</CompilerGeneratedFilesOutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!--
+    This allows you to use scoped CSS in your Blazor components.
+    e.g. for GdsCurrencyInput component create a file named GdsCurrencyInput.razor.css
+    -->
+    <EnableDefaultScopedCssItems>true</EnableDefaultScopedCssItems>
+  </PropertyGroup>
+  
   <ItemGroup>
     <ProjectReference Include="..\..\Domain\Models\INSS.Forms.Domain.Models\INSS.Forms.Domain.Models.csproj" />
     <ProjectReference Include="..\INSS.Forms.Components\INSS.Forms.Components.csproj" />

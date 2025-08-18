@@ -5,7 +5,7 @@ namespace INSS.Forms.Components.Abstract
     /// <summary>
     /// Provides a base class for components that require a unique name and generate element IDs and names.
     /// </summary>
-    public abstract class RequiredAttributeBase : ComponentBase
+    public abstract class InssComponentBase : ComponentBase
     {
         private const string idPrefix = "inss-form-element-id-";
 
@@ -49,6 +49,8 @@ namespace INSS.Forms.Components.Abstract
         /// Output: "inss-form-element-id-form-section1-row5-a1b2c3d4e5f6g7h8i9j0"
 
         /// </remarks>
+        /// <param name="context">Optional context string to further qualify the ID.</param>
+        /// <param name="key">Optional key string to further qualify the ID.</param>
         public string GenerateElementId(string? context = null, string? key = null)
         {
             return BuildElementString(context, key, true);
