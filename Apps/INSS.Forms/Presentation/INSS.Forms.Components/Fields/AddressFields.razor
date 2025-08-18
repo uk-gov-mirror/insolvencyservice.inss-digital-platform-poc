@@ -1,11 +1,10 @@
-﻿@inherits RequiredAttributeBase
+﻿@using INSS.Forms.Domain.Models.Composite
+@inherits InssComponentBase
 
-<fieldset class="govuk-fieldset" id="@GenerateElementId("fields")">
-    <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-        <h1 class="govuk-fieldset__heading">
-            @Text
-        </h1>
-    </legend>
+<fieldset class="govuk-fieldset" id="@GenerateElementId()">
+    <FieldSetHeadingText Name="fieldset-address-heading">
+        @Text
+    </FieldSetHeadingText>
 
     <GdsTextInputField text="Address line 1" Name="address1" SmallText="true" @bind-Value="Value.Address1" />
 

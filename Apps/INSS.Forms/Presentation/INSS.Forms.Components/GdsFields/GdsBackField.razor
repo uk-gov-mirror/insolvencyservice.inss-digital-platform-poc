@@ -1,6 +1,6 @@
-﻿@inherits RequiredAttributeBase
+﻿@inherits InssComponentBase
 
-<a href="#" class="govuk-back-link" @onclick="OnClick" id="@GenerateElementId("back")" style="display: @displayStyle">Back</a>
+<a href="#" class="govuk-back-link" @onclick="OnClick" id="@GenerateElementId()" style="@displayStyle">Back</a>
 
 
 @code {
@@ -11,5 +11,5 @@
     [Parameter]
     public bool IsVisible { get; set; } = true;
 
-    private string displayStyle => IsVisible ? "block;" : "none;";
+    private string displayStyle => IsVisible ? string.Empty : "display: none;";
 }

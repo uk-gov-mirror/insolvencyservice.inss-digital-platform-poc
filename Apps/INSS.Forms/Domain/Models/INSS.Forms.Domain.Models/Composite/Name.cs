@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace INSS.Forms.Domain.Models
+namespace INSS.Forms.Domain.Models.Composite
 {
     /// <summary>
     /// Represents a person's name with first and last name properties.

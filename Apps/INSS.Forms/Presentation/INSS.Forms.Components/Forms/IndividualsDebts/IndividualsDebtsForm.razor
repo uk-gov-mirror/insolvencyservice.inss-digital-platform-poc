@@ -1,0 +1,206 @@
+﻿@page "/individuals-debts"
+@inherits FormPagerBase
+
+<PageTitle>Individual's Debts</PageTitle>
+
+<HeadingText Name="heading-debts">Individual's Debts</HeadingText>
+
+<GdsBackField Name="back-btn" IsVisible="@(!IsFirstPage && !PageVisibility(EntityNames.List))" OnClick="@Back" />
+
+<PageFields IsVisible="@PageVisibility(EntityNames.CreditorName)">
+    <GdsTextInputField Text="What is the creditor's name?" Name='@($"{EntityNames.CreditorName}-{debtIndex}")' @bind-Value="individualsDebts.Debts[debtIndex].CreditorName" />
+</PageFields>
+
+<PageFields IsVisible="@(PageVisibility(EntityNames.InitialDebt))">
+    <GdsCurrencyInputField Text="What is the initial debt?" Name='@($"{EntityNames.InitialDebt}-{debtIndex}")' @bind-Value="individualsDebts.Debts[debtIndex].InitialDebt" />
+</PageFields>
+
+<PageFields IsVisible="@PageVisibility(EntityNames.DateDebtTakenOut)">
+    <GdsDateInputField Text="What date was the debt taken out?" Name='@($"{EntityNames.DateDebtTakenOut}-{debtIndex}")' @bind-Value="individualsDebts.Debts[debtIndex].DateDebtTakenOut" />
+</PageFields>
+
+<PageFields IsVisible="@PageVisibility(EntityNames.OutstandingDebt)">
+    <GdsCurrencyInputField Text="What is the outstanding debt?" Name='@($"{EntityNames.OutstandingDebt}-{debtIndex}")' @bind-Value="individualsDebts.Debts[debtIndex].OutstandingDebt" />
+</PageFields>
+
+<PageFields IsVisible="@PageVisibility(EntityNames.PaymentFrequency)">
+    <GdsRadioButtonsField Name='@($"{EntityNames.PaymentFrequency}-{debtIndex}")'
+        Text="How often do you make the payments?"
+        Items="@paymentFrequencyOptions"
+        Value="@individualsDebts.Debts[debtIndex].PaymentFrequency.ToString()"
+        ValueChanged="@(v => individualsDebts.Debts[debtIndex].PaymentFrequency = Enum.Parse<PaymentFrequencyType>(v))" />
+</PageFields>
+
+<PageFields IsVisible="@PageVisibility(EntityNames.PaymentAmount)">
+    <GdsCurrencyInputField Text="What is the payment amount?" Name='@($"{EntityNames.PaymentAmount}-{debtIndex}")' @bind-Value="individualsDebts.Debts[debtIndex].PaymentAmount" />
+</PageFields>
+
+
+<PageFields IsVisible="@PageVisibility(EntityNames.List)">
+    <IndividualDebtsList 
+        Name=@EntityNames.List
+        FormData="individualsDebts"
+        @bind-Value="addNewDebt"
+        OnAddNewChanged="@(value => AddNewChanged(value))"
+        OnChange="@(index => ChangeItem(index))"
+        OnRemove="@(index => ConfirmRemoveItem(index))"
+     />
+</PageFields>
+
+<PageFields IsVisible="@PageVisibility(EntityNames.ListChange, () => changingItem is false)">
+    <IndividualDebtsChange Name=@EntityNames.ListChange FormData="individualsDebts" DebtIndex="debtIndex" OnNext="@(page => Next(page))" />
+</PageFields>
+
+<PageFields IsVisible="@PageVisibility(EntityNames.ConfirmAction, () => removingItem is false)">
+    <Confirm Name= Text='@($"Are you sure you want to remove {entityName} ?")' Value="@confirmValue" OnConfirmChanged="@ConfirmChanged" />
+</PageFields>
+
+<PageFields IsVisible="@PageVisibility(EntityNames.Summary)">
+    <IndividualsDebtsSummary Name=@EntityNames.Summary FormData="individualsDebts" OnClick="@(args => SkipTo(args.index, args.page))" />
+</PageFields>
+
+
+<GdsButtonField Name="next-btn" IsDisabled="@IsNextButtonDisabled" OnClick="@NextHandler">
+    @(IsLastPage ? "Apply" : "Next")
+</GdsButtonField>
+
+
+@code {
+    private IndividualsDebts individualsDebts = null!;
+    private int debtIndex = 0;
+    private string? addNewDebt;
+    private string? confirmValue;
+    private bool removingItem = false;
+    private bool changingItem = false;
+    private string entityName = string.Empty;
+
+    private List<RadioOption<string>> paymentFrequencyOptions = EnumHelper.ToRadioOptions<PaymentFrequencyType>();
+    private bool IsNextButtonDisabled => addNewDebt is null && IsCurrentPage(EntityNames.List);
+
+    protected override void OnInitialized()
+    {
+        PageNames = new string[]
+        {
+            EntityNames.CreditorName,
+            EntityNames.InitialDebt,
+            EntityNames.DateDebtTakenOut,
+            EntityNames.OutstandingDebt,
+            EntityNames.PaymentFrequency,
+            EntityNames.PaymentAmount,
+            EntityNames.List,
+            EntityNames.ListChange,
+            EntityNames.ConfirmAction,
+            EntityNames.Summary
+        };
+
+        individualsDebts = new IndividualsDebts();
+        individualsDebts.Debts = new List<DebtItem>
+        {
+            new DebtItem()
+        };
+
+        base.OnInitialized();
+    }
+
+    private async Task SkipTo(int index, string page)
+    {
+        if (index >= 0 && index < individualsDebts.Debts.Count)
+        {
+            debtIndex = index;
+            await Next(page).ConfigureAwait(false);
+        }
+    }
+
+    private async Task NextHandler()
+    {
+        changingItem = false;
+
+        if (IsCurrentPage(EntityNames.List))
+        {
+            if (addNewDebt == YesNoType.Yes.ToString())
+            {
+                addNewDebt = null;
+                individualsDebts.Debts.Add(new DebtItem());
+                debtIndex = individualsDebts.Debts.Count - 1;
+                await Next(EntityNames.CreditorName).ConfigureAwait(false);
+                return;
+            }
+            else if(addNewDebt == YesNoType.No.ToString())
+            {
+                await Next(EntityNames.Summary).ConfigureAwait(false);
+            }
+
+            addNewDebt = null;
+            return;
+        }
+        else if (IsCurrentPage(EntityNames.ListChange))
+        {
+            await Next(EntityNames.List).ConfigureAwait(false);
+        }
+        else if (IsCurrentPage(EntityNames.ConfirmAction))
+        {
+            if (confirmValue == YesNoType.Yes.ToString())
+            {
+                if (debtIndex >= 0 && debtIndex < individualsDebts.Debts.Count)
+                {
+                    individualsDebts.Debts.RemoveAt(debtIndex);
+                    if (debtIndex >= individualsDebts.Debts.Count)
+                    {
+                        debtIndex = individualsDebts.Debts.Count - 1;
+                    }
+                }
+
+                if(!individualsDebts.Debts.Any())
+                {
+                    individualsDebts.Debts.Add(new DebtItem());
+                    debtIndex = 0;
+                    await Next(EntityNames.CreditorName).ConfigureAwait(false);
+                }
+                else
+                {
+                    await Next(EntityNames.List).ConfigureAwait(false);
+                }
+            }
+            else
+            {
+                await Next(EntityNames.List).ConfigureAwait(false);
+            }
+
+            confirmValue = null;
+            removingItem = false;
+        }
+        else
+        {
+            await Next().ConfigureAwait(false);
+        }
+    }
+
+    private async Task ConfirmRemoveItem(int index)
+    {
+        removingItem = true;
+        debtIndex = index;
+        entityName = individualsDebts.Debts[debtIndex].CreditorName ?? string.Empty;
+        
+        await Next(EntityNames.ConfirmAction).ConfigureAwait(false);
+    }
+
+    private async Task ChangeItem(int index)
+    {
+        if (index >= 0 && index < individualsDebts.Debts.Count)
+        {
+            changingItem = true;
+            debtIndex = index;
+            await Next(EntityNames.ListChange).ConfigureAwait(false);
+        }
+    }
+
+    private void AddNewChanged(string? value)
+    {
+        addNewDebt = value;
+    }
+
+    private void ConfirmChanged(string? value)
+    {
+        confirmValue = value;
+    }
+}

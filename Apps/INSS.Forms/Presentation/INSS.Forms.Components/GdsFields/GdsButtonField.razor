@@ -1,9 +1,9 @@
-﻿@inherits RequiredAttributeBase
+﻿@inherits InssComponentBase
 <button type="submit"
         class="govuk-button @(IsDisabled ? "govuk-button--disabled" : "")"
         data-module="govuk-button"
-        id="@GenerateElementId("button")"
-        name="@GenerateElementName("button")"
+        id="@GenerateElementId()"
+        name="@GenerateElementName()"
         title="@ChildContent"
         @onclick="OnClick"
         disabled="@IsDisabled"

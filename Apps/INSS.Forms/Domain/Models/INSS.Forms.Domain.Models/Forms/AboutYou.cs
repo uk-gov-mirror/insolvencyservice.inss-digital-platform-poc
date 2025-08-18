@@ -1,4 +1,5 @@
 ﻿using INSS.Forms.Domain.Models.Abstract;
+using INSS.Forms.Domain.Models.Composite;
 
 namespace INSS.Forms.Domain.Models.Forms
 {

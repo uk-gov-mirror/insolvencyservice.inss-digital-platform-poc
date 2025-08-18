@@ -1,12 +1,12 @@
-﻿@inherits RequiredAttributeBase
+﻿@inherits InssComponentBase
 
 <div class="govuk-error-summary" role="alert" aria-labelledby="@GenerateElementId("title")" tabindex="-1" id="@GenerateElementId()">
     <h2 class="govuk-error-summary__title" id="@GenerateElementId("title")">@Title</h2>
     <div class="govuk-error-summary__body" id="@GenerateElementId("body")">
-        <ul class="govuk-error-summary__list" id="@GenerateElementId("error-list")">
+        <ul class="govuk-error-summary__list" id="@GenerateElementId("list")">
             @foreach (var errorItem in Errors.Select((error, index) => new { error, index }))
             {
-                <li id="@($"{GenerateElementId("error")}-{errorItem.index}")">
+                <li id="@($"{GenerateElementId("item-error")}-{errorItem.index}")">
                     @errorItem.error
                 </li>
             }

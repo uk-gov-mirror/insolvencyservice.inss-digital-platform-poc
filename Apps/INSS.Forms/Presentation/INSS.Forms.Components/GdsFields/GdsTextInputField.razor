@@ -1,13 +1,13 @@
-﻿@inherits RequiredAttributeBase
+﻿@inherits InssComponentBase
 
-<div class="govuk-form-group">
-    <h1 class="govuk-label-wrapper">
-        <label class="govuk-label @(SmallText ? "" : "govuk-label--l")" for="@inputId">
+<div class="govuk-form-group" id="@GenerateElementId()">
+    <h1 class="govuk-label-wrapper" id="@GenerateElementId("label-wrapper")">
+        <label class="govuk-label @(SmallText ? "" : "govuk-label--l")" for=" @GenerateElementId("input")" id="@GenerateElementId("label")">
             @Text
         </label>
     </h1>
     <input class="govuk-input"
-           id="@inputId"
+           id="@GenerateElementId("input")"
            name="@GenerateElementName("input")"
            type=@Type
            placeholder="@Placeholder"
@@ -34,8 +34,6 @@
 
     [Parameter]
     public EventCallback<string> ValueChanged { get; set; }
-
-    private string inputId => GenerateElementId();
 
     private async Task OnInputChanged(ChangeEventArgs e)
     {

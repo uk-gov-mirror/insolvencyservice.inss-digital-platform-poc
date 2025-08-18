@@ -1,0 +1,51 @@
+﻿@inherits ListBase<IndividualsDebts>
+
+<HeadingText Name="heading-individuals-debts-list">
+    @($"You have added {FormData.Debts.Count} debt{(FormData.Debts.Count > 1 ? "s" : "")}")
+</HeadingText>
+
+<div class="govuk-form-group" id="@GenerateElementId()">
+    <dl class="govuk-summary-list hmrc-list-with-actions hmrc-list-with-actions--short">
+        @foreach (var debt in FormData.Debts.Select((item, index) => new { Index = index, Item = item }))
+        {
+            <ListRow Name=@($"{EntityNames.CreditorName}-row")
+                     Key="@debt.Index.ToString()"
+                     Text="@debt.Item.CreditorName"
+                     OnChangeClick='() => OnChange.InvokeAsync(debt.Index)'
+                     OnRemoveClick='() => OnRemove.InvokeAsync(debt.Index)' />
+        }
+    </dl>
+
+    <GdsRadioButtonsField Name="add-new-debt"
+                          Text="Do you need to add another debt?"
+                          Hint="You must tell us about all your debts."
+                          Inline="true"
+                          Items="@yesNoOptions"
+                          Value="@Value"
+                          ValueChanged="@AddNew" />
+</div>
+
+
+
+@code {
+
+
+
+    [Parameter]
+    public string? Value { get; set; }
+
+    [Parameter]
+    public EventCallback<string?> ValueChanged { get; set; }
+
+    [Parameter]
+    public EventCallback<string?> OnAddNewChanged { get; set; }
+
+    private List<RadioOption<string>> yesNoOptions = EnumHelper.ToRadioOptions<YesNoType>();
+
+    private async Task AddNew(string? value)
+    {
+        Value = value;
+        await ValueChanged.InvokeAsync(value);
+        await OnAddNewChanged.InvokeAsync(value);
+    }
+}

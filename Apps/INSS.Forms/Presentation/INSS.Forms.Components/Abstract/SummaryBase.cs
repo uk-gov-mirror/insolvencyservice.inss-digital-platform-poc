@@ -7,13 +7,14 @@ namespace INSS.Forms.Components.Abstract
     /// Abstract base class for summary components in Blazor forms.
     /// </summary>
     /// <typeparam name="T">The type of the form data model.</typeparam>
-    public abstract class SummaryBase<T> : ComponentBase where T : class
+    public abstract class SummaryBase<T> : InssComponentBase where T : class
     {
         /// <summary>
         /// Gets or sets the form data to be summarized.
         /// </summary>
         [Parameter]
-        public T? FormData { get; set; }
+        [EditorRequired]
+        public T FormData { get; set; }
 
         /// <summary>
         /// Event callback triggered when the user proceeds to the next step.

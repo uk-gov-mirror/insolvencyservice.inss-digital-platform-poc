@@ -1,6 +1,6 @@
-using System.ComponentModel;
+﻿using System.ComponentModel;
 
-namespace INSS.Forms.Domain.Models.Enums
+namespace INSS.Forms.Application.Common.Extensions
 {
     /// <summary>
     /// Provides extension methods for working with <see cref="Enum"/> types.
@@ -14,8 +14,13 @@ namespace INSS.Forms.Domain.Models.Enums
         /// <returns>
         /// The description specified by the <see cref="DescriptionAttribute"/> if it exists; otherwise, the enum member's name as a string.
         /// </returns>
-        public static string GetDescription(this Enum value)
+        public static string GetDescription(this Enum? value)
         {
+            if (value == null)
+            {
+                return string.Empty;
+            }
+
             var fi = value.GetType().GetField(value.ToString());
             var attributes = (DescriptionAttribute[])fi!.GetCustomAttributes(typeof(DescriptionAttribute), false);
             return attributes.Length > 0 ? attributes[0].Description : value.ToString();

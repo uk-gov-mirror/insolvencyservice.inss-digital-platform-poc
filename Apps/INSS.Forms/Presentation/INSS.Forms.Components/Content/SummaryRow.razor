@@ -1,10 +1,10 @@
-﻿@inherits RequiredAttributeBase
+﻿@inherits InssComponentBase
 
-<div class="govuk-summary-list__row" style="display: @displayStyle" id="@GenerateElementId("summary-row")">
-    <dt class="govuk-summary-list__key" id="@GenerateElementId("summary-row-label")">
+<div class="govuk-summary-list__row" style="@displayStyle" id="@GenerateElementId()">
+    <dt class="govuk-summary-list__key" id="@GenerateElementId("label")">
         @Text
     </dt>
-    <dd class="govuk-summary-list__value" id="@GenerateElementId("list-row-value")">
+    <dd class="govuk-summary-list__value" id="@GenerateElementId("value")">
         @foreach (var value in Values)
         {
             <span>@value</span>
@@ -14,15 +14,15 @@
             }
         }
     </dd>
-    <dd class="govuk-summary-list__actions" id="@GenerateElementId("list-row-action")">
-        <LinkButtonField Text="Change"
-        AriaLabel="@ariaLabel"
-        Name="@linkButtonName"
-        OnClick='OnClick' />
+
+    <dd class="govuk-summary-list__actions" id="@GenerateElementId("action")">
+        <a class="govuk-link" href="#" @onclick="OnClick">Change <span class="govuk-visually-hidden">@ariaLabel</span></a>
     </dd>
 </div>
 
 @code {
+
+
 
     [Parameter]
     public string Text { get; set; } = string.Empty;
@@ -40,6 +40,6 @@
 
     private string linkButtonName => $"{Text.ToLower()}-change";
 
-    private string displayStyle => IsVisible ? "block;" : "none;";
+    private string displayStyle => IsVisible ? string.Empty : "display: none;";
 }
 

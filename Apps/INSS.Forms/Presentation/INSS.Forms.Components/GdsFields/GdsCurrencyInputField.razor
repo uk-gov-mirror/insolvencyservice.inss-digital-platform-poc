@@ -1,4 +1,4 @@
-﻿@inherits RequiredAttributeBase
+﻿@inherits InssComponentBase
 
 <div class="govuk-form-group">
     <h1 class="govuk-label-wrapper">
@@ -9,14 +9,13 @@
     <div class="govuk-input__wrapper">
         <span class="govuk-input__prefix">£</span>
         <input class="govuk-input govuk-input--width-10"
-               id="@GenerateElementId("currency-input")"
-               name="@GenerateElementName("currency-input")"
+               id="@GenerateElementId()"
+               name="@GenerateElementName()"
                type="text"
                inputmode="decimal"
-               pattern="^\d+(\.\d{1,2})?$"
                placeholder="@Placeholder"
                title="@Text"
-               value="@(Value.HasValue ? Value.Value.ToString("0.00") : "")"
+               value="@(Value.HasValue ? Value.Value.ToString() : "")"
                @oninput="OnInputChanged"
                aria-label="Amount in pounds">
         </div>

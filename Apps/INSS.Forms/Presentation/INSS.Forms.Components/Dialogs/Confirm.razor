@@ -1,0 +1,34 @@
+﻿@inherits InssComponentBase
+
+<div id="@GenerateElementId()">
+    <GdsRadioButtonsField 
+        Name=@EntityNames.ConfirmAction
+        Text=@Text
+        Inline="false"
+        Items="@yesNoOptions"
+        Value="@Value"
+        ValueChanged="@OnValueChanged" />
+</div>
+
+@code {
+
+    [Parameter]
+    public string Text { get; set; } = string.Empty;
+
+    [Parameter]
+    public string? Value { get; set; }
+
+    [Parameter]
+    public EventCallback<string?> ValueChanged { get; set; }
+
+    [Parameter]
+    public EventCallback<string?> OnConfirmChanged { get; set; }
+
+    private List<RadioOption<string>> yesNoOptions = EnumHelper.ToRadioOptions<YesNoType>();
+
+    private async Task OnValueChanged(string? value)
+    {
+        Value = value;
+        await OnConfirmChanged.InvokeAsync(value);
+    }
+}

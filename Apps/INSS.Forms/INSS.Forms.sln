@@ -49,6 +49,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "INSS.Forms.Components", "Pr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "INSS.Forms.Runner.NoJs", "Presentation\INSS.Forms.Runner.NoJs\INSS.Forms.Runner.NoJs.csproj", "{522D7D32-A95F-487D-8D43-C3F9351C7857}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "INSS.Forms.Application.Common", "Application\Common\INSS.Forms.Application.Common\INSS.Forms.Application.Common.csproj", "{7E032DA6-AFC3-4523-BF1B-8E89445794C8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -97,6 +101,10 @@ Global
 		{522D7D32-A95F-487D-8D43-C3F9351C7857}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{522D7D32-A95F-487D-8D43-C3F9351C7857}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{522D7D32-A95F-487D-8D43-C3F9351C7857}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E032DA6-AFC3-4523-BF1B-8E89445794C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E032DA6-AFC3-4523-BF1B-8E89445794C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E032DA6-AFC3-4523-BF1B-8E89445794C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E032DA6-AFC3-4523-BF1B-8E89445794C8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -121,6 +129,8 @@ Global
 		{28A4B43E-A512-4EA1-B8DF-2B82A118C4BA} = {304CB56F-09BC-40B7-B139-6340DA1A8128}
 		{9E43310A-98C5-4272-A5B6-1D78D71F9F27} = {7F479297-BD8D-4EAF-BC64-1EC2B061F098}
 		{522D7D32-A95F-487D-8D43-C3F9351C7857} = {304CB56F-09BC-40B7-B139-6340DA1A8128}
+		{02EA681E-C7D8-13C7-8484-4AC65E1B71E8} = {E95D9C0E-4218-43D6-914F-4827ECABC6D8}
+		{7E032DA6-AFC3-4523-BF1B-8E89445794C8} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {201B97B3-3282-401E-A6F6-64FA448E5589}

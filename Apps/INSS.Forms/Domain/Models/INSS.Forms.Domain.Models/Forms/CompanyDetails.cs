@@ -1,4 +1,5 @@
-﻿using INSS.Forms.Domain.Models.Enums;
+﻿using INSS.Forms.Domain.Models.Composite;
+using INSS.Forms.Domain.Models.Enums;
 
 namespace INSS.Forms.Domain.Models.Forms
 {
