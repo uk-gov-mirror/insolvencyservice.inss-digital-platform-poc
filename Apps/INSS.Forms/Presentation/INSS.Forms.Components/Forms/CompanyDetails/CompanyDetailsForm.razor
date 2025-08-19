@@ -8,36 +8,36 @@
 <GdsBackField Name="back-btn" IsVisible="@(!IsFirstPage )" OnClick="@Back" />
 
 <PageFields IsVisible="@PageVisibility(EntityNames.CompanyName)">
-    <GdsTextInputField Text="What is your company name?" Name=@EntityNames.CompanyName @bind-Value="companyDetailsForm.CompanyName" />
+    <GdsTextInputField Text="@Questions.WhatIsYour(Labels.CompanyName)" Name="@EntityNames.CompanyName" @bind-Value="companyDetailsForm.CompanyName" />
 </PageFields>
 
 <PageFields IsVisible="@PageVisibility(EntityNames.CompanyType)">
     <GdsRadioButtonsField 
-        Name=@EntityNames.CompanyType
-        Text="What is your company type?"
+        Name="@EntityNames.CompanyType"
+        Text="@Questions.WhatIsYour(Labels.CompanyType)"
         Items="@companyTypeOptions"
         Value="@companyDetailsForm.CompanyType.ToString()"
         ValueChanged="@(v => UpdateCompanyType(v))" />
 </PageFields>
 
 <PageFields IsVisible="@PageVisibility(EntityNames.CompaniesHouseReferenceNumber, ShouldCompaniesHouseReferenceNumberBeHidden)">
-    <GdsTextInputField text="What is your companies house reference number?" Name=@EntityNames.CompaniesHouseReferenceNumber @bind-Value="companyDetailsForm.CompaniesHouseReferenceNumber" />
+    <GdsTextInputField text="@Questions.WhatIsYour(Labels.CompaniesHouseReferenceNumber)" Name="@EntityNames.CompaniesHouseReferenceNumber" @bind-Value="companyDetailsForm.CompaniesHouseReferenceNumber" />
 </PageFields>
 
 <PageFields IsVisible="@PageVisibility(EntityNames.CharityReferenceNumber, ShouldCharityNumberBeHidden)">
-    <GdsTextInputField text="What is your registered charity number?" Name=@EntityNames.CharityReferenceNumber @bind-Value="companyDetailsForm.CharityReferenceNumber" />
+    <GdsTextInputField text="@Questions.WhatIsYour(Labels.CharityReferenceNumber)" Name="@EntityNames.CharityReferenceNumber" @bind-Value="companyDetailsForm.CharityReferenceNumber" />
 </PageFields>
 
 <PageFields IsVisible="@PageVisibility(EntityNames.CompanyAddress)">
-    <AddressFields Text="What is your company address?" Name=@EntityNames.CompanyAddress @bind-Value="companyDetailsForm.CompanyAddress" />
+    <AddressFields Text="@Questions.WhatIsYour(Labels.CompanyAddress)" Name="@EntityNames.CompanyAddress" @bind-Value="companyDetailsForm.CompanyAddress" />
 </PageFields>
 
 <PageFields IsVisible="@PageVisibility(EntityNames.CompanyTelephone)">
-    <GdsTextInputField Text="What is your telephone number?" Name=@EntityNames.CompanyTelephone @bind-Value="companyDetailsForm.CompanyTelephone" />
+    <GdsTextInputField Text="@Questions.WhatIsYour(Labels.CompanyTelephone)" Name="@EntityNames.CompanyTelephone" @bind-Value="companyDetailsForm.CompanyTelephone" />
 </PageFields>
 
 <PageFields IsVisible="@PageVisibility(EntityNames.Summary)">
-    <CompanyDetailsSummary Name=@EntityNames.Summary FormData="@companyDetailsForm" OnNext="@(page => Next(page))" />
+    <CompanyDetailsSummary Name="@EntityNames.Summary" FormData="@companyDetailsForm" OnNext="@(page => Next(page))" />
 </PageFields>
 
 <GdsButtonField Name="next-btn" OnClick="@Next">

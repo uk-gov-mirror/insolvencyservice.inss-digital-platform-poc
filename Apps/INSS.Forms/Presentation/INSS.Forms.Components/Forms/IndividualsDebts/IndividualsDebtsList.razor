@@ -1,0 +1,27 @@
+﻿@inherits ListBase<IndividualsDebts>
+
+<HeadingText Name="heading-list">
+    @($"You have added {FormData.Debts.Count} debt{(FormData.Debts.Count > 1 ? "s" : "")}")
+</HeadingText>
+
+<div class="govuk-form-group" id="@GenerateElementId()">
+    <dl class="govuk-summary-list hmrc-list-with-actions hmrc-list-with-actions--short">
+        @foreach (var dataItem in FormData.Debts.Select((item, index) => new { Index = index, Item = item }))
+        {
+            <ListRow Name='@($"{EntityNames.CreditorName}-row")'
+                     Key="@dataItem.Index.ToString()"
+                     Text="@dataItem.Item.CreditorName"
+                     OnChangeClick='() => OnChange.InvokeAsync(dataItem.Index)'
+                     OnRemoveClick='() => OnRemove.InvokeAsync(dataItem.Index)' />
+        }
+    </dl>
+
+    <GdsRadioButtonsField Name="add-new-item"
+                          Text=@AddNewText
+                          Hint=@AddNewHint
+                          Inline="true"
+                          Items="@confirmOptions"
+                          Value="@Value"
+                          ValueChanged="@OnAddNew" />
+</div>
+

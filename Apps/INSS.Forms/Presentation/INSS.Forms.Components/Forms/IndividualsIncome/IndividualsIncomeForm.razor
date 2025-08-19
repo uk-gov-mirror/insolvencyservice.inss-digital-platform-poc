@@ -1,12 +1,89 @@
 @page "/individuals-income"
-@inherits FormPagerBase
+@inherits FormListBase<Income>
+
 
 <PageTitle>Individual's Income</PageTitle>
 
-<HeadingText Name="heading-debts">Individual's Income</HeadingText>
+<HeadingText Name="heading-income">Individual's Income</HeadingText>
 
-<GdsBackField Name="back-btn" OnClick="@Back" />
+<GdsBackField Name="back-btn" IsVisible="@(!IsFirstPage && !PageVisibility(EntityNames.List))" OnClick="@Back" />
+
+<PageFields IsVisible="@PageVisibility(EntityNames.IncomeType)">
+    <GdsRadioButtonsField Name=@IndexedName(EntityNames.IncomeAmount, ListIndex)
+        Text="@Questions.WhatIsThe(Labels.IncomeType)"
+        Items="@incomeTypeOptions"
+        Value="@individualsIncome.Income[ListIndex].IncomeType.ToString()"
+        ValueChanged="@(v => individualsIncome.Income[ListIndex].IncomeType = Enum.Parse<IncomeType>(v))" />
+</PageFields>
+
+<PageFields IsVisible="@(PageVisibility(EntityNames.IncomeAmount))">
+    <GdsCurrencyInputField Text="@Questions.WhatIsThe(Labels.IncomeAmount)" Name=@IndexedName(EntityNames.IncomeAmount, ListIndex) @bind-Value="individualsIncome.Income[ListIndex].Amount" />
+</PageFields>
+
+<PageFields IsVisible="@PageVisibility(EntityNames.IncomeFrequency)">
+    <GdsRadioButtonsField Name=@IndexedName(EntityNames.IncomeFrequency, ListIndex)
+        Text="@Questions.WhatIsThe(Labels.IncomeFrequency)"
+        Items="@incomeFrequencyOptions"
+        Value="@individualsIncome.Income[ListIndex].IncomeFrequency.ToString()"
+        ValueChanged="@(v => individualsIncome.Income[ListIndex].IncomeFrequency = Enum.Parse<IncomeFrequencyType>(v))" />
+</PageFields>
+
+<PageFields IsVisible="@PageVisibility(EntityNames.IncomeProvider)">
+    <GdsTextInputField Text="@Questions.WhoIsThe(Labels.IncomeProvider)" Name=@IndexedName(EntityNames.IncomeProvider, ListIndex) @bind-Value="individualsIncome.Income[ListIndex].Provider" />
+</PageFields>
+
+<PageFields IsVisible="@PageVisibility(EntityNames.List)">
+    <IndividualsIncomeList 
+        Name=@EntityNames.List
+        FormData="individualsIncome"
+        AddNewText="Do you need to add another income?"
+        AddNewHint="You must tell us about all your income."
+        OnAddNewChanged="@(value => AddNewChanged(value))"
+        OnChange="@(index => ChangeItem(index))"
+        OnRemove="@(index => ConfirmRemoveItem(index, individualsIncome.Income[index].IncomeType.GetDescription()))"
+        @bind-Value="AddNewItemValue"
+     />
+</PageFields>
+
+<PageFields IsVisible="@PageVisibility(EntityNames.ListChange, () => ChangingItem is false)">
+    <IndividualsIncomeListItem Name=@EntityNames.ListChange FormData="individualsIncome.Income[ListIndex]" OnNext="@(page => Next(page))" />
+</PageFields>
+
+<PageFields IsVisible="@PageVisibility(EntityNames.ConfirmAction, () => RemovingItem is false)">
+    <Confirm Name= Text='@($"Are you sure you want to remove {KeyEntityValue} ?")' Value="@ConfirmValue" OnConfirmChanged="@ConfirmChanged" />
+</PageFields>
+
+<PageFields IsVisible="@PageVisibility(EntityNames.Summary)">
+    <IndividualsIncomeListSummary Name=@EntityNames.Summary FormData="individualsIncome" OnClick="@(args => SkipTo(args.index, args.page))" />
+</PageFields>
+
+
+<GdsButtonField Name="next-btn" IsDisabled="@IsNextButtonDisabled" OnClick="@(e => NextHandler(EntityNames.IncomeType))">
+    @(IsLastPage ? "Apply" : "Next")
+</GdsButtonField>
+
 
 @code {
+    private IndividualsIncome individualsIncome = new IndividualsIncome { Income = new List<Income> { new Income() }};
+    private List<RadioOption<string>> incomeTypeOptions = EnumHelper.ToRadioOptions<IncomeType>();
+    private List<RadioOption<string>> incomeFrequencyOptions = EnumHelper.ToRadioOptions<IncomeFrequencyType>();
 
+    protected override void OnInitialized()
+    {
+        PageNames = new string[]
+        {
+            EntityNames.IncomeType,
+            EntityNames.IncomeAmount,
+            EntityNames.IncomeFrequency,
+            EntityNames.IncomeProvider,
+            EntityNames.List,
+            EntityNames.ListChange,
+            EntityNames.ConfirmAction,
+            EntityNames.Summary
+        };
+
+        FormData = individualsIncome.Income;
+
+        base.OnInitialized();
+    }
 }

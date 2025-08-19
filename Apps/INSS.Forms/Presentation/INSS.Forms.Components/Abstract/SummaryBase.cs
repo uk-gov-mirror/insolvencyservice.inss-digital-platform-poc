@@ -29,14 +29,19 @@ namespace INSS.Forms.Components.Abstract
         /// <returns>
         /// An array containing the value if it is not null or empty; otherwise, an empty array.
         /// </returns>
-        public string[] GetValue(string? value)
+        protected string[] GetValue(string? value)
         {
             return string.IsNullOrEmpty(value) ? [] : new[] { value };
         }
 
-        public bool IsVisible(Func<bool> isVisible)
+        protected bool IsVisible(Func<bool> isVisible)
         {
             return isVisible != null && isVisible();
+        }
+
+        protected string IndexedName(string entityName, int index)
+        {
+            return $"{entityName}-{index.ToString()}";
         }
     }
 }

@@ -1,12 +1,12 @@
 ﻿using INSS.Forms.Domain.Models.Enums;
 using System.ComponentModel.DataAnnotations;
 
-namespace INSS.Forms.Domain.Models.Forms
+namespace INSS.Forms.Domain.Models.Composite
 {
     /// <summary>
-    /// Represents a single debt item, including details about the creditor, debt amounts, and payment information.
+    /// Represents a single debt, including details about the creditor, debt amounts, and payment information.
     /// </summary>
-    public class DebtItem
+    public class Debt
     {
         /// <summary>
         /// Gets or sets the name of the creditor.
