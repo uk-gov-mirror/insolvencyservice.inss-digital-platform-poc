@@ -8,55 +8,57 @@
 <GdsBackField Name="back-btn" IsVisible="@(!IsFirstPage && !PageVisibility(EntityNames.List))" OnClick="@Back" />
 
 <PageFields IsVisible="@PageVisibility(EntityNames.CreditorName)">
-    <GdsTextInputField Text="What is the creditor's name?" Name='@($"{EntityNames.CreditorName}-{debtIndex}")' @bind-Value="individualsDebts.Debts[debtIndex].CreditorName" />
+    <GdsTextInputField Text="@Questions.WhatIsThe(Labels.CreditorName)" Name="@IndexedName(EntityNames.CreditorName, listIndex)" @bind-Value="individualsDebts.Debts[listIndex].CreditorName" />
 </PageFields>
 
 <PageFields IsVisible="@(PageVisibility(EntityNames.InitialDebt))">
-    <GdsCurrencyInputField Text="What is the initial debt?" Name='@($"{EntityNames.InitialDebt}-{debtIndex}")' @bind-Value="individualsDebts.Debts[debtIndex].InitialDebt" />
+    <GdsCurrencyInputField Text="@Questions.WhatIsThe(Labels.InitialDebt)" Name="@IndexedName(EntityNames.InitialDebt, listIndex)" @bind-Value="individualsDebts.Debts[listIndex].InitialDebt" />
 </PageFields>
 
 <PageFields IsVisible="@PageVisibility(EntityNames.DateDebtTakenOut)">
-    <GdsDateInputField Text="What date was the debt taken out?" Name='@($"{EntityNames.DateDebtTakenOut}-{debtIndex}")' @bind-Value="individualsDebts.Debts[debtIndex].DateDebtTakenOut" />
+    <GdsDateInputField Text="@Questions.WhatDateWasThe(Labels.DebtTakenOut)" Name="@IndexedName(EntityNames.DateDebtTakenOut, listIndex)" @bind-Value="individualsDebts.Debts[listIndex].DateDebtTakenOut" />
 </PageFields>
 
 <PageFields IsVisible="@PageVisibility(EntityNames.OutstandingDebt)">
-    <GdsCurrencyInputField Text="What is the outstanding debt?" Name='@($"{EntityNames.OutstandingDebt}-{debtIndex}")' @bind-Value="individualsDebts.Debts[debtIndex].OutstandingDebt" />
+    <GdsCurrencyInputField Text="@Questions.WhatIsThe(Labels.OutstandingDebt)" Name="@IndexedName(EntityNames.OutstandingDebt, listIndex)" @bind-Value="individualsDebts.Debts[listIndex].OutstandingDebt" />
 </PageFields>
 
 <PageFields IsVisible="@PageVisibility(EntityNames.PaymentFrequency)">
-    <GdsRadioButtonsField Name='@($"{EntityNames.PaymentFrequency}-{debtIndex}")'
+    <GdsRadioButtonsField Name="@IndexedName(EntityNames.PaymentFrequency, listIndex)"
         Text="How often do you make the payments?"
         Items="@paymentFrequencyOptions"
-        Value="@individualsDebts.Debts[debtIndex].PaymentFrequency.ToString()"
-        ValueChanged="@(v => individualsDebts.Debts[debtIndex].PaymentFrequency = Enum.Parse<PaymentFrequencyType>(v))" />
+        Value="@individualsDebts.Debts[listIndex].PaymentFrequency.ToString()"
+        ValueChanged="@(v => individualsDebts.Debts[listIndex].PaymentFrequency = Enum.Parse<PaymentFrequencyType>(v))" />
 </PageFields>
 
 <PageFields IsVisible="@PageVisibility(EntityNames.PaymentAmount)">
-    <GdsCurrencyInputField Text="What is the payment amount?" Name='@($"{EntityNames.PaymentAmount}-{debtIndex}")' @bind-Value="individualsDebts.Debts[debtIndex].PaymentAmount" />
+    <GdsCurrencyInputField Text="What is the payment amount?" Name="@IndexedName(EntityNames.PaymentAmount, listIndex)" @bind-Value="individualsDebts.Debts[listIndex].PaymentAmount" />
 </PageFields>
 
 
 <PageFields IsVisible="@PageVisibility(EntityNames.List)">
-    <IndividualDebtsList 
-        Name=@EntityNames.List
+    <IndividualsDebtsList 
+        Name="@EntityNames.List"
         FormData="individualsDebts"
-        @bind-Value="addNewDebt"
+        AddNewText="Do you need to add another debt?"
+        AddNewHint="You must tell us about all your debts."
         OnAddNewChanged="@(value => AddNewChanged(value))"
         OnChange="@(index => ChangeItem(index))"
         OnRemove="@(index => ConfirmRemoveItem(index))"
+        @bind-Value="addNewItemValue"
      />
 </PageFields>
 
 <PageFields IsVisible="@PageVisibility(EntityNames.ListChange, () => changingItem is false)">
-    <IndividualDebtsChange Name=@EntityNames.ListChange FormData="individualsDebts" DebtIndex="debtIndex" OnNext="@(page => Next(page))" />
+    <IndividualsDebtsListItem Name="@EntityNames.ListChange" FormData="individualsDebts.Debts[listIndex]" OnNext="@(page => Next(page))" />
 </PageFields>
 
 <PageFields IsVisible="@PageVisibility(EntityNames.ConfirmAction, () => removingItem is false)">
-    <Confirm Name= Text='@($"Are you sure you want to remove {entityName} ?")' Value="@confirmValue" OnConfirmChanged="@ConfirmChanged" />
+    <Confirm Name="@EntityNames.ConfirmAction" Text='@($"Are you sure you want to remove {entityName} ?")' Value="@confirmValue" OnConfirmChanged="@ConfirmChanged" />
 </PageFields>
 
 <PageFields IsVisible="@PageVisibility(EntityNames.Summary)">
-    <IndividualsDebtsSummary Name=@EntityNames.Summary FormData="individualsDebts" OnClick="@(args => SkipTo(args.index, args.page))" />
+    <IndividualsDebtsListSummary Name="@EntityNames.Summary" FormData="individualsDebts" OnClick="@(args => SkipTo(args.index, args.page))" />
 </PageFields>
 
 
@@ -66,16 +68,16 @@
 
 
 @code {
-    private IndividualsDebts individualsDebts = null!;
-    private int debtIndex = 0;
-    private string? addNewDebt;
+    private IndividualsDebts individualsDebts = new IndividualsDebts { Debts = new List<Debt> { new Debt() } };
+    private int listIndex = 0;
+    private string? addNewItemValue;
     private string? confirmValue;
     private bool removingItem = false;
     private bool changingItem = false;
     private string entityName = string.Empty;
 
     private List<RadioOption<string>> paymentFrequencyOptions = EnumHelper.ToRadioOptions<PaymentFrequencyType>();
-    private bool IsNextButtonDisabled => addNewDebt is null && IsCurrentPage(EntityNames.List);
+    private bool IsNextButtonDisabled => addNewItemValue is null && IsCurrentPage(EntityNames.List);
 
     protected override void OnInitialized()
     {
@@ -93,20 +95,19 @@
             EntityNames.Summary
         };
 
-        individualsDebts = new IndividualsDebts();
-        individualsDebts.Debts = new List<DebtItem>
-        {
-            new DebtItem()
-        };
-
         base.OnInitialized();
+    }
+
+    private string IndexedName(string entityName, int index)
+    {
+        return $"{entityName}-{index.ToString()}";
     }
 
     private async Task SkipTo(int index, string page)
     {
         if (index >= 0 && index < individualsDebts.Debts.Count)
         {
-            debtIndex = index;
+            listIndex = index;
             await Next(page).ConfigureAwait(false);
         }
     }
@@ -117,20 +118,20 @@
 
         if (IsCurrentPage(EntityNames.List))
         {
-            if (addNewDebt == YesNoType.Yes.ToString())
+            if (addNewItemValue == ConfirmType.Yes.ToString())
             {
-                addNewDebt = null;
-                individualsDebts.Debts.Add(new DebtItem());
-                debtIndex = individualsDebts.Debts.Count - 1;
+                addNewItemValue = null;
+                individualsDebts.Debts.Add(new Debt());
+                listIndex = individualsDebts.Debts.Count - 1;
                 await Next(EntityNames.CreditorName).ConfigureAwait(false);
                 return;
             }
-            else if(addNewDebt == YesNoType.No.ToString())
+            else if(addNewItemValue == ConfirmType.No.ToString())
             {
                 await Next(EntityNames.Summary).ConfigureAwait(false);
             }
 
-            addNewDebt = null;
+            addNewItemValue = null;
             return;
         }
         else if (IsCurrentPage(EntityNames.ListChange))
@@ -139,21 +140,21 @@
         }
         else if (IsCurrentPage(EntityNames.ConfirmAction))
         {
-            if (confirmValue == YesNoType.Yes.ToString())
+            if (confirmValue == ConfirmType.Yes.ToString())
             {
-                if (debtIndex >= 0 && debtIndex < individualsDebts.Debts.Count)
+                if (listIndex >= 0 && listIndex < individualsDebts.Debts.Count)
                 {
-                    individualsDebts.Debts.RemoveAt(debtIndex);
-                    if (debtIndex >= individualsDebts.Debts.Count)
+                    individualsDebts.Debts.RemoveAt(listIndex);
+                    if (listIndex >= individualsDebts.Debts.Count)
                     {
-                        debtIndex = individualsDebts.Debts.Count - 1;
+                        listIndex = individualsDebts.Debts.Count - 1;
                     }
                 }
 
                 if(!individualsDebts.Debts.Any())
                 {
-                    individualsDebts.Debts.Add(new DebtItem());
-                    debtIndex = 0;
+                    individualsDebts.Debts.Add(new Debt());
+                    listIndex = 0;
                     await Next(EntityNames.CreditorName).ConfigureAwait(false);
                 }
                 else
@@ -178,8 +179,8 @@
     private async Task ConfirmRemoveItem(int index)
     {
         removingItem = true;
-        debtIndex = index;
-        entityName = individualsDebts.Debts[debtIndex].CreditorName ?? string.Empty;
+        listIndex = index;
+        entityName = individualsDebts.Debts[listIndex].CreditorName ?? string.Empty;
         
         await Next(EntityNames.ConfirmAction).ConfigureAwait(false);
     }
@@ -189,14 +190,14 @@
         if (index >= 0 && index < individualsDebts.Debts.Count)
         {
             changingItem = true;
-            debtIndex = index;
+            listIndex = index;
             await Next(EntityNames.ListChange).ConfigureAwait(false);
         }
     }
 
     private void AddNewChanged(string? value)
     {
-        addNewDebt = value;
+        addNewItemValue = value;
     }
 
     private void ConfirmChanged(string? value)

@@ -1,0 +1,29 @@
+﻿@inherits ListBase<IndividualsIncome>
+
+<HeadingText Name="heading-list">
+    @($"You have added {FormData.Income.Count} income{(FormData.Income.Count > 1 ? "s" : "")}")
+</HeadingText>
+
+<div class="govuk-form-group" id="@GenerateElementId()">
+    <dl class="govuk-summary-list hmrc-list-with-actions hmrc-list-with-actions--short">
+        @foreach (var dataItem in FormData.Income.Select((item, index) => new { Index = index, Item = item }))
+        {
+            <ListRow 
+                Name='@($"{EntityNames.IncomeType}-row")'
+                Key="@dataItem.Index.ToString()"
+                Text="@dataItem.Item.IncomeType.GetDescription()"
+                OnChangeClick='() => OnChange.InvokeAsync(dataItem.Index)'
+                OnRemoveClick='() => OnRemove.InvokeAsync(dataItem.Index)' />
+        }
+    </dl>
+
+    <GdsRadioButtonsField 
+        Name="add-new-item"
+        Text="Do you need to add another income?"
+        Hint="You must tell us about all your income."
+        Inline="true"
+        Items=@confirmOptions
+        Value=@Value
+        ValueChanged=@OnAddNew />
+</div>
+

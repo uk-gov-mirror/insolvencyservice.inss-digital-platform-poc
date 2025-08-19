@@ -35,15 +35,6 @@ namespace INSS.Forms.Components.Abstract
 
             if (visible)
             {
-                if(pageName == EntityNames.ListChange)
-                {
-                    var hide = forceHide?.Invoke();
-                }
-                else if (pageName == EntityNames.ListChange && (forceHide is null || forceHide() == false))
-                {
-                    var x = 1;
-                }
-
                 if (forceHide != null && forceHide())
                 {
                     visible = false;

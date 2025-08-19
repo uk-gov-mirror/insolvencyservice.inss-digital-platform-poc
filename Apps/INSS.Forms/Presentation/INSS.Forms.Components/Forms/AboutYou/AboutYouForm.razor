@@ -5,30 +5,30 @@
 
 <HeadingText Name="heading-about-you">About You</HeadingText>
 
-<GdsBackField Name="back-btn" IsVisible="@(!IsFirstPage)" OnClick="@Back" />
+<GdsBackField Name="back-btn" IsVisible=@(!IsFirstPage) OnClick="@Back" />
 
 <PageFields IsVisible="@PageVisibility(EntityNames.Name)">
-    <GdsTextInputField Text="What is your name?" Name=@EntityNames.Name @bind-Value="aboutYouForm.Name" />
+    <GdsTextInputField Text="@Questions.WhatIsYour(Labels.Name)" Name="@EntityNames.Name" @bind-Value="aboutYouForm.Name" />
 </PageFields>
 
 <PageFields IsVisible="@PageVisibility(EntityNames.DateOfBirth)">
-    <GdsDateInputField text="What is your date of birth?" Name=@EntityNames.DateOfBirth Hint="For example, 27 3 2007" @bind-Value="aboutYouForm.DateOfBirth" />
+    <GdsDateInputField text="@Questions.WhatIsYour(Labels.DateOfBirth)" Name="@EntityNames.DateOfBirth" Hint="For example, 27 3 2007" @bind-Value="aboutYouForm.DateOfBirth" />
 </PageFields>
 
 <PageFields IsVisible="@PageVisibility(EntityNames.Address)">
-    <AddressFields Text="What is your address?" Name=@EntityNames.Address @bind-Value="aboutYouForm.Address" />
+    <AddressFields Text="@Questions.WhatIsYour(Labels.Address)" Name="@EntityNames.Address" @bind-Value="aboutYouForm.Address" />
 </PageFields>
 
 <PageFields IsVisible="@PageVisibility(EntityNames.Telephone)">
-    <GdsTextInputField Text="What is your telephone number?" Name=@EntityNames.Telephone @bind-Value="aboutYouForm.Telephone" />
+    <GdsTextInputField Text="@Questions.WhatIsYour(Labels.Telephone)" Name="@EntityNames.Telephone" @bind-Value="aboutYouForm.Telephone" />
 </PageFields>
 
 <PageFields IsVisible="@PageVisibility(EntityNames.Email)">
-    <GdsTextInputField Text="What is your email address?" Type="email" Name=@EntityNames.Email @bind-Value="aboutYouForm.Email" />
+    <GdsTextInputField Text="@Questions.WhatIsYour(Labels.Email)" Type="email" Name="@EntityNames.Email" @bind-Value="aboutYouForm.Email" />
 </PageFields>
 
 <PageFields IsVisible="@PageVisibility(EntityNames.Summary)">
-    <AboutYouSummary Name=@EntityNames.Summary FormData="@aboutYouForm" OnNext="@(page => Next(page))" />
+    <AboutYouSummary Name="@EntityNames.Summary" FormData="@aboutYouForm" OnNext="@(page => Next(page))" />
 </PageFields>
 
 <GdsButtonField Name="next-btn" OnClick="@Next">

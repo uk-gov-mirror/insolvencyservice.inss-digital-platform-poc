@@ -2,10 +2,10 @@
 
 <div id="@GenerateElementId()">
     <GdsRadioButtonsField 
-        Name=@EntityNames.ConfirmAction
+        Name="@EntityNames.ConfirmAction"
         Text=@Text
         Inline="false"
-        Items="@yesNoOptions"
+        Items="@confirmOptions"
         Value="@Value"
         ValueChanged="@OnValueChanged" />
 </div>
@@ -24,7 +24,7 @@
     [Parameter]
     public EventCallback<string?> OnConfirmChanged { get; set; }
 
-    private List<RadioOption<string>> yesNoOptions = EnumHelper.ToRadioOptions<YesNoType>();
+    private List<RadioOption<string>> confirmOptions = EnumHelper.ToRadioOptions<ConfirmType>();
 
     private async Task OnValueChanged(string? value)
     {

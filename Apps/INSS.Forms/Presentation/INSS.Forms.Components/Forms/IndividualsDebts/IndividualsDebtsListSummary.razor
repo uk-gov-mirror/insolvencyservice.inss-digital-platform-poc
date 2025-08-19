@@ -1,0 +1,63 @@
+﻿@inherits SummaryBase<IndividualsDebts>
+
+<div id="@GenerateElementId()">
+    @foreach (var dataItem in FormData.Debts.Select((item, index) => new { Index = index, Item = item }))
+    {
+        <div class="govuk-summary-card" id="@GenerateElementId("card-row", dataItem.Index.ToString())">
+            <div class="govuk-summary-card__title-wrapper" id="@GenerateElementId("row-title-wrapper", dataItem.Index.ToString())">
+                <h2 class="govuk-summary-card__title" id="@GenerateElementId("row-title", dataItem.Index.ToString())">
+                    @dataItem.Item.CreditorName
+                </h2>
+            </div>
+            <div class="govuk-summary-card__content" id="@GenerateElementId("row-content", dataItem.Index.ToString())">
+                <dl class="govuk-summary-list" id="@GenerateElementId("row-content-list", dataItem.Index.ToString())">
+
+                    <SummaryRow Name="@IndexedName(EntityNames.InitialDebt, dataItem.Index)"
+                        Text="@Labels.InitialDebt"
+                        Values="@GetValue(dataItem.Item.InitialDebt.ToStringAsCurrency())"
+                        OnClick='() => HandleOnClick(dataItem.Index, EntityNames.InitialDebt)' 
+                     />
+
+                    <SummaryRow Name="@IndexedName(EntityNames.DateDebtTakenOut, dataItem.Index)"
+                        Text="@Labels.DateDebtTakenOut"
+                        Values="@GetValue(@dataItem.Item.DateDebtTakenOut?.ToString("dd MMM yyyy"))"
+                        OnClick='() => HandleOnClick(dataItem.Index, EntityNames.DateDebtTakenOut)' 
+                     />
+
+                    <SummaryRow Name="@IndexedName(EntityNames.OutstandingDebt, dataItem.Index)"
+                        Text="@Labels.OutstandingDebt"
+                        Values="@GetValue(@dataItem.Item.OutstandingDebt.ToStringAsCurrency())"
+                        OnClick='() => HandleOnClick(dataItem.Index, EntityNames.OutstandingDebt)' 
+                     />
+
+                    <SummaryRow Name="@IndexedName(EntityNames.PaymentFrequency, dataItem.Index)"
+                        Text="@Labels.PaymentFrequency"
+                        Values="@GetValue(@dataItem.Item.PaymentFrequency.GetDescription())"
+                        OnClick='() => HandleOnClick(dataItem.Index, EntityNames.PaymentFrequency)' 
+                     />
+
+                    <SummaryRow Name="@IndexedName(EntityNames.PaymentAmount, dataItem.Index)"
+                        Text="@Labels.PaymentAmount"
+                        Values="@GetValue(@dataItem.Item.PaymentAmount.ToStringAsCurrency())"
+                        OnClick='() => HandleOnClick(dataItem.Index, EntityNames.PaymentAmount)' 
+                     />
+
+                </dl>
+            </div>
+        </div>
+    }
+</div>
+
+@code{
+
+    [Parameter]
+    public EventCallback<(int index, string page)> OnClick { get; set; }
+
+    private async Task HandleOnClick(int index, string pageName)
+    {
+        if (OnClick.HasDelegate)
+        {
+            await OnClick.InvokeAsync((index, pageName));
+        }
+    }
+}

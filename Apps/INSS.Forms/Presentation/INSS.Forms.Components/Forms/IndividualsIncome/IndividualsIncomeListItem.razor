@@ -1,0 +1,34 @@
+﻿@inherits SummaryBase<Income>
+
+<HeadingText Name="heading-individuals-debts-list">
+    @($"Change {FormData.IncomeType.GetDescription()} details")
+</HeadingText>
+
+<dl class="govuk-summary-list" id="@GenerateElementId()">
+
+    <SummaryRow 
+        Name="@EntityNames.IncomeType"
+        Text="@Labels.IncomeType"
+        Values="@GetValue(FormData.IncomeType.GetDescription())"
+        OnClick='() => OnNext.InvokeAsync(EntityNames.IncomeType)' />
+
+    <SummaryRow 
+        Name="@EntityNames.IncomeFrequency"
+        Text="@Labels.IncomeFrequency"
+        Values="@GetValue(FormData.IncomeFrequency.GetDescription())"
+        OnClick='() => OnNext.InvokeAsync(EntityNames.IncomeFrequency)' />
+
+    <SummaryRow 
+        Name="@EntityNames.IncomeAmount"
+        Text="@Labels.IncomeAmount"
+        Values="@GetValue(FormData.Amount.ToStringAsCurrency())"
+        OnClick='() => OnNext.InvokeAsync(EntityNames.IncomeAmount)' />
+
+    <SummaryRow 
+        Name="@EntityNames.IncomeProvider"
+        Text="@Labels.IncomeProvider"
+        Values="@GetValue(FormData.Provider)"
+        OnClick='() => OnNext.InvokeAsync(EntityNames.IncomeProvider)' />
+
+</dl>
+

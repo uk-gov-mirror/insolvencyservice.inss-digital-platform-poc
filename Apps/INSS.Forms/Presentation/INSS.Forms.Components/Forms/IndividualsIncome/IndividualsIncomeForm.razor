@@ -3,10 +3,201 @@
 
 <PageTitle>Individual's Income</PageTitle>
 
-<HeadingText Name="heading-debts">Individual's Income</HeadingText>
+<HeadingText Name="heading-income">Individual's Income</HeadingText>
 
-<GdsBackField Name="back-btn" OnClick="@Back" />
+<GdsBackField Name="back-btn" IsVisible="@(!IsFirstPage && !PageVisibility(EntityNames.List))" OnClick="@Back" />
+
+<PageFields IsVisible="@PageVisibility(EntityNames.IncomeType)">
+    <GdsRadioButtonsField Name=@IndexedName(EntityNames.IncomeAmount, listIndex)
+        Text="@Questions.WhatIsThe(Labels.IncomeType)"
+        Items="@incomeTypeOptions"
+        Value="@individualsIncome.Income[listIndex].IncomeType.ToString()"
+        ValueChanged="@(v => individualsIncome.Income[listIndex].IncomeType = Enum.Parse<IncomeType>(v))" />
+</PageFields>
+
+<PageFields IsVisible="@(PageVisibility(EntityNames.IncomeAmount))">
+    <GdsCurrencyInputField Text="@Questions.WhatIsThe(Labels.IncomeAmount)" Name=@IndexedName(EntityNames.IncomeAmount, listIndex) @bind-Value="individualsIncome.Income[listIndex].Amount" />
+</PageFields>
+
+<PageFields IsVisible="@PageVisibility(EntityNames.IncomeFrequency)">
+    <GdsRadioButtonsField Name=@IndexedName(EntityNames.IncomeFrequency, listIndex)
+        Text="@Questions.WhatIsThe(Labels.IncomeFrequency)"
+        Items="@incomeFrequencyOptions"
+        Value="@individualsIncome.Income[listIndex].IncomeFrequency.ToString()"
+        ValueChanged="@(v => individualsIncome.Income[listIndex].IncomeFrequency = Enum.Parse<IncomeFrequencyType>(v))" />
+</PageFields>
+
+<PageFields IsVisible="@PageVisibility(EntityNames.IncomeProvider)">
+    <GdsTextInputField Text="@Questions.WhoIsThe(Labels.IncomeProvider)" Name=@IndexedName(EntityNames.IncomeProvider, listIndex) @bind-Value="individualsIncome.Income[listIndex].Provider" />
+</PageFields>
+
+<PageFields IsVisible="@PageVisibility(EntityNames.List)">
+    <IndividualsIncomeList 
+        Name=@EntityNames.List
+        FormData="individualsIncome"
+        AddNewText="Do you need to add another income?"
+        AddNewHint="You must tell us about all your income."
+        OnAddNewChanged="@(value => AddNewChanged(value))"
+        OnChange="@(index => ChangeItem(index))"
+        OnRemove="@(index => ConfirmRemoveItem(index))"
+        @bind-Value="addNewItemValue"
+     />
+</PageFields>
+
+<PageFields IsVisible="@PageVisibility(EntityNames.ListChange, () => changingItem is false)">
+    <IndividualsIncomeListItem Name=@EntityNames.ListChange FormData="individualsIncome.Income[listIndex]" OnNext="@(page => Next(page))" />
+</PageFields>
+
+<PageFields IsVisible="@PageVisibility(EntityNames.ConfirmAction, () => removingItem is false)">
+    <Confirm Name= Text='@($"Are you sure you want to remove {entityName} ?")' Value="@confirmValue" OnConfirmChanged="@ConfirmChanged" />
+</PageFields>
+
+<PageFields IsVisible="@PageVisibility(EntityNames.Summary)">
+    <IndividualsIncomeListSummary Name=@EntityNames.Summary FormData="individualsIncome" OnClick="@(args => SkipTo(args.index, args.page))" />
+</PageFields>
+
+
+<GdsButtonField Name="next-btn" IsDisabled="@IsNextButtonDisabled" OnClick="@NextHandler">
+    @(IsLastPage ? "Apply" : "Next")
+</GdsButtonField>
+
 
 @code {
+    private IndividualsIncome individualsIncome = new IndividualsIncome { Income = new List<Income> { new Income() }};
 
+    private int listIndex = 0;
+    private string? addNewItemValue;
+    private string? confirmValue;
+    private bool removingItem = false;
+    private bool changingItem = false;
+    private string entityName = string.Empty;
+
+    private List<RadioOption<string>> incomeTypeOptions = EnumHelper.ToRadioOptions<IncomeType>();
+    private List<RadioOption<string>> incomeFrequencyOptions = EnumHelper.ToRadioOptions<IncomeFrequencyType>();
+
+    private bool IsNextButtonDisabled => addNewItemValue is null && IsCurrentPage(EntityNames.List);
+
+    protected override void OnInitialized()
+    {
+        PageNames = new string[]
+        {
+            EntityNames.IncomeType,
+            EntityNames.IncomeAmount,
+            EntityNames.IncomeFrequency,
+            EntityNames.IncomeProvider,
+            EntityNames.List,
+            EntityNames.ListChange,
+            EntityNames.ConfirmAction,
+            EntityNames.Summary
+        };
+
+        base.OnInitialized();
+    }
+
+    private string IndexedName(string entityName, int index)
+    {
+        return $"{entityName}-{index.ToString()}";
+    }
+
+    private async Task SkipTo(int index, string page)
+    {
+        if (index >= 0 && index < individualsIncome.Income.Count)
+        {
+            listIndex = index;
+            await Next(page).ConfigureAwait(false);
+        }
+    }
+
+    private async Task NextHandler()
+    {
+        changingItem = false;
+
+        if (IsCurrentPage(EntityNames.List))
+        {
+            if (addNewItemValue == ConfirmType.Yes.ToString())
+            {
+                addNewItemValue = null;
+                individualsIncome.Income.Add(new Income());
+                listIndex = individualsIncome.Income.Count - 1;
+                await Next(EntityNames.IncomeType).ConfigureAwait(false);
+                return;
+            }
+            else if(addNewItemValue == ConfirmType.No.ToString())
+            {
+                await Next(EntityNames.Summary).ConfigureAwait(false);
+            }
+
+            addNewItemValue = null;
+            return;
+        }
+        else if (IsCurrentPage(EntityNames.ListChange))
+        {
+            await Next(EntityNames.List).ConfigureAwait(false);
+        }
+        else if (IsCurrentPage(EntityNames.ConfirmAction))
+        {
+            if (confirmValue == ConfirmType.Yes.ToString())
+            {
+                if (listIndex >= 0 && listIndex < individualsIncome.Income.Count)
+                {
+                    individualsIncome.Income.RemoveAt(listIndex);
+                    if (listIndex >= individualsIncome.Income.Count)
+                    {
+                        listIndex = individualsIncome.Income.Count - 1;
+                    }
+                }
+
+                if (!individualsIncome.Income.Any())
+                {
+                    individualsIncome.Income.Add(new Income());
+                    listIndex = 0;
+                    await Next(EntityNames.IncomeType).ConfigureAwait(false);
+                }
+                else
+                {
+                    await Next(EntityNames.List).ConfigureAwait(false);
+                }
+            }
+            else
+            {
+                await Next(EntityNames.List).ConfigureAwait(false);
+            }
+
+            confirmValue = null;
+            removingItem = false;
+        }
+        else
+        {
+            await Next().ConfigureAwait(false);
+        }
+    }
+
+    private async Task ConfirmRemoveItem(int index)
+    {
+        removingItem = true;
+        listIndex = index;
+        entityName = individualsIncome.Income[listIndex].IncomeType.GetDescription();
+        
+        await Next(EntityNames.ConfirmAction).ConfigureAwait(false);
+    }
+
+    private async Task ChangeItem(int index)
+    {
+        if (index >= 0 && index < individualsIncome.Income.Count)
+        {
+            changingItem = true;
+            listIndex = index;
+            await Next(EntityNames.ListChange).ConfigureAwait(false);
+        }
+    }
+
+    private void AddNewChanged(string? value)
+    {
+        addNewItemValue = value;
+    }
+
+    private void ConfirmChanged(string? value)
+    {
+        confirmValue = value;
+    }
 }

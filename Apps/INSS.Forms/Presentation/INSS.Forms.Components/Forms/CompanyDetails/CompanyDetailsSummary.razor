@@ -2,17 +2,17 @@
 
 <dl class="govuk-summary-list" id="@GenerateElementId()">
 
-    <SummaryRow Name=@EntityNames.CompanyName Text="Company Name" Values="@GetValue(FormData?.CompanyName)" OnClick='() => OnNext.InvokeAsync(EntityNames.CompanyName)' />
+    <SummaryRow Name="@EntityNames.CompanyName" Text="@Labels.CompanyName" Values="@GetValue(FormData?.CompanyName)" OnClick='() => OnNext.InvokeAsync(EntityNames.CompanyName)' />
 
-    <SummaryRow Name=@EntityNames.CompanyType Text="Company Type" Values="@GetValue(FormData?.CompanyType?.GetDescription())" OnClick='() => OnNext.InvokeAsync(EntityNames.CompanyType)' />
+    <SummaryRow Name="@EntityNames.CompanyType" Text="@Labels.CompanyType" Values="@GetValue(FormData?.CompanyType?.GetDescription())" OnClick='() => OnNext.InvokeAsync(EntityNames.CompanyType)' />
 
-    <SummaryRow Name=@EntityNames.CompaniesHouseReferenceNumber IsVisible="@IsVisible(IsCompanyRefVisible)" Text="Companies House Ref" Values="@GetValue(FormData?.CompaniesHouseReferenceNumber)" OnClick='() => OnNext.InvokeAsync(EntityNames.CompaniesHouseReferenceNumber)' />
+    <SummaryRow Name="@EntityNames.CompaniesHouseReferenceNumber" IsVisible="@IsVisible(IsCompanyRefVisible)" Text="@Labels.CompaniesHouseReferenceNumber" Values="@GetValue(FormData?.CompaniesHouseReferenceNumber)" OnClick='() => OnNext.InvokeAsync(EntityNames.CompaniesHouseReferenceNumber)' />
 
-    <SummaryRow Name=@EntityNames.CharityReferenceNumber IsVisible="@IsVisible(IsCompanyCharityRefVisible)" Text="Charity Ref" Values="@GetValue(FormData?.CharityReferenceNumber)" OnClick='() => OnNext.InvokeAsync(EntityNames.CharityReferenceNumber)' />
+    <SummaryRow Name="@EntityNames.CharityReferenceNumber" IsVisible="@IsVisible(IsCompanyCharityRefVisible)" Text="@Labels.CharityReferenceNumber" Values="@GetValue(FormData?.CharityReferenceNumber)" OnClick='() => OnNext.InvokeAsync(EntityNames.CharityReferenceNumber)' />
 
     <SummaryRow 
-        Name=@EntityNames.CompanyAddress
-        Text="Address"
+        Name="@EntityNames.CompanyAddress"
+        Text="@Labels.CompanyAddress"
         Values="@(new[] {
                 FormData?.CompanyAddress?.Address1 ?? string.Empty,
                 FormData?.CompanyAddress?.Address2 ?? string.Empty,
@@ -21,7 +21,7 @@
             })"
             OnClick='() => OnNext.InvokeAsync(EntityNames.CompanyAddress)' />
 
-    <SummaryRow Name=@EntityNames.CompanyTelephone Text="Telephone" Values="@GetValue(FormData?.CompanyTelephone)" OnClick='() => OnNext.InvokeAsync(EntityNames.CompanyTelephone)' />
+    <SummaryRow Name="@EntityNames.CompanyTelephone" Text="@Labels.CompanyTelephone" Values="@GetValue(FormData?.CompanyTelephone)" OnClick='() => OnNext.InvokeAsync(EntityNames.CompanyTelephone)' />
 
 </dl>
 

@@ -28,5 +28,10 @@
         public const string List = "list-entity";
         public const string ListChange = "list-change-entity";
         public const string ConfirmAction = "confirm-action-entity";
+
+        public const string IncomeType = "income-type-entity";
+        public const string IncomeAmount = "income-amount-entity";
+        public const string IncomeFrequency = "income-frequency-entity";
+        public const string IncomeProvider = "income-provider-entity";
     }
 }

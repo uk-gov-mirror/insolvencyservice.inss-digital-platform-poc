@@ -2,13 +2,13 @@
 
 <dl class="govuk-summary-list" id="@GenerateElementId()">
 
-    <SummaryRow Name=@EntityNames.Name Text="Name" Values="@GetValue(FormData?.Name)" OnClick='() => OnNext.InvokeAsync(EntityNames.Name)' />
+    <SummaryRow Name="@EntityNames.Name" Text="@Labels.Name" Values="@GetValue(FormData?.Name)" OnClick='() => OnNext.InvokeAsync(EntityNames.Name)' />
 
-    <SummaryRow Name=@EntityNames.DateOfBirth Text="Date of birth" Values="@GetValue(FormData?.DateOfBirth?.ToString("dd MMM yyyy"))" OnClick='() => OnNext.InvokeAsync(EntityNames.DateOfBirth)' />
+    <SummaryRow Name="@EntityNames.DateOfBirth" Text="@Labels.DateOfBirth" Values="@GetValue(FormData?.DateOfBirth?.ToString("dd MMM yyyy"))" OnClick='() => OnNext.InvokeAsync(EntityNames.DateOfBirth)' />
 
     <SummaryRow 
-        Name=@EntityNames.Address 
-        Text="Address"
+        Name="@EntityNames.Address" 
+        Text="@Labels.Address"
         Values="@(new[] 
         {
             FormData?.Address?.Address1 ?? string.Empty,
@@ -19,9 +19,9 @@
         OnClick='() => OnNext.InvokeAsync(EntityNames.Address)' 
      />
 
-    <SummaryRow Name=@EntityNames.Telephone Text="Telephone" Values="@GetValue(FormData?.Telephone)" OnClick='() => OnNext.InvokeAsync(EntityNames.Telephone)' />
+    <SummaryRow Name="@EntityNames.Telephone" Text="@Labels.Telephone" Values="@GetValue(FormData?.Telephone)" OnClick='() => OnNext.InvokeAsync(EntityNames.Telephone)' />
 
-    <SummaryRow Name=@EntityNames.Email Text="Email" Values="@GetValue(FormData?.Email)" OnClick='() => OnNext.InvokeAsync(EntityNames.Email)' />
+    <SummaryRow Name="@EntityNames.Email" Text="@Labels.Email" Values="@GetValue(FormData?.Email)" OnClick='() => OnNext.InvokeAsync(EntityNames.Email)' />
 
 </dl>
 
