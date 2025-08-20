@@ -9,16 +9,7 @@ namespace INSS.Forms.Domain.Models.Abstract
     /// </summary>
     public abstract class FormBase
     {
-        /// <summary>
-        /// Gets or sets the unique instance identifier for this general enquiry.
-        /// </summary>
         [Required]
-        public Guid InstanceId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the user associated with this general enquiry.
-        /// </summary>
-        [Required]
-        public User User { get; set; } = new User();
+        public FormMetadata? FormMetadata { get; set; }
     }
 }

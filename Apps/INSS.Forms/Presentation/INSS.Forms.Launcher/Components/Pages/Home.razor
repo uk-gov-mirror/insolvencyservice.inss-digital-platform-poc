@@ -1,6 +1,7 @@
 ﻿@page "/"
 @inject IHttpContextAccessor HttpContextAccessor
 @inject IConfiguration Configuration
+@inject NavigationManager NavigationManager
 
 <PageTitle>Forms Launcher</PageTitle>
 
@@ -26,7 +27,7 @@
                 <ParagraphText Name="section-description">@digitalServiceSection.Section.Description</ParagraphText>
             </RowTwoThirdsLayout>
 
-            <GdsTaskListField 
+            <GdsTaskListFieldMetadata 
                 Name="section-forms" 
                 Items="@GetTaskListItems(digitalServiceSection.Section.SectionForms.OrderBy(f => f.SortOrder))" 
             />
@@ -44,13 +45,19 @@
 
     private DigitalService? digitalService = null;
     private List<string> errors = new();
+    private string returnUrl = string.Empty;
+    private string userName = Environment.UserName;
 
     // OnInitializedAsync is a lifecycle method in Blazor components that runs when the component is initialized. 
     // It’s the asynchronous version of OnInitialized. Use it when you need to perform async operations (like fetching data from a service or API) during component initialization. 
     // In this example we are simply retrieving the Host header from the HTTP context, so it does not need to be async, this is async just for demo/kb purposes.
     protected override async Task OnInitializedAsync()
     {
-        var hostHeader = HttpContextAccessor.HttpContext?.Request.Headers["Host"].ToString();
+        HttpContext? httpContext = HttpContextAccessor.HttpContext 
+            ?? throw new InvalidOperationException("HttpContext is not available in the current context.");
+
+        var hostHeader = httpContext.Request.Headers["Host"].ToString();
+
         string hostName = string.Empty;
         if (!string.IsNullOrEmpty(hostHeader))
         {
@@ -71,18 +78,22 @@
         await base.OnInitializedAsync();
     }
 
-    private IReadOnlyList<TaskListItem> GetTaskListItems(IOrderedEnumerable<SectionForm> sectionForms)
+    private IReadOnlyList<TaskListItemMetadata> GetTaskListItems(IOrderedEnumerable<SectionForm> sectionForms)
     {
         string formRunnerBaseUrl = Configuration["FormRunner-BaseUrl"] 
             ?? throw new InvalidOperationException("The 'FormRunner-BaseUrl' configuration value is missing.");
 
         return sectionForms.Select(
-            sf => new TaskListItem
+            sf => new TaskListItemMetadata
                 {
                     Id = sf.Form.Id,
+                    FormId = sf.Form.Id,
+                    Username = userName,
+                    ReturnUrl = NavigationManager.Uri,
                     Title = sf.Form.FormName,
                     HRef = new Uri(new Uri(formRunnerBaseUrl), sf.Form.UriPath).ToString(),
                     Status = "Incomplete"
+                    
                 }).ToList();
     }
 

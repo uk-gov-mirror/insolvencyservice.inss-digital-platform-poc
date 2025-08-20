@@ -1,11 +1,12 @@
-﻿using INSS.Forms.Domain.Models.Composite;
+﻿using INSS.Forms.Domain.Models.Abstract;
+using INSS.Forms.Domain.Models.Composite;
 
 namespace INSS.Forms.Domain.Models.Forms
 {
     /// <summary>
     /// Represents a form model for an individual's debts.
     /// </summary>
-    public class IndividualsDebts : Abstract.FormBase
+    public class IndividualsDebts : FormBase
     {
         /// <summary>
         /// Gets or sets the list of debt items associated with the individual.

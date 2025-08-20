@@ -45,12 +45,14 @@
 </GdsButtonField>
 
 @code {
-    private CompanyDetails companyDetailsForm = new CompanyDetails();
 
+    private CompanyDetails companyDetailsForm = new CompanyDetails();
     private List<RadioOption<string>> companyTypeOptions = EnumHelper.ToRadioOptions<CompanyType>();
 
     protected override void OnInitialized()
     {
+        companyDetailsForm.FormMetadata = MetaDataFromLauncher;
+
         PageNames = new string[]
         {
             EntityNames.CompanyName,

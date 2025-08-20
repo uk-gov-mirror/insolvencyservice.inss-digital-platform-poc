@@ -1,8 +1,9 @@
-﻿using INSS.Forms.Domain.Models.Composite;
+﻿using INSS.Forms.Domain.Models.Abstract;
+using INSS.Forms.Domain.Models.Composite;
 
 namespace INSS.Forms.Domain.Models.Forms
 {
-    public class IndividualsIncome : Abstract.FormBase
+    public class IndividualsIncome : FormBase
     {
         /// <summary>
         /// Gets or sets the list of income associated with the individual.

@@ -6,14 +6,8 @@ namespace INSS.Forms.Components.Abstract
     /// <summary>
     /// Provides base functionality for paginated forms in Blazor, including navigation and page visibility logic.
     /// </summary>
-    public abstract class FormPagerBase : ComponentBase
+    public abstract class FormPagerBase : QueryStringBase
     {
-        /// <summary>
-        /// Gets or sets the <see cref="NavigationManager"/> used for navigation between pages.
-        /// </summary>
-        [Inject]
-        protected NavigationManager? NavigationManager { get; set; }
-
         private LastAction lastAction = LastAction.Next;
 
         public enum LastAction
@@ -80,7 +74,7 @@ namespace INSS.Forms.Components.Abstract
 
             if (currentPageIndex == PageNames.Length - 1)
             {
-                NavigationManager?.NavigateTo("https://dro.local:6001/", forceLoad: true);
+                NavigationManager?.NavigateTo(MetaDataFromLauncher.ReturnUrl, forceLoad: true);
             }
             if (currentPageIndex < PageNames.Length - 1)
             {
