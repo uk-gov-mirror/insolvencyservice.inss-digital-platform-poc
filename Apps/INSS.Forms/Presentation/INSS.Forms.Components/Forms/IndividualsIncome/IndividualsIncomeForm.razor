@@ -64,12 +64,16 @@
 
 
 @code {
+
     private IndividualsIncome individualsIncome = new IndividualsIncome { Income = new List<Income> { new Income() }};
     private List<RadioOption<string>> incomeTypeOptions = EnumHelper.ToRadioOptions<IncomeType>();
     private List<RadioOption<string>> incomeFrequencyOptions = EnumHelper.ToRadioOptions<IncomeFrequencyType>();
 
     protected override void OnInitialized()
     {
+        FormData = individualsIncome.Income;
+        individualsIncome.FormMetadata = MetaDataFromLauncher;
+
         PageNames = new string[]
         {
             EntityNames.IncomeType,
@@ -81,8 +85,6 @@
             EntityNames.ConfirmAction,
             EntityNames.Summary
         };
-
-        FormData = individualsIncome.Income;
 
         base.OnInitialized();
     }

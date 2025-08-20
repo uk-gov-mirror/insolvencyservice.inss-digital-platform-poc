@@ -1,4 +1,5 @@
-﻿using INSS.Forms.Domain.Models.Composite;
+﻿using INSS.Forms.Domain.Models.Abstract;
+using INSS.Forms.Domain.Models.Composite;
 using INSS.Forms.Domain.Models.Enums;
 
 namespace INSS.Forms.Domain.Models.Forms
@@ -6,7 +7,7 @@ namespace INSS.Forms.Domain.Models.Forms
     /// <summary>
     /// Represents information about a person completing the form.
     /// </summary>
-    public class CompanyDetails
+    public class CompanyDetails : FormBase
     {
         /// <summary>
         /// Gets or sets the name of the company.

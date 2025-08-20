@@ -68,11 +68,15 @@
 
 
 @code {
+
     private IndividualsDebts individualsDebts = new IndividualsDebts { Debts = new List<Debt> { new Debt() } };
     private List<RadioOption<string>> paymentFrequencyOptions = EnumHelper.ToRadioOptions<PaymentFrequencyType>();
 
     protected override void OnInitialized()
     {
+        FormData = individualsDebts.Debts;
+        individualsDebts.FormMetadata = MetaDataFromLauncher;
+
         PageNames = new string[]
         {
             EntityNames.CreditorName,
@@ -86,8 +90,6 @@
             EntityNames.ConfirmAction,
             EntityNames.Summary
         };
-
-        FormData = individualsDebts.Debts;
 
         base.OnInitialized();
     }
