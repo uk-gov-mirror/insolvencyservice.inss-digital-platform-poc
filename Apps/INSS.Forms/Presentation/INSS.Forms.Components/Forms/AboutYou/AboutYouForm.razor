@@ -31,9 +31,7 @@
     <AboutYouSummary Name="@EntityNames.Summary" FormData="@aboutYouForm" OnNext="@(page => Next(page))" />
 </PageFields>
 
-<GdsButtonField Name="next-btn" OnClick="@Next">
-    @(IsLastPage ? "Apply" : "Next")
-</GdsButtonField>
+<GdsFormNavButton IsLastPage="@IsLastPage" OnClick="@Next"/>
 
 @code {
 
