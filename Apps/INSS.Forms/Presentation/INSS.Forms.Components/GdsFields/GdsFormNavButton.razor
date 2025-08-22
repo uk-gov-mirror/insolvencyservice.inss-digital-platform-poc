@@ -1,0 +1,13 @@
+
+
+<GdsButtonField Name="next-btn" OnClick="@OnClick">
+    @(IsLastPage ? "Submit" : "Next")
+</GdsButtonField>
+
+@code {
+    [Parameter]
+    public bool IsLastPage { get; set; }
+
+    [Parameter]
+    public EventCallback OnClick { get; set; }
+}

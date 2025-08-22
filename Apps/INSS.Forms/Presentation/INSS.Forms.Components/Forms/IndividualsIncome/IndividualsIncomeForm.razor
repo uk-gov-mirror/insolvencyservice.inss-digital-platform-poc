@@ -57,11 +57,7 @@
     <IndividualsIncomeListSummary Name=@EntityNames.Summary FormData="individualsIncome" OnClick="@(args => SkipTo(args.index, args.page))" />
 </PageFields>
 
-
-<GdsButtonField Name="next-btn" IsDisabled="@IsNextButtonDisabled" OnClick="@(e => NextHandler(EntityNames.IncomeType))">
-    @(IsLastPage ? "Apply" : "Next")
-</GdsButtonField>
-
+<GdsFormNavButton IsLastPage="@IsLastPage" OnClick="@Next"/>
 
 @code {
 
