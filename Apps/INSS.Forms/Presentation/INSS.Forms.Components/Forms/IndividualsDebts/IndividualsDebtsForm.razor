@@ -74,8 +74,9 @@
 
     protected override void OnInitialized()
     {
-        FormData = individualsDebts.Debts;
-        individualsDebts.FormMetadata = MetaDataFromLauncher;
+        individualsDebts.InitializeMetadata(FormMetadataHelper.CreateFromQueryString(NavigationManager));
+        AllFormData = individualsDebts;
+        ListItems = individualsDebts.Debts;
 
         PageNames = new string[]
         {

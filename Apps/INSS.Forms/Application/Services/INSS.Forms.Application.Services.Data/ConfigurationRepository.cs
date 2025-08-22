@@ -3,11 +3,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace INSS.Forms.Application.Services.Data
 {
-    public class FormsRepository
+    public class ConfigurationRepository : IConfigurationRepository
     {
         private readonly DbContext _context;
 
-        public FormsRepository(DbContext context)
+        public ConfigurationRepository(DbContext context)
         {
             _context = context;
         }
@@ -17,7 +17,7 @@ namespace INSS.Forms.Application.Services.Data
         /// </summary>
         /// <param name="digitalServiceId">The Id of the DigitalService.</param>
         /// <returns>A list of SectionForm entities.</returns>
-        public async Task<List<SectionForm>> GetStepFormsForDigitalServiceAsync(Guid digitalServiceId)
+        public async Task<List<SectionForm>> GetFormsForDigitalServiceAsync(Guid digitalServiceId)
         {
             return await _context.Set<SectionForm>()
                 .Include(sf => sf.Section)

@@ -30,6 +30,8 @@ if (builder.Environment.IsDevelopment())
 
 // Register with the DI container the services required for the application.
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddHttpClient();
+
 
 // The services are built, so we can now register the components.
 var app = builder.Build();

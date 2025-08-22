@@ -3,6 +3,10 @@
     "Name": "New Profile",
     "Projects": [
       {
+        "Path": "Application\\Services\\INSS.Forms.Application.Services.Api\\INSS.Forms.Application.Services.Api.csproj",
+        "Action": "Start"
+      },
+      {
         "Path": "Presentation\\INSS.Forms.Runner\\INSS.Forms.Runner.WebApp.csproj",
         "Action": "Start"
       },

@@ -16,7 +16,7 @@ namespace INSS.Forms.Domain.Models.Forms
         /// <summary>
         /// Gets or sets the address of the person.
         /// </summary>
-        public Address Address { get; set; } = new Address();
+        public Address? Address { get; set; } = new Address();
 
         /// <summary>
         /// Gets or sets the date of birth of the person.

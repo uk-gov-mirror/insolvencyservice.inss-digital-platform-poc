@@ -1,5 +1,5 @@
 ﻿@page "/about-you"
-@inherits FormPagerBase
+@inherits FormNavigationBase
 
 <PageTitle>About You</PageTitle>
 
@@ -42,7 +42,8 @@
 
     protected override void OnInitialized()
     {
-        aboutYouForm.FormMetadata = MetaDataFromLauncher;
+        aboutYouForm.InitializeMetadata(FormMetadataHelper.CreateFromQueryString(NavigationManager));
+        AllFormData = aboutYouForm;
 
         PageNames = new string[]
         {

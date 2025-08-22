@@ -1,5 +1,5 @@
 ﻿@page "/company-details"
-@inherits FormPagerBase
+@inherits FormNavigationBase
 
 <PageTitle>Company Details</PageTitle>
 
@@ -51,7 +51,8 @@
 
     protected override void OnInitialized()
     {
-        companyDetailsForm.FormMetadata = MetaDataFromLauncher;
+        companyDetailsForm.InitializeMetadata(FormMetadataHelper.CreateFromQueryString(NavigationManager));
+        AllFormData = companyDetailsForm;
 
         PageNames = new string[]
         {

@@ -71,8 +71,9 @@
 
     protected override void OnInitialized()
     {
-        FormData = individualsIncome.Income;
-        individualsIncome.FormMetadata = MetaDataFromLauncher;
+        individualsIncome.InitializeMetadata(FormMetadataHelper.CreateFromQueryString(NavigationManager));
+        AllFormData = individualsIncome;
+        ListItems = individualsIncome.Income;
 
         PageNames = new string[]
         {

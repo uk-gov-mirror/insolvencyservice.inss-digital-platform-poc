@@ -8,7 +8,7 @@ namespace INSS.Forms.Components.Abstract
     /// Supports adding, changing, and removing items, as well as navigation between list-related pages.
     /// </summary>
     /// <typeparam name="TItem">The type of items in the form list.</typeparam>
-    public abstract class FormListBase<TItem> : FormPagerBase where TItem : class, new()
+    public abstract class FormListBase<TItem> : FormNavigationBase where TItem : class, new()
     {
         /// <summary>
         /// Gets or sets the current index in the form data list.
@@ -48,7 +48,7 @@ namespace INSS.Forms.Components.Abstract
         /// <summary>
         /// Gets or sets the form data that will be used in the list.
         /// </summary>
-        required public IList<TItem> FormData { get; set; }
+        required public IList<TItem> ListItems { get; set; }
 
         /// <summary>
         /// Returns a unique name for an entity based on its index.
@@ -68,7 +68,7 @@ namespace INSS.Forms.Components.Abstract
         /// <param name="page">The name of the page to navigate to.</param>
         protected async Task SkipTo(int index, string page)
         {
-            if (index >= 0 && index < FormData.Count)
+            if (index >= 0 && index < ListItems.Count)
             {
                 ListIndex = index;
                 await Next(page).ConfigureAwait(false);
@@ -100,7 +100,7 @@ namespace INSS.Forms.Components.Abstract
         /// <param name="index">The index of the item to change.</param>
         protected async Task ChangeItem(int index)
         {
-            if (index >= 0 && index < FormData.Count)
+            if (index >= 0 && index < ListItems.Count)
             {
                 ChangingItem = true;
                 ListIndex = index;
@@ -137,8 +137,8 @@ namespace INSS.Forms.Components.Abstract
                 if (AddNewItemValue == ConfirmType.Yes.ToString())
                 {
                     AddNewItemValue = null;
-                    FormData.Add(new TItem());
-                    ListIndex = FormData.Count - 1;
+                    ListItems.Add(new TItem());
+                    ListIndex = ListItems.Count - 1;
                     await Next(keyPropertyName).ConfigureAwait(false);
                     return;
                 }
@@ -158,18 +158,18 @@ namespace INSS.Forms.Components.Abstract
             {
                 if (ConfirmValue == ConfirmType.Yes.ToString())
                 {
-                    if (ListIndex >= 0 && ListIndex < FormData.Count)
+                    if (ListIndex >= 0 && ListIndex < ListItems.Count)
                     {
-                        FormData.RemoveAt(ListIndex);
-                        if (ListIndex >= FormData.Count)
+                        ListItems.RemoveAt(ListIndex);
+                        if (ListIndex >= ListItems.Count)
                         {
-                            ListIndex = FormData.Count - 1;
+                            ListIndex = ListItems.Count - 1;
                         }
                     }
 
-                    if (!FormData.Any())
+                    if (!ListItems.Any())
                     {
-                        FormData.Add(new TItem());
+                        ListItems.Add(new TItem());
                         ListIndex = 0;
                         await Next(keyPropertyName).ConfigureAwait(false);
                     }
