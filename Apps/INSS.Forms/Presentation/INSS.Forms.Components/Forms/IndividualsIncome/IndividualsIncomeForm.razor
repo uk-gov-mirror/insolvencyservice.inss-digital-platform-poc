@@ -57,11 +57,7 @@
     <IndividualsIncomeListSummary Name=@EntityNames.Summary FormData="individualsIncome" OnClick="@(args => SkipTo(args.index, args.page))" />
 </PageFields>
 
-
-<GdsButtonField Name="next-btn" IsDisabled="@IsNextButtonDisabled" OnClick="@(e => NextHandler(EntityNames.IncomeType))">
-    @(IsLastPage ? "Apply" : "Next")
-</GdsButtonField>
-
+<GdsFormNavButton Name="@EntityNames.NextButton" IsLastPage="@IsLastPage" IsDisabled="@IsNextButtonDisabled" OnClick="@(e => NextHandler(EntityNames.IncomeType))"/>
 
 @code {
 
@@ -71,8 +67,9 @@
 
     protected override void OnInitialized()
     {
-        FormData = individualsIncome.Income;
-        individualsIncome.FormMetadata = MetaDataFromLauncher;
+        individualsIncome.InitializeMetadata(FormMetadataHelper.CreateFromQueryString(NavigationManager));
+        AllFormData = individualsIncome;
+        ListItems = individualsIncome.Income;
 
         PageNames = new string[]
         {

@@ -1,0 +1,10 @@
+@inherits GdsButtonField
+
+<GdsButtonField Name="next-btn" OnClick="@OnClick" IsDisabled="@IsDisabled">
+    @(IsLastPage ? "Submit" : "Next")
+</GdsButtonField>
+
+@code {
+    [Parameter]
+    public bool IsLastPage { get; set; }
+}

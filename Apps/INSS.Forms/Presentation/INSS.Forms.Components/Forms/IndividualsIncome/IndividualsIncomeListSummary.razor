@@ -12,16 +12,15 @@
             <div class="govuk-summary-card__content" id="@GenerateElementId("row-content", dataItem.Index.ToString())">
                 <dl class="govuk-summary-list" id="@GenerateElementId("row-content-list", dataItem.Index.ToString())">
 
+                    <SummaryRow Name="@IndexedName(EntityNames.IncomeAmount, dataItem.Index)"
+                                Text="@Labels.IncomeAmount"
+                                Values="@GetValue(@dataItem.Item.Amount.ToStringAsCurrency())"
+                                OnClick='() => HandleOnClick(dataItem.Index, EntityNames.IncomeAmount)' />
+
                     <SummaryRow Name="@IndexedName(EntityNames.IncomeFrequency, dataItem.Index)"
                         Text="@Labels.IncomeFrequency"
                         Values="@GetValue(dataItem.Item.IncomeFrequency.GetDescription())"
                         OnClick='() => HandleOnClick(dataItem.Index, EntityNames.IncomeFrequency)' 
-                     />
-
-                    <SummaryRow Name="@IndexedName(EntityNames.IncomeAmount, dataItem.Index)"
-                        Text="@Labels.IncomeAmount"
-                        Values="@GetValue(@dataItem.Item.Amount.ToStringAsCurrency())"
-                        OnClick='() => HandleOnClick(dataItem.Index, EntityNames.IncomeAmount)' 
                      />
 
                     <SummaryRow Name="@IndexedName(EntityNames.IncomeProvider, dataItem.Index)"

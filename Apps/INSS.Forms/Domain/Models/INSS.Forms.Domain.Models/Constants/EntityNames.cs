@@ -11,6 +11,7 @@
         public const string Telephone = "telephone-entity";
         public const string Email = "email-entity";
         public const string Summary = "summary-entity";
+        public const string NextButton = "next-btn";
 
         public const string CompanyName = "company-name-entity";
         public const string CompanyAddress = "company-address-entity";

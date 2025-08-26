@@ -1,5 +1,5 @@
 ﻿@page "/company-details"
-@inherits FormPagerBase
+@inherits FormNavigationBase
 
 <PageTitle>Company Details</PageTitle>
 
@@ -40,9 +40,7 @@
     <CompanyDetailsSummary Name="@EntityNames.Summary" FormData="@companyDetailsForm" OnNext="@(page => Next(page))" />
 </PageFields>
 
-<GdsButtonField Name="next-btn" OnClick="@Next">
-    @(IsLastPage ? "Apply" : "Next")
-</GdsButtonField>
+<GdsFormNavButton IsLastPage="@IsLastPage" OnClick="@Next"/>
 
 @code {
 
@@ -51,7 +49,8 @@
 
     protected override void OnInitialized()
     {
-        companyDetailsForm.FormMetadata = MetaDataFromLauncher;
+        companyDetailsForm.InitializeMetadata(FormMetadataHelper.CreateFromQueryString(NavigationManager));
+        AllFormData = companyDetailsForm;
 
         PageNames = new string[]
         {
