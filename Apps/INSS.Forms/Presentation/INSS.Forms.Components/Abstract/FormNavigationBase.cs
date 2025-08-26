@@ -157,37 +157,17 @@ namespace INSS.Forms.Components.Abstract
                 {
                     PropertyNamingPolicy = JsonNamingPolicy.CamelCase, // <-- This enables camel case
                     PropertyNameCaseInsensitive = true,
-                    Converters = { new JsonStringEnumConverter() },
-                    TypeInfoResolver = new DefaultJsonTypeInfoResolver
-                    {
-                        Modifiers =
-                        {
-                            typeInfo =>
-                            {
-                                if (typeInfo.Type == typeof(FormBase))
-                                {
-                                    typeInfo.PolymorphismOptions = new JsonPolymorphismOptions
-                                    {
-                                        DerivedTypes =
-                                        {
-                                            new JsonDerivedType(typeof(AboutYou), "AboutYou"),
-                                            new JsonDerivedType(typeof(CompanyDetails), "CompanyDetails"),
-                                            new JsonDerivedType(typeof(IndividualsDebts), "IndividualsDebts"),
-                                            new JsonDerivedType(typeof(IndividualsIncome), "IndividualsIncome"),
-                                        },
-                                    };
-                                }
-                            }
-                        }
-                    }
                 };
 
-                var response = await HttpClient.PostAsJsonAsync(apiUrl, AllFormData, serializerOptions);
+                var json = JsonSerializer.Serialize(AllFormData, AllFormData.GetType(), serializerOptions);
+                var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+                var response = await HttpClient.PostAsync(apiUrl, content);
+
                 return response.IsSuccessStatusCode;
             }
-            catch
+            catch(Exception ex)
             {
-                // Optionally log or handle error
+                Console.WriteLine(ex.Message);
                 return false;
             }
         }

@@ -62,7 +62,7 @@
 </PageFields>
 
 
-<GdsFormNavButton IsLastPage="@IsLastPage" OnClick="@Next"/>
+<GdsFormNavButton Name="@EntityNames.NextButton" IsLastPage="@IsLastPage" IsDisabled="@IsNextButtonDisabled" OnClick="@(e => NextHandler(EntityNames.CreditorName))" />
 
 @code {
 

@@ -4,6 +4,8 @@ using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Net;
+using System.Text.Json;
 
 namespace INSS.Forms.Application.Services.Data
 {
@@ -22,31 +24,19 @@ namespace INSS.Forms.Application.Services.Data
         }
 
         /// <inheritdoc />
-        public async Task<IEnumerable<FormBase>> GetFormSetAsync(Guid formSetInstanceId)
+        public async Task<IEnumerable<string>> GetJsonAsync(Guid formSetInstanceId)
         {
             var query = _container.GetItemQueryIterator<dynamic>($"SELECT * FROM c WHERE c.formMetadata.formSetInstanceId = \"{formSetInstanceId}\"");
 
-            var results = new List<FormBase>();
+            var results = new List<string>();
+
             while (query.HasMoreResults)
             {
-                foreach (var item in await query.ReadNextAsync())
+                var response = await query.ReadNextAsync();
+                foreach (var item in response)
                 {
                     string json = JsonConvert.SerializeObject(item);
-                    var type = JObject.Parse(json)["formType"]?.ToString();
-
-                    FormBase? formBase = type switch
-                    {
-                        "INSS.Forms.Domain.Models.Forms.AboutYou, INSS.Forms.Domain.Models, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" => JsonConvert.DeserializeObject<AboutYou>(json),
-                        "INSS.Forms.Domain.Models.Forms.CompanyDetails, INSS.Forms.Domain.Models, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" => JsonConvert.DeserializeObject<CompanyDetails>(json),
-                        "INSS.Forms.Domain.Models.Forms.IndividualsDebts, INSS.Forms.Domain.Models, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" => JsonConvert.DeserializeObject<IndividualsDebts>(json),
-                        "INSS.Forms.Domain.Models.Forms.IndividualsIncome, INSS.Forms.Domain.Models, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" => JsonConvert.DeserializeObject<IndividualsIncome>(json),
-                        _ => JsonConvert.DeserializeObject<FormBase>(json)
-                    };
-
-                    if (formBase != null)
-                    {
-                        results.Add(formBase);
-                    }
+                    results.Add(json);
                 }
             }
 
@@ -54,26 +44,36 @@ namespace INSS.Forms.Application.Services.Data
         }
 
         /// <inheritdoc />
-        public async Task SaveFormAsync(FormBase form)
+        public async Task<HttpStatusCode> SaveJsonAsync(string json)
         {
-            if (form == null)
-                throw new ArgumentNullException(nameof(form));
+            using var doc = JsonDocument.Parse(json);
+            var root = doc.RootElement;
+
+            var partitionKey = root.GetProperty("formMetadata").GetProperty("formSetInstanceId").GetString();
+
+            _logger.LogTrace($"SaveFormAsync(string json) - json:{Environment.NewLine}{json}");
+
+            if (string.IsNullOrEmpty(partitionKey))
+            {
+                throw new ArgumentException("Invalid JSON: Missing formSetInstanceId in formMetadata.");
+            }
 
             try
             {
-                await _container.UpsertItemAsync(form, new PartitionKey(form.FormMetadata.FormSetInstanceId.ToString()));
+                var item = JsonConvert.DeserializeObject<object>(json);
+                var response = await _container.UpsertItemAsync(item, new PartitionKey(partitionKey)).ConfigureAwait(false);
+                return response.StatusCode;
             }
             catch (CosmosException cex)
             {
-                _logger.LogError(cex, "Cosmos DB error while creating form: {Message}", cex.Message);
-                throw;
+                _logger.LogError(cex, "Cosmos DB error while creating form from JSON: {Message}", cex.Message);
+                return HttpStatusCode.BadRequest;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Unexpected error while creating form: {Message}", ex.Message);
-                throw;
+                _logger.LogError(ex, "Unexpected error while creating form from JSON: {Message}", ex.Message);
+                return HttpStatusCode.BadRequest;
             }
         }
-
     }
 }
