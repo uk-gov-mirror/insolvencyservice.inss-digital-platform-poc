@@ -40,6 +40,26 @@ This project is a Blazor application targeting .NET 8.
 		- Check the boxes for 'Mark the key as exportable' and 'Include all extended properties'
 		- Place all certificates in the following store: Trusted Route Certification Authorities
 
+
+## Dependecies
+1. **Cosmos DB Instance**
+   
+   The forms data is stored in a Cosmos DB instance. 
+   - Database Name: `Forms`
+   - Container Name: `FormInstance`
+   - Partition Key: `/formMetadata/formSetInstanceId`
+   
+	The connection string can be found in the (INSS.Forms.Application.Services.Api) appsettings.json file under `ConnectionString:CosmosDb` or set the environment variable (ConnectionStrings__CosmosDb)
+
+2. **SQL Server Instance**
+
+   The launcher configuration data is stored in a SQL Server instance.
+   
+   The database can be deployed by publishing this solutions SqlDatabase project: INSS.Forms.Infrastructure.Persistence.Database
+   
+   The connection string can be found in the (INSS.Forms.Application.Services.Api) appsettings.json file under `ConnectionString:SqlServer` or set the environment variable (ConnectionStrings__SqlServer)
+   	
+
 ## Build and Run Instructions
 
 1. **Restore dependencies**  

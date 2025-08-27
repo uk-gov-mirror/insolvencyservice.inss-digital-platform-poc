@@ -1,10 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace INSS.Forms.Domain.Models.Configuration
 {
     /// <summary>
     /// Represents a digital service with a unique identifier, name, title, and associated sections.
     /// </summary>
+    [Table("digital_service")]
     public class DigitalService
     {
         /// <summary>

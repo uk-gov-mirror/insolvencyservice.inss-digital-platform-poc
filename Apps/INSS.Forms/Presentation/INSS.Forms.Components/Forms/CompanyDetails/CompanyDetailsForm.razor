@@ -40,7 +40,7 @@
     <CompanyDetailsSummary Name="@EntityNames.Summary" FormData="@companyDetailsForm" OnNext="@(page => Next(page))" />
 </PageFields>
 
-<GdsFormNavButton IsLastPage="@IsLastPage" OnClick="@Next"/>
+<GdsFormNavButton Name="@EntityNames.NextButton" IsLastPage="@IsLastPage" OnClick="@Next" />
 
 @code {
 
