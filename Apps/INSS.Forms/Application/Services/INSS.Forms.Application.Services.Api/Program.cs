@@ -1,6 +1,6 @@
 using INSS.Forms.Application.Services.Data;
 using Microsoft.Azure.Cosmos;
-
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +16,11 @@ builder.Services.AddSingleton<CosmosClient>(provider =>
 {
     var configuration = provider.GetRequiredService<IConfiguration>();
     var cosmosConnectionString = configuration.GetConnectionString("CosmosDb");
+
+    if (string.IsNullOrEmpty(cosmosConnectionString))
+    {
+        throw new InvalidOperationException("Cosmos DB connection string is not configured.  Update appsettings.json or set the environment variable (ConnectionStrings__CosmosDb)");
+    }
 
     var cosmosClientOptions = new CosmosClientOptions
     {
@@ -37,13 +42,33 @@ builder.Services.AddScoped<IFormRepository, FormRepository>(provider =>
     return new FormRepository(logger, cosmosClient);
 });
 
+// Register DbContext for Entity Framework
+builder.Services.AddDbContext<ConfigurationDbContext>(options =>
+{
+    var configuration = builder.Configuration;
+    var sqlConnectionString = configuration.GetConnectionString("SqlServer");
+
+    if(string.IsNullOrEmpty(sqlConnectionString))
+    {
+        throw new InvalidOperationException("SQL Server connection string is not configured.  Update appsettings.json or set the environment variable (ConnectionStrings__SqlServer)");
+    }
+
+    options.UseSqlServer(sqlConnectionString);
+});
+
+// Register the configuration repository
+builder.Services.AddScoped<IConfigurationRepository, ConfigurationRepository>(provider =>
+{
+    var logger = provider.GetRequiredService<ILogger<ConfigurationRepository>>();
+    var dbContext = provider.GetRequiredService<ConfigurationDbContext>();
+    return new ConfigurationRepository(logger, dbContext);
+});
 
 builder.Services.AddControllers()
 .AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
 });
-
 
 var app = builder.Build();
 

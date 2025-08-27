@@ -1,9 +1,6 @@
-﻿using INSS.Forms.Domain.Models.Abstract;
-using INSS.Forms.Domain.Models.Forms;
-using Microsoft.Azure.Cosmos;
+﻿using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System.Net;
 using System.Text.Json;
 
@@ -15,6 +12,15 @@ namespace INSS.Forms.Application.Services.Data
         private readonly ILogger<FormRepository> _logger;
         private readonly Container _container;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FormRepository"/> class,  providing access to form data stored
+        /// in a Cosmos DB container.
+        /// </summary>
+        /// <remarks>This constructor initializes the repository by connecting to the "Forms" database 
+        /// and the "FormInstance" container within Cosmos DB. Ensure that the provided  <paramref name="cosmosClient"/>
+        /// is properly configured and has access to the target database and container.</remarks>
+        /// <param name="logger">The logger used to log diagnostic and operational information.</param>
+        /// <param name="cosmosClient">The Cosmos DB client used to interact with the database.</param>
         public FormRepository(ILogger<FormRepository> logger, CosmosClient cosmosClient)
         {
             _logger = logger;
@@ -26,7 +32,12 @@ namespace INSS.Forms.Application.Services.Data
         /// <inheritdoc />
         public async Task<IEnumerable<string>> GetJsonAsync(Guid formSetInstanceId)
         {
-            var query = _container.GetItemQueryIterator<dynamic>($"SELECT * FROM c WHERE c.formMetadata.formSetInstanceId = \"{formSetInstanceId}\"");
+            var queryDefinition = new QueryDefinition(
+                "SELECT * FROM c WHERE c.formMetadata.formSetInstanceId = @formSetInstanceId")
+                .WithParameter("@formSetInstanceId", formSetInstanceId.ToString());
+
+            var query = _container.GetItemQueryIterator<dynamic>(queryDefinition);
+
 
             var results = new List<string>();
 

@@ -3,6 +3,7 @@
 @using INSS.Forms.Domain.Models.Abstract
 @using System.Text.Json
 @using System.Text.Json.Serialization
+@using INSS.Forms.Domain.Models.Composite
 @inject IHttpContextAccessor HttpContextAccessor
 @inject IConfiguration Configuration
 @inject NavigationManager NavigationManager
@@ -25,16 +26,16 @@
             <HeadingText Name="heading-ds">@digitalService.Title</HeadingText>
         </RowTwoThirdsLayout>
 
-        @foreach (var digitalServiceSection in digitalService.DigitalServiceSections.OrderBy(section => section.SortOrder))
+        @foreach (var digitalServiceSection in sections.OrderBy(section => section.SortOrder))
         {
             <RowTwoThirdsLayout Name="row-section">
-                <SubHeadingText Name="section-name">@digitalServiceSection.Section.Name</SubHeadingText>
-                <ParagraphText Name="section-description">@digitalServiceSection.Section.Description</ParagraphText>
+                <SubHeadingText Name="section-name">@digitalServiceSection.Name</SubHeadingText>
+                <ParagraphText Name="section-description">@digitalServiceSection.Description</ParagraphText>
             </RowTwoThirdsLayout>
 
             <GdsTaskListFieldMetadata 
                 Name="section-forms" 
-                Items="@GetTaskListItems(digitalServiceSection.Section.SectionForms.OrderBy(f => f.SortOrder), formInstances)" 
+                Items="@(sectionTaskListItems.TryGetValue(digitalServiceSection.Id, out var items) ? items : Array.Empty<TaskListItemMetadata>())" 
             />
         }
 
@@ -48,24 +49,23 @@
 @code {
     [Parameter]
     public Guid? formSetInstanceId { get; set; }
-
     private DigitalService? digitalService = null;
+    private List<OrderedSection> sections = new();
     private List<FormBase> formInstances = new();
     private List<string> errors = new();
     private string returnUrl = string.Empty;
     private string userName = Environment.UserName;
     private bool allFormsCompleted = false;
     private string pageTitle = "Launch Forms";
+    private string formApiBaseUrl = string.Empty;
+    private Dictionary<Guid, IReadOnlyList<TaskListItemMetadata>> sectionTaskListItems = new();
 
-    /// <summary>
-    /// Initializes the component, determines the digital service based on the host, and loads form instances if applicable.
-    /// </summary>
     protected override async Task OnInitializedAsync()
     {
-        HttpContext? httpContext = HttpContextAccessor.HttpContext 
-            ?? throw new InvalidOperationException("HttpContext is not available in the current context.");
+        formApiBaseUrl = Configuration["FormApi-BaseUrl"]
+            ?? throw new InvalidOperationException("The 'FormApi-BaseUrl' configuration value is missing.");
 
-        var hostHeader = httpContext.Request.Headers["Host"].ToString();
+        var hostHeader = HttpContextAccessor.HttpContext!.Request.Headers["Host"].ToString();
 
         string hostName = string.Empty;
         if (!string.IsNullOrEmpty(hostHeader))
@@ -74,27 +74,27 @@
             hostName = colonIndex > 0 ? hostHeader[..colonIndex] : hostHeader;
         }
 
-        List<DigitalService>? digitalServices = GenerateDigitalServiceData();
-
-        digitalService = digitalServices
-            .SingleOrDefault(ds => ds.Name.ToUpperInvariant() == hostName.ToUpperInvariant());
+        digitalService = await GetDigitalServiceAsync(hostName).ConfigureAwait(false);
 
         if (digitalService != null)
         {
-            pageTitle = $"Launch {digitalService.Title}";
-
+            IEnumerable<Guid> formIds = new List<Guid>();
             if (formSetInstanceId.HasValue)
             {
-                formInstances = await GetFormInstancesAsync(formSetInstanceId.Value);
-
-                var dsForms = digitalService.DigitalServiceSections
-                    .SelectMany(dsSection => dsSection.Section.SectionForms)
-                    .Select(sectionForm => sectionForm.Form)
-                    .Select(f => f.Id)
-                    .ToList();
-
-                allFormsCompleted = dsForms.All(formId => formInstances.Any(f => f.FormMetadata.FormId == formId));
+                formInstances = await GetFormInstancesAsync(formSetInstanceId.Value).ConfigureAwait(false);
+                formIds = await GetDigitalServiceFormIdsAsync(digitalService.Id).ConfigureAwait(false);
             }
+
+            sections = (await GetSectionsAsync(digitalService.Id).ConfigureAwait(false)).ToList();
+            var sectionTasks = sections.Select(section => GetTaskListItemsAsync(section.Id, formInstances)).ToList();
+            var allItems = await Task.WhenAll(sectionTasks);
+
+            sectionTaskListItems = sections
+                .Select((section, idx) => new { section.Id, Items = allItems[idx] })
+                .ToDictionary(x => x.Id, x => (IReadOnlyList<TaskListItemMetadata>)x.Items);
+
+            pageTitle = $"Launch {digitalService.Title}";
+            allFormsCompleted = formIds.All(formId => formInstances.Any(f => f.FormMetadata.FormId == formId));
         }
         else
         {
@@ -105,36 +105,176 @@
     }
 
     /// <summary>
-    /// Retrieves the list of form instances for the specified form set instance identifier from the API.
+    /// Retrieves the list of form instances for the specified form set instance identifier.
     /// </summary>
-    /// <param name="formSetInstanceId">The unique identifier for the form set instance.</param>
-    /// <returns>A list of <see cref="FormBase"/> objects representing the form instances.</returns>
+    /// <param name="formSetInstanceId">The unique identifier of the form set instance.</param>
+    /// <returns>
+    /// A <see cref="Task{TResult}"/> representing the asynchronous operation, with a result of a list of <see cref="FormBase"/> objects.
+    /// Returns an empty list if no form instances are found or if the API call fails.
+    /// </returns>
     private async Task<List<FormBase>> GetFormInstancesAsync(Guid formSetInstanceId)
     {
-        string formApiBaseUrl = Configuration["FormApi-BaseUrl"]
-            ?? throw new InvalidOperationException("The 'FormApi-BaseUrl' configuration value is missing.");
+        var formsApiUrl = $"{formApiBaseUrl}/forms/{formSetInstanceId}";
 
-        var formApiUrl = $"{formApiBaseUrl}/forms/{formSetInstanceId}";
+        return await CallApiAsync<List<FormBase>>(formsApiUrl).ConfigureAwait(false) ?? new List<FormBase>();
+    }
+
+    /// <summary>
+    /// Retrieves the digital service configuration for the specified host name.
+    /// </summary>
+    /// <param name="hostName">The host name to look up the digital service for.</param>
+    /// <returns>
+    /// A <see cref="Task{TResult}"/> representing the asynchronous operation, with a result of a <see cref="DigitalService"/> object if found; otherwise, <c>null</c>.
+    /// </returns>
+    private async Task<DigitalService?> GetDigitalServiceAsync(string hostName)
+    {
+        var configApiUrl = $"{formApiBaseUrl}/configuration/digital-service/{hostName}";
+
+        return await CallApiAsync<DigitalService>(configApiUrl).ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Retrieves the collection of form definition identifiers associated with the specified digital service.
+    /// </summary>
+    /// <param name="digitalServiceId">The unique identifier of the digital service.</param>
+    /// <returns>
+    /// A <see cref="Task{TResult}"/> representing the asynchronous operation, with a result of an enumerable of <see cref="Guid"/> values.
+    /// Returns an empty array if no form IDs are found or if the API call fails.
+    /// </returns>
+    private async Task<IEnumerable<Guid>> GetDigitalServiceFormIdsAsync(Guid digitalServiceId)
+    {
+        var configApiUrl = $"{formApiBaseUrl}/configuration/digital-service/{digitalServiceId}/formids";
+
+        return await CallApiAsync<IEnumerable<Guid>>(configApiUrl).ConfigureAwait(false) ?? Array.Empty<Guid>();
+    }
+
+    /// <summary>
+    /// Retrieves the ordered sections associated with the specified digital service.
+    /// </summary>
+    /// <param name="digitalServiceId">The unique identifier of the digital service.</param>
+    /// <returns>
+    /// A <see cref="Task{TResult}"/> representing the asynchronous operation, with a result of an enumerable of <see cref="OrderedSection"/> objects.
+    /// Returns an empty array if no sections are found or if the API call fails.
+    /// </returns>
+    private async Task<IEnumerable<OrderedSection>> GetSectionsAsync(Guid digitalServiceId)
+    {
+        var configApiUrl = $"{formApiBaseUrl}/configuration/digital-service/{digitalServiceId}/sections";
+
+        return await CallApiAsync<IEnumerable<OrderedSection>>(configApiUrl).ConfigureAwait(false) ?? Array.Empty<OrderedSection>();
+    }
+
+    /// <summary>
+    /// Retrieves the ordered forms associated with the specified section.
+    /// </summary>
+    /// <param name="sectionId">The unique identifier of the section.</param>
+    /// <returns>
+    /// A <see cref="Task{TResult}"/> representing the asynchronous operation, with a result of a list of <see cref="OrderedForm"/> objects.
+    /// Returns an empty array if no forms are found or if the API call fails.
+    /// </returns>
+    private async Task<IList<OrderedForm>> GetSectionFormsAsync(Guid sectionId)
+    {
+        var configApiUrl = $"{formApiBaseUrl}/configuration/section/{sectionId}/forms";
+
+        return await CallApiAsync<IList<OrderedForm>>(configApiUrl).ConfigureAwait(false) ?? Array.Empty<OrderedForm>();
+    }
+
+    /// <summary>
+    /// Makes an HTTP GET request to the specified API URL and deserializes the response to the specified type.
+    /// Handles common HTTP and deserialization errors, adding error messages to the <c>errors</c> list.
+    /// </summary>
+    /// <typeparam name="T">The type to deserialize the response to.</typeparam>
+    /// <param name="apiUrl">The URL of the API endpoint.</param>
+    /// <returns>
+    /// A <see cref="Task{TResult}"/> representing the asynchronous operation, with a result of the deserialized object of type <typeparamref name="T"/>.
+    /// Returns <c>default(T)</c> if the resource is not found or if an error occurs.
+    /// </returns>
+    private async Task<T?> CallApiAsync<T>(string apiUrl)
+    {
+        string json = string.Empty;
 
         try
         {
-            var response = await HttpClient.GetAsync(formApiUrl);
+            var response = await HttpClient.GetAsync(apiUrl);
+
+            if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                return default(T);
+            }
+
             response.EnsureSuccessStatusCode();
-            
-            var json = await response.Content.ReadAsStringAsync();
-            var formInstances = JsonSerializer.Deserialize<List<FormBase>>(json, new JsonSerializerOptions
+
+            json = await response.Content.ReadAsStringAsync();
+            var deserialized = JsonSerializer.Deserialize<T>(json, new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true,
                 Converters = { new JsonStringEnumConverter() }
             });
-            
-            return formInstances ?? new List<FormBase>();
+
+            return deserialized;
+
+        }
+        catch (HttpRequestException ex)
+        {
+            errors.Add($"The HTTP request failed calling:{apiUrl}");
+            errors.Add(ex.Message);
+        }
+        catch (TaskCanceledException)
+        {
+            errors.Add($"Request timed out or was canceled calling:{apiUrl}");
+        }
+        catch (JsonException ex)
+        {
+            errors.Add($"Deserialization failed for JSON: {json}");
+            errors.Add(ex.Message);
         }
         catch (Exception ex)
         {
-            errors.Add($"API request failed: {ex.Message}");
-            return new List<FormBase>();
+            errors.Add($"Failed to return objects from API: {apiUrl}");
+            errors.Add(ex.Message);
         }
+
+        return default(T);
+    }
+
+    /// <summary>
+    /// Retrieves the list of task list items for a given section, including completion status and navigation links.
+    /// </summary>
+    /// <param name="sectionId">The unique identifier of the section for which to retrieve forms.</param>
+    /// <param name="formInstances">A list of form instances representing completed or in-progress forms.</param>
+    /// <returns>
+    /// A <see cref="Task{TResult}"/> representing the asynchronous operation, with a result of a read-only list of <see cref="TaskListItemMetadata"/> objects.
+    /// Each item contains metadata for a form in the section, including its completion status and navigation URI.
+    /// </returns>
+    private async Task<IReadOnlyList<TaskListItemMetadata>> GetTaskListItemsAsync(Guid sectionId, List<FormBase> formInstances)
+    {
+        string formRunnerBaseUrl = Configuration["FormRunner-BaseUrl"] 
+            ?? throw new InvalidOperationException("The 'FormRunner-BaseUrl' configuration value is missing.");
+
+        var forms = (await GetSectionFormsAsync(sectionId).ConfigureAwait(false))
+            .OrderBy(f => f.SortOrder);
+
+        var result = forms.Select(
+            form =>
+            {
+                var uriBuilder = new UriBuilder(new Uri(new Uri(formRunnerBaseUrl), form.UriPath));
+                if (formSetInstanceId.HasValue)
+                {
+                    var query = $"formSetInstanceId={formSetInstanceId.Value}";
+                    uriBuilder.Query = string.IsNullOrEmpty(uriBuilder.Query) ? query : uriBuilder.Query.TrimStart('?') + "&" + query;
+                }
+                return new TaskListItemMetadata
+                {
+                    Id = form.Id,
+                    FormId = form.Id,
+                    Username = userName,
+                    ReturnUrl = NavigationManager.Uri,
+                    Title = form.Name,
+                    HRef = uriBuilder.ToString(),
+                    Status = formInstances.Any(formInstance => formInstance.FormMetadata.FormId == form.Id) ? "Completed" : "Incomplete"
+                };
+            }).ToList();
+
+        return result;
     }
 
     /// <summary>
@@ -143,158 +283,5 @@
     private void NavigateToCompletedPage()
     {
         NavigationManager.NavigateTo($"/completed/{formSetInstanceId}");
-    }
-
-    /// <summary>
-    /// Generates a list of <see cref="TaskListItemMetadata"/> for the given section forms and form instances.
-    /// </summary>
-    /// <param name="sectionForms">The ordered collection of section forms.</param>
-    /// <param name="formInstances">The list of form instances.</param>
-    /// <returns>A read-only list of <see cref="TaskListItemMetadata"/> representing the task list items.</returns>
-    private IReadOnlyList<TaskListItemMetadata> GetTaskListItems(IOrderedEnumerable<SectionForm> sectionForms, List<FormBase> formInstances)
-    {
-        string formRunnerBaseUrl = Configuration["FormRunner-BaseUrl"] 
-            ?? throw new InvalidOperationException("The 'FormRunner-BaseUrl' configuration value is missing.");
-
-        return sectionForms.Select(
-            sf => {
-                var uriBuilder = new UriBuilder(new Uri(new Uri(formRunnerBaseUrl), sf.Form.UriPath));
-                if (formSetInstanceId.HasValue)
-                {
-                    var query = $"formSetInstanceId={formSetInstanceId.Value}";
-                    uriBuilder.Query = string.IsNullOrEmpty(uriBuilder.Query) ? query : uriBuilder.Query.TrimStart('?') + "&" + query;
-                }
-                return new TaskListItemMetadata
-                {
-                    Id = sf.Form.Id,
-                    FormId = sf.Form.Id,
-                    Username = userName,
-                    ReturnUrl = NavigationManager.Uri,
-                    Title = sf.Form.FormName,
-                    HRef = uriBuilder.ToString(),
-                    Status = formInstances.Any(f => f.FormMetadata.FormId == sf.Form.Id) ? "Completed" : "Incomplete"
-                };
-            }).ToList();
-    }
-
-    /// <summary>
-    /// Generates the digital service data for the application, including forms and sections.
-    /// </summary>
-    /// <returns>A list of <see cref="DigitalService"/> objects representing the available digital services.</returns>
-    private List<DigitalService> GenerateDigitalServiceData()
-    {
-        Form aboutYouForm = new Form { Id = new Guid("9c8c8494-eaef-41f4-900a-55a0e9bfcc13"), FormName = "About You", UriPath = "about-you" };
-        Form companyDetailsForm = new Form { Id = new Guid("47d7ac5d-00ec-4e46-baa6-f41e26f47fe6"), FormName = "Company Details", UriPath = "company-details" };
-        Form individualsIncomeForm = new Form { Id = new Guid("e07e41f4-f3be-487b-aae8-304858356512"), FormName = "Individual's Income", UriPath = "individuals-income" };
-        Form individualsDebtsForm = new Form { Id = new Guid("e65004dd-bba9-401d-b93e-3ca5de20394a"), FormName = "Individual's Debts", UriPath = "individuals-debts" };
-
-        return new List<DigitalService>
-        {
-            new DigitalService
-            {
-                Id = Guid.NewGuid(),
-                Name = "dro.local",
-                Title = "Debt Relief Order",
-                DigitalServiceSections = new List<DigitalServiceSection>
-                {
-                    new DigitalServiceSection
-                    {
-                        SortOrder = 1,
-                        Section = new Section
-                        {
-                            Id = Guid.NewGuid(),
-                            Name = "Personal Information",
-                            Description = "Please provide your personal information to proceed with the application.",
-                            SectionForms = new List<SectionForm>
-                            {
-                                new SectionForm
-                                {
-                                    Form = aboutYouForm,
-                                    SortOrder = 1,
-                                },
-                                new SectionForm
-                                {
-                                    Form = companyDetailsForm,
-                                    SortOrder = 2,
-                                }
-                            }
-                        }
-                    },
-                    new DigitalServiceSection
-                    {
-                        SortOrder = 2,
-                        Section = new Section
-                        {
-                            Id = Guid.NewGuid(),
-                            Name = "Financial Information",
-                            Description = "Please provide your financial information to proceed with the application.",
-                            SectionForms = new List<SectionForm>
-                            {
-                                new SectionForm
-                                {
-                                    Form = individualsIncomeForm,
-                                    SortOrder = 1,
-                                },
-                                new SectionForm
-                                {
-                                    Form = individualsDebtsForm,
-                                    SortOrder = 2,
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            new DigitalService
-            {
-                Id = Guid.NewGuid(),
-                Name = "dcrs.local",
-                Title = "Director Conduct Reporting Service",
-                DigitalServiceSections = new List<DigitalServiceSection>
-                {
-                    new DigitalServiceSection
-                    {
-                        SortOrder = 1,
-                        Section = new Section
-                        {
-                            Id = Guid.NewGuid(),
-                            Name = "Your Information",
-                            Description = "Please provide your information to proceed with the application.",
-                            SectionForms = new List<SectionForm>
-                            {
-                                new SectionForm
-                                {
-                                    Form = aboutYouForm,
-                                    SortOrder = 1,
-                                }
-                            },
-                        }
-                    },
-                    new DigitalServiceSection
-                    {
-                        SortOrder = 2,
-                        Section = new Section
-                        {
-                            Id = Guid.NewGuid(),
-                            Name = "Your Salary & Income",
-                            Description = "Please provide your company details and income information.",
-                            SectionForms = new List<SectionForm>
-                            {
-                                new SectionForm
-                                {
-                                    Form = companyDetailsForm,
-                                    SortOrder = 1,
-                                },
-                                new SectionForm
-                                {
-                                    Form = individualsIncomeForm,
-                                    SortOrder = 2,
-                                },
-                            },
-                        }
-                    }
-                }
-            }
-        };
     }
 }

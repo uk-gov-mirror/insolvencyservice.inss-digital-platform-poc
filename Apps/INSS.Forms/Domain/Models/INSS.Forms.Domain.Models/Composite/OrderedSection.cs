@@ -1,37 +1,28 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Text.Json.Serialization;
-
-namespace INSS.Forms.Domain.Models.Configuration
+﻿namespace INSS.Forms.Domain.Models.Composite
 {
     /// <summary>
-    /// Represents a section in a form workflow.
+    /// DTO that represents a section with an explicit order, name, and description.
     /// </summary>
-    [Table("section")]
-    public class Section
+    public class OrderedSection
     {
         /// <summary>
         /// Gets or sets the unique identifier for the section.
         /// </summary>
-        [Key]
         public Guid Id { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the section.
         /// </summary>
-        [Required]
-        [MaxLength(255)]
         public string Name { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the description of the section.
         /// </summary>
-        [MaxLength(1000)]
         public string Description { get; set; } = string.Empty;
 
         /// <summary>
-        /// Gets or sets the collection of forms associated with this section.
+        /// Gets or sets the sort order of the section.
         /// </summary>
-        public ICollection<SectionForm> SectionForms { get; set; } = [];
+        public int SortOrder { get; set; }
     }
 }
