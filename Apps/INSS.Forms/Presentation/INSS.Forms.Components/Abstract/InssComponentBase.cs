@@ -10,8 +10,8 @@ namespace INSS.Forms.Components.Abstract
         private const string idPrefix = "inss-form-element-id-";
 
         /// <summary>
-        /// Gets or sets the name of the form element.
-        /// This parameter is required.
+        /// Gets or sets the unique name for the component.
+        /// This name is used as part of the generated element IDs and names.
         /// </summary>
         [Parameter]
         [EditorRequired] // This makes the parameter mandatory

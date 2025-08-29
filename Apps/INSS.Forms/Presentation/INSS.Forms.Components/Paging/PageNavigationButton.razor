@@ -1,0 +1,40 @@
+@inject IFormPageNavigatorService FormPageNavigationService
+
+@if (FormPageNavigationService.IsLastPage)
+{
+    <GdsButtonField Name="submit-btn" IsDisabled="@IsDisabled" OnClick="@FormPageNavigationService.SubmitFormAsync">
+        Submit
+    </GdsButtonField>
+}
+else
+{
+    <GdsButtonField Name="next-btn" IsDisabled="@IsDisabled" OnClick="@OnNextClick">
+        Next
+    </GdsButtonField>
+}
+
+@code{
+    [Parameter]
+    public EventCallback OnNext { get; set; }
+
+    [Parameter]
+    public bool IsDisabled { get; set; } = false;
+
+    private void OnNextClick()
+    {
+        if (OnNext.HasDelegate)
+        {
+            OnNext.InvokeAsync();
+        }
+        else
+        {
+            FormPageNavigationService.NextPage();
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        FormPageNavigationService.OnPageChange += StateHasChanged;
+        base.OnInitialized();
+    }
+}

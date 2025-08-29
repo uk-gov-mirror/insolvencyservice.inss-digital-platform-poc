@@ -8,7 +8,7 @@ namespace INSS.Forms.Components.Abstract
     /// Supports adding, changing, and removing items, as well as navigation between list-related pages.
     /// </summary>
     /// <typeparam name="TItem">The type of items in the form list.</typeparam>
-    public abstract class FormListBase<TItem> : FormNavigationBase where TItem : class, new()
+    public abstract class FormListBase<TItem> : InssFormBase where TItem : class, new()
     {
         /// <summary>
         /// Gets or sets the current index in the form data list.
@@ -43,7 +43,7 @@ namespace INSS.Forms.Components.Abstract
         /// <summary>
         /// Gets a value indicating whether the "Next" button should be disabled.
         /// </summary>
-        protected bool IsNextButtonDisabled => AddNewItemValue is null && IsCurrentPage(EntityNames.List);
+        protected bool IsNextButtonDisabled => AddNewItemValue is null && FormPageNavigationService.IsCurrentPage(EntityNames.List);
 
         /// <summary>
         /// Gets or sets the form data that will be used in the list.
@@ -66,12 +66,12 @@ namespace INSS.Forms.Components.Abstract
         /// </summary>
         /// <param name="index">The index to skip to.</param>
         /// <param name="page">The name of the page to navigate to.</param>
-        protected async Task SkipTo(int index, string page)
+        protected void SkipTo(int index, string page)
         {
             if (index >= 0 && index < ListItems.Count)
             {
                 ListIndex = index;
-                await Next(page).ConfigureAwait(false);
+                FormPageNavigationService.NextPage(page);
             }
         }
 
@@ -98,13 +98,13 @@ namespace INSS.Forms.Components.Abstract
         /// Navigates to the change page if the index is valid.
         /// </summary>
         /// <param name="index">The index of the item to change.</param>
-        protected async Task ChangeItem(int index)
+        protected void ChangeItem(int index)
         {
             if (index >= 0 && index < ListItems.Count)
             {
                 ChangingItem = true;
                 ListIndex = index;
-                await Next(EntityNames.ListChange).ConfigureAwait(false);
+                FormPageNavigationService.NextPage(EntityNames.ListChange);
             }
         }
 
@@ -114,13 +114,28 @@ namespace INSS.Forms.Components.Abstract
         /// </summary>
         /// <param name="index">The index of the item to remove.</param>
         /// <param name="entityName">The name of the entity being removed.</param>
-        protected async Task ConfirmRemoveItem(int index, string entityName)
+        protected void ConfirmRemoveItem(int index, string entityName)
         {
             RemovingItem = true;
             ListIndex = index;
             KeyEntityValue = entityName;
 
-            await Next(EntityNames.ConfirmAction).ConfigureAwait(false);
+            FormPageNavigationService.NextPage(EntityNames.ConfirmAction);
+        }
+
+
+        /// <summary>
+        /// Navigates to the previous page in the form workflow.
+        /// </summary>
+        /// <remarks>Resets the <see cref="ChangingItem"/> and <see cref="RemovingItem"/> flags to <see
+        /// langword="false"/>  before navigating. This method is typically used to handle user actions that require
+        /// moving  backward in a multi-step form or wizard.</remarks>
+        protected void PreviousPageHandler()
+        {
+            ChangingItem = false;
+            RemovingItem = false;
+
+            FormPageNavigationService.PreviousPage();
         }
 
         /// <summary>
@@ -128,33 +143,33 @@ namespace INSS.Forms.Components.Abstract
         /// Supports adding, changing, and removing items, as well as navigation to summary or other pages.
         /// </summary>
         /// <param name="keyPropertyName">The key property name used for navigation after adding or removing items.</param>
-        protected async Task NextHandler(string keyPropertyName)
+        protected void NextPageHandler(string keyPropertyName)
         {
             ChangingItem = false;
 
-            if (IsCurrentPage(EntityNames.List))
+            if (FormPageNavigationService.IsCurrentPage(EntityNames.List))
             {
                 if (AddNewItemValue == ConfirmType.Yes.ToString())
                 {
                     AddNewItemValue = null;
                     ListItems.Add(new TItem());
                     ListIndex = ListItems.Count - 1;
-                    await Next(keyPropertyName).ConfigureAwait(false);
+                    FormPageNavigationService.NextPage(keyPropertyName);
                     return;
                 }
                 else if (AddNewItemValue == ConfirmType.No.ToString())
                 {
-                    await Next(EntityNames.Summary).ConfigureAwait(false);
+                    FormPageNavigationService.NextPage(EntityNames.Summary);
                 }
 
                 AddNewItemValue = null;
                 return;
             }
-            else if (IsCurrentPage(EntityNames.ListChange))
+            else if (FormPageNavigationService.IsCurrentPage(EntityNames.ListChange))
             {
-                await Next(EntityNames.List).ConfigureAwait(false);
+                FormPageNavigationService.NextPage(EntityNames.List);
             }
-            else if (IsCurrentPage(EntityNames.ConfirmAction))
+            else if (FormPageNavigationService.IsCurrentPage(EntityNames.ConfirmAction))
             {
                 if (ConfirmValue == ConfirmType.Yes.ToString())
                 {
@@ -171,16 +186,16 @@ namespace INSS.Forms.Components.Abstract
                     {
                         ListItems.Add(new TItem());
                         ListIndex = 0;
-                        await Next(keyPropertyName).ConfigureAwait(false);
+                        FormPageNavigationService.NextPage(keyPropertyName);
                     }
                     else
                     {
-                        await Next(EntityNames.List).ConfigureAwait(false);
+                        FormPageNavigationService.NextPage(EntityNames.List);
                     }
                 }
                 else
                 {
-                    await Next(EntityNames.List).ConfigureAwait(false);
+                    FormPageNavigationService.NextPage(EntityNames.List);
                 }
 
                 ConfirmValue = null;
@@ -188,7 +203,7 @@ namespace INSS.Forms.Components.Abstract
             }
             else
             {
-                await Next().ConfigureAwait(false);
+                FormPageNavigationService.NextPage();
             }
         }
     }

@@ -5,38 +5,38 @@
 
 <HeadingText Name="heading-debts">Individual's Debts</HeadingText>
 
-<GdsBackField Name="back-btn" IsVisible="@(!IsFirstPage && !PageVisibility(EntityNames.List))" OnClick="@Back" />
+<PreviousPageLink OnPrevious="@PreviousPageHandler" />
 
-<PageFields IsVisible="@PageVisibility(EntityNames.CreditorName)">
+<Page Name="@EntityNames.CreditorName">
     <GdsTextInputField Text="@Questions.WhatIsThe(Labels.CreditorName)" Name="@IndexedName(EntityNames.CreditorName, ListIndex)" @bind-Value="individualsDebts.Debts[ListIndex].CreditorName" />
-</PageFields>
+</Page>
 
-<PageFields IsVisible="@(PageVisibility(EntityNames.InitialDebt))">
+<Page Name="@EntityNames.InitialDebt">
     <GdsCurrencyInputField Text="@Questions.WhatIsThe(Labels.InitialDebt)" Name="@IndexedName(EntityNames.InitialDebt, ListIndex)" @bind-Value="individualsDebts.Debts[ListIndex].InitialDebt" />
-</PageFields>
+</Page>
 
-<PageFields IsVisible="@PageVisibility(EntityNames.DateDebtTakenOut)">
+<Page Name="@EntityNames.DateDebtTakenOut">
     <GdsDateInputField Text="@Questions.WhatDateWasThe(Labels.DebtTakenOut)" Name="@IndexedName(EntityNames.DateDebtTakenOut, ListIndex)" @bind-Value="individualsDebts.Debts[ListIndex].DateDebtTakenOut" />
-</PageFields>
+</Page>
 
-<PageFields IsVisible="@PageVisibility(EntityNames.OutstandingDebt)">
+<Page Name="@EntityNames.OutstandingDebt">
     <GdsCurrencyInputField Text="@Questions.WhatIsThe(Labels.OutstandingDebt)" Name="@IndexedName(EntityNames.OutstandingDebt, ListIndex)" @bind-Value="individualsDebts.Debts[ListIndex].OutstandingDebt" />
-</PageFields>
+</Page>
 
-<PageFields IsVisible="@PageVisibility(EntityNames.PaymentFrequency)">
+<Page Name="@EntityNames.PaymentFrequency">
     <GdsRadioButtonsField Name="@IndexedName(EntityNames.PaymentFrequency, ListIndex)"
         Text="How often do you make the payments?"
         Items="@paymentFrequencyOptions"
         Value="@individualsDebts.Debts[ListIndex].PaymentFrequency.ToString()"
         ValueChanged="@(v => individualsDebts.Debts[ListIndex].PaymentFrequency = Enum.Parse<PaymentFrequencyType>(v))" />
-</PageFields>
+</Page>
 
-<PageFields IsVisible="@PageVisibility(EntityNames.PaymentAmount)">
+<Page Name="@EntityNames.PaymentAmount">
     <GdsCurrencyInputField Text="What is the payment amount?" Name="@IndexedName(EntityNames.PaymentAmount, ListIndex)" @bind-Value="individualsDebts.Debts[ListIndex].PaymentAmount" />
-</PageFields>
+</Page>
 
 
-<PageFields IsVisible="@PageVisibility(EntityNames.List)">
+<Page Name="@EntityNames.List">
     <IndividualsDebtsList 
         Name="@EntityNames.List"
         FormData="individualsDebts"
@@ -47,22 +47,21 @@
         OnRemove="@(index => ConfirmRemoveItem(index, individualsDebts.Debts[index].CreditorName))"
         @bind-Value="AddNewItemValue"
      />
-</PageFields>
+</Page>
 
-<PageFields IsVisible="@PageVisibility(EntityNames.ListChange, () => ChangingItem is false)">
-    <IndividualsDebtsListItem Name="@EntityNames.ListChange" FormData="individualsDebts.Debts[ListIndex]" OnNext="@(page => Next(page))" />
-</PageFields>
+<Page Name="@EntityNames.ListChange" Hide="@(!ChangingItem)">
+    <IndividualsDebtsListItem Name="@EntityNames.ListChange" FormData="individualsDebts.Debts[ListIndex]" OnNext="@(page => FormPageNavigationService.NextPage(page))" />
+</Page>
 
-<PageFields IsVisible="@PageVisibility(EntityNames.ConfirmAction, () => RemovingItem is false)">
+<Page Name="@EntityNames.ConfirmAction" Hide="@(!RemovingItem)">
     <Confirm Name="@EntityNames.ConfirmAction" Text='@($"Are you sure you want to remove {KeyEntityValue} ?")' Value="@ConfirmValue" OnConfirmChanged="@ConfirmChanged" />
-</PageFields>
+</Page>
 
-<PageFields IsVisible="@PageVisibility(EntityNames.Summary)">
+<Page Name="@EntityNames.Summary">
     <IndividualsDebtsListSummary Name="@EntityNames.Summary" FormData="individualsDebts" OnClick="@(args => SkipTo(args.index, args.page))" />
-</PageFields>
+</Page>
 
-
-<GdsFormNavButton Name="@EntityNames.NextButton" IsLastPage="@IsLastPage" IsDisabled="@IsNextButtonDisabled" OnClick="@(e => NextHandler(EntityNames.CreditorName))" />
+<PageNavigationButton IsDisabled="@IsNextButtonDisabled" OnNext="@(e => NextPageHandler(EntityNames.CreditorName))" />
 
 @code {
 
@@ -71,24 +70,8 @@
 
     protected override void OnInitialized()
     {
-        individualsDebts.InitializeMetadata(FormMetadataHelper.CreateFromQueryString(NavigationManager));
-        AllFormData = individualsDebts;
         ListItems = individualsDebts.Debts;
 
-        PageNames = new string[]
-        {
-            EntityNames.CreditorName,
-            EntityNames.InitialDebt,
-            EntityNames.DateDebtTakenOut,
-            EntityNames.OutstandingDebt,
-            EntityNames.PaymentFrequency,
-            EntityNames.PaymentAmount,
-            EntityNames.List,
-            EntityNames.ListChange,
-            EntityNames.ConfirmAction,
-            EntityNames.Summary
-        };
-
-        base.OnInitialized();
+        base.OnInitialized(individualsDebts);
     }
 }

@@ -1,3 +1,5 @@
+using INSS.Forms.Components.Abstract;
+using INSS.Forms.Components.Services;
 using INSS.Forms.Runner.WebApp.Components;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,6 +9,13 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 builder.Services.AddHttpClient();
+
+builder.Services.AddScoped<IFormPageNavigatorService, FormPageNavigatorService>();
+
+builder.Services.AddScoped<IFormMetadataService, FormMetadataService>();
+
+builder.Services.AddScoped<IFormApiClient, FormApiClient>();
+
 
 var app = builder.Build();
 
