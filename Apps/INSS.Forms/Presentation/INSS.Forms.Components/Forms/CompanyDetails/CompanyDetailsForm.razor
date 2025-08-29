@@ -1,46 +1,46 @@
 ﻿@page "/company-details"
-@inherits FormNavigationBase
+@inherits InssFormBase
 
 <PageTitle>Company Details</PageTitle>
 
 <HeadingText Name="heading-company-details">Company Details</HeadingText>
 
-<GdsBackField Name="back-btn" IsVisible="@(!IsFirstPage )" OnClick="@Back" />
+<PreviousPageLink />
 
-<PageFields IsVisible="@PageVisibility(EntityNames.CompanyName)">
+<Page Name="@EntityNames.CompanyName">
     <GdsTextInputField Text="@Questions.WhatIsYour(Labels.CompanyName)" Name="@EntityNames.CompanyName" @bind-Value="companyDetailsForm.CompanyName" />
-</PageFields>
+</Page>
 
-<PageFields IsVisible="@PageVisibility(EntityNames.CompanyType)">
+<Page Name="@EntityNames.CompanyType">
     <GdsRadioButtonsField 
         Name="@EntityNames.CompanyType"
         Text="@Questions.WhatIsYour(Labels.CompanyType)"
         Items="@companyTypeOptions"
         Value="@companyDetailsForm.CompanyType.ToString()"
-        ValueChanged="@(v => UpdateCompanyType(v))" />
-</PageFields>
+        ValueChanged="@(companyType => UpdateCompanyTypeValues(companyType))" />
+</Page>
 
-<PageFields IsVisible="@PageVisibility(EntityNames.CompaniesHouseReferenceNumber, ShouldCompaniesHouseReferenceNumberBeHidden)">
+<Page Name="@EntityNames.CompaniesHouseReferenceNumber" Hide="@(IsLimitedCompany is false)">
     <GdsTextInputField text="@Questions.WhatIsYour(Labels.CompaniesHouseReferenceNumber)" Name="@EntityNames.CompaniesHouseReferenceNumber" @bind-Value="companyDetailsForm.CompaniesHouseReferenceNumber" />
-</PageFields>
+</Page>
 
-<PageFields IsVisible="@PageVisibility(EntityNames.CharityReferenceNumber, ShouldCharityNumberBeHidden)">
+<Page Name="@EntityNames.CharityReferenceNumber" Hide="@(IsRegisteredCharity is false)">
     <GdsTextInputField text="@Questions.WhatIsYour(Labels.CharityReferenceNumber)" Name="@EntityNames.CharityReferenceNumber" @bind-Value="companyDetailsForm.CharityReferenceNumber" />
-</PageFields>
+</Page>
 
-<PageFields IsVisible="@PageVisibility(EntityNames.CompanyAddress)">
+<Page Name="@EntityNames.CompanyAddress">
     <AddressFields Text="@Questions.WhatIsYour(Labels.CompanyAddress)" Name="@EntityNames.CompanyAddress" @bind-Value="companyDetailsForm.CompanyAddress" />
-</PageFields>
+</Page>
 
-<PageFields IsVisible="@PageVisibility(EntityNames.CompanyTelephone)">
+<Page Name="@EntityNames.CompanyTelephone">
     <GdsTextInputField Text="@Questions.WhatIsYour(Labels.CompanyTelephone)" Name="@EntityNames.CompanyTelephone" @bind-Value="companyDetailsForm.CompanyTelephone" />
-</PageFields>
+</Page>
 
-<PageFields IsVisible="@PageVisibility(EntityNames.Summary)">
-    <CompanyDetailsSummary Name="@EntityNames.Summary" FormData="@companyDetailsForm" OnNext="@(page => Next(page))" />
-</PageFields>
+<Page Name="@EntityNames.Summary">
+    <CompanyDetailsSummary Name="@EntityNames.Summary" FormData="@companyDetailsForm" OnNext="@(page => FormPageNavigationService.NextPage(page))" />
+</Page>
 
-<GdsFormNavButton Name="@EntityNames.NextButton" IsLastPage="@IsLastPage" OnClick="@Next" />
+<PageNavigationButton />
 
 @code {
 
@@ -49,32 +49,14 @@
 
     protected override void OnInitialized()
     {
-        companyDetailsForm.InitializeMetadata(FormMetadataHelper.CreateFromQueryString(NavigationManager));
-        AllFormData = companyDetailsForm;
-
-        PageNames = new string[]
-        {
-            EntityNames.CompanyName,
-            EntityNames.CompanyType,
-            EntityNames.CompaniesHouseReferenceNumber,
-            EntityNames.CharityReferenceNumber,
-            EntityNames.CompanyAddress,
-            EntityNames.CompanyTelephone,
-            EntityNames.Summary
-        };
+        base.OnInitialized(companyDetailsForm);
     }
 
-    private bool ShouldCompaniesHouseReferenceNumberBeHidden()
-    {
-        return companyDetailsForm.CompanyType != CompanyType.LimitedCompany;
-    }
+    private bool IsLimitedCompany => companyDetailsForm.CompanyType == CompanyType.LimitedCompany;
 
-    private bool ShouldCharityNumberBeHidden()
-    {
-        return companyDetailsForm.CompanyType != CompanyType.RegisteredCharity;
-    }
+    private bool IsRegisteredCharity => companyDetailsForm.CompanyType == CompanyType.RegisteredCharity;
 
-    private void UpdateCompanyType(string value)
+    private void UpdateCompanyTypeValues(string value)
     {
         companyDetailsForm.CompanyType = Enum.Parse<CompanyType>(value);
         companyDetailsForm.CompaniesHouseReferenceNumber = string.Empty;

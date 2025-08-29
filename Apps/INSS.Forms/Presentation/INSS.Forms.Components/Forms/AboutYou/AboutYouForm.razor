@@ -1,37 +1,37 @@
 ﻿@page "/about-you"
-@inherits FormNavigationBase
+@inherits InssFormBase
 
 <PageTitle>About You</PageTitle>
 
 <HeadingText Name="heading-about-you">About You</HeadingText>
 
-<GdsBackField Name="back-btn" IsVisible=@(!IsFirstPage) OnClick="@Back" />
+<PreviousPageLink />
 
-<PageFields IsVisible="@PageVisibility(EntityNames.Name)">
+<Page Name="@EntityNames.Name">
     <GdsTextInputField Text="@Questions.WhatIsYour(Labels.Name)" Name="@EntityNames.Name" @bind-Value="aboutYouForm.Name" />
-</PageFields>
+</Page>
 
-<PageFields IsVisible="@PageVisibility(EntityNames.DateOfBirth)">
+<Page Name="@EntityNames.DateOfBirth">
     <GdsDateInputField Text="@Questions.WhatIsYour(Labels.DateOfBirth)" Name="@EntityNames.DateOfBirth" Hint="For example, 27 3 2007" @bind-Value="aboutYouForm.DateOfBirth" />
-</PageFields>
+</Page>
 
-<PageFields IsVisible="@PageVisibility(EntityNames.Address)">
+<Page Name="@EntityNames.Address">
     <AddressFields Text="@Questions.WhatIsYour(Labels.Address)" Name="@EntityNames.Address" @bind-Value="aboutYouForm.Address" />
-</PageFields>
+</Page>
 
-<PageFields IsVisible="@PageVisibility(EntityNames.Telephone)">
+<Page Name="@EntityNames.Telephone">
     <GdsTextInputField Text="@Questions.WhatIsYour(Labels.Telephone)" Name="@EntityNames.Telephone" @bind-Value="aboutYouForm.Telephone" />
-</PageFields>
+</Page>
 
-<PageFields IsVisible="@PageVisibility(EntityNames.Email)">
+<Page Name="@EntityNames.Email">
     <GdsTextInputField Text="@Questions.WhatIsYour(Labels.Email)" Type="email" Name="@EntityNames.Email" @bind-Value="aboutYouForm.Email" />
-</PageFields>
+</Page>
 
-<PageFields IsVisible="@PageVisibility(EntityNames.Summary)">
-    <AboutYouSummary Name="@EntityNames.Summary" FormData="@aboutYouForm" OnNext="@(page => Next(page))" />
-</PageFields>
+<Page Name="@EntityNames.Summary">
+    <AboutYouSummary Name="@EntityNames.Summary" FormData="@aboutYouForm" OnNext="@(page => FormPageNavigationService.NextPage(page))" />
+</Page>
 
-<GdsFormNavButton Name="@EntityNames.NextButton" IsLastPage="@IsLastPage" OnClick="@Next" />
+<PageNavigationButton />
 
 
 @code {
@@ -40,19 +40,6 @@
 
     protected override void OnInitialized()
     {
-        aboutYouForm.InitializeMetadata(FormMetadataHelper.CreateFromQueryString(NavigationManager));
-        AllFormData = aboutYouForm;
-
-        PageNames = new string[]
-        {
-            EntityNames.Name,
-            EntityNames.DateOfBirth,
-            EntityNames.Address,
-            EntityNames.Telephone,
-            EntityNames.Email,
-            EntityNames.Summary
-        };
-
-        base.OnInitialized();
+        base.OnInitialized(aboutYouForm);
     }
 }

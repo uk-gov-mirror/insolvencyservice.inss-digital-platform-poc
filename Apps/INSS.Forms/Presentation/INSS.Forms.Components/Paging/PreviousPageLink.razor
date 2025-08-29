@@ -1,0 +1,34 @@
+﻿@inject IFormPageNavigatorService FormPageNavigationService
+
+
+<GdsBackField Name="back-btn" IsVisible="@(!FormPageNavigationService.IsFirstPage && !FormPageNavigationService.PageVisibility(EntityNames.List))" OnClick="@OnPreviousClick" />
+
+
+
+@code {
+
+    [Parameter]
+    public EventCallback OnPrevious { get; set; }
+
+    private void OnPreviousClick()
+    {
+        if (OnPrevious.HasDelegate)
+        {
+            OnPrevious.InvokeAsync();
+        }
+        else
+        {
+            FormPageNavigationService.PreviousPage();
+        }
+    }
+
+
+    protected override void OnInitialized()
+    {
+        FormPageNavigationService.OnPageChange += StateHasChanged;
+        base.OnInitialized();
+    }
+}
+
+
+

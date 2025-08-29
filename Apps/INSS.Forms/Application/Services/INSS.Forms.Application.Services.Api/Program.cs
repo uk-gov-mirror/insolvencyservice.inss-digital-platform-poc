@@ -34,13 +34,6 @@ builder.Services.AddSingleton<CosmosClient>(provider =>
     return new CosmosClient(cosmosConnectionString, cosmosClientOptions);
 });
 
-// Register IFormRepository with injected Logger and CosmosClient
-builder.Services.AddScoped<IFormRepository, FormRepository>(provider =>
-{
-    var logger = provider.GetRequiredService<ILogger<FormRepository>>();
-    var cosmosClient = provider.GetRequiredService<CosmosClient>();
-    return new FormRepository(logger, cosmosClient);
-});
 
 // Register DbContext for Entity Framework
 builder.Services.AddDbContext<ConfigurationDbContext>(options =>
@@ -56,13 +49,9 @@ builder.Services.AddDbContext<ConfigurationDbContext>(options =>
     options.UseSqlServer(sqlConnectionString);
 });
 
-// Register the configuration repository
-builder.Services.AddScoped<IConfigurationRepository, ConfigurationRepository>(provider =>
-{
-    var logger = provider.GetRequiredService<ILogger<ConfigurationRepository>>();
-    var dbContext = provider.GetRequiredService<ConfigurationDbContext>();
-    return new ConfigurationRepository(logger, dbContext);
-});
+builder.Services.AddScoped<IFormRepository, FormRepository>();
+
+builder.Services.AddScoped<IConfigurationRepository, ConfigurationRepository>();
 
 builder.Services.AddControllers()
 .AddJsonOptions(options =>
