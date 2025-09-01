@@ -39,9 +39,11 @@
             />
         }
 
-        <GdsButtonField Name="apply-btn" IsDisabled="@(!allFormsCompleted)" OnClick="@NavigateToCompletedPage">
-            Apply
-        </GdsButtonField>
+        <form name="ds-apply" method="get" action="/completed/@formSetInstanceId">
+            <GdsButtonField Name="apply-btn" IsDisabled="@(!allFormsCompleted)">
+                Apply
+            </GdsButtonField>
+        </form>
     }
 
 </GridContainerLayout>
@@ -78,11 +80,10 @@
 
         if (digitalService != null)
         {
-            IEnumerable<Guid> formIds = new List<Guid>();
+            IEnumerable<Guid> formIds = await GetDigitalServiceFormIdsAsync(digitalService.Id).ConfigureAwait(false);
             if (formSetInstanceId.HasValue)
             {
                 formInstances = await GetFormInstancesAsync(formSetInstanceId.Value).ConfigureAwait(false);
-                formIds = await GetDigitalServiceFormIdsAsync(digitalService.Id).ConfigureAwait(false);
             }
 
             sections = (await GetSectionsAsync(digitalService.Id).ConfigureAwait(false)).ToList();
@@ -94,6 +95,7 @@
                 .ToDictionary(x => x.Id, x => (IReadOnlyList<TaskListItemMetadata>)x.Items);
 
             pageTitle = $"Launch {digitalService.Title}";
+
             allFormsCompleted = formIds.All(formId => formInstances.Any(f => f.FormMetadata.FormId == formId));
         }
         else
@@ -275,13 +277,5 @@
             }).ToList();
 
         return result;
-    }
-
-    /// <summary>
-    /// Navigates to the completed page with the current form set instance identifier.
-    /// </summary>
-    private void NavigateToCompletedPage()
-    {
-        NavigationManager.NavigateTo($"/completed/{formSetInstanceId}");
     }
 }
