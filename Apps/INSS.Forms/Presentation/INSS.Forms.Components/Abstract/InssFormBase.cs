@@ -34,7 +34,7 @@ namespace INSS.Forms.Components.Abstract
         /// <summary>
         /// Gets or sets the service for retrieving form instance metadata.
         /// </summary>
-        [Inject] protected IFormMetadataService FormMetadata { get; set; } = default!;
+        [Inject] protected IFormMetadataService FormMetadataService { get; set; } = default!;
 
         /// <summary>
         /// Gets or sets the API client for posting form data.
@@ -54,7 +54,7 @@ namespace INSS.Forms.Components.Abstract
         /// <param name="form">The form instance to initialize.</param>
         protected void OnInitialized<T>(T form) where T : FormBase
         {
-            form.InitializeMetadata(FormMetadata.CreateFromQueryString());
+            form.InitializeMetadata(FormMetadataService.CreateFromQueryString());
             _formData = form;
 
             FormPageNavigationService.OnPageChange += HandlePageChange;
