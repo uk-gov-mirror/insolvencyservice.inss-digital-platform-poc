@@ -1,0 +1,27 @@
+@model INSS.Forms.RCL.Models.InputModel
+
+@{
+    var propertyName = Model.Name;
+    var validationMessage = ViewContext.ViewData.ModelState[propertyName]?.Errors.FirstOrDefault()?.ErrorMessage;
+}
+
+<div class="govuk-form-group" id="inss-forms-id-input-group">
+    <h1 class="govuk-label-wrapper" id="inss-forms-id-input-group-label">
+        <label class="govuk-label @(Model.SmallText ? "" : "govuk-label--l")" for="@Model.Name">
+            @Model.Label
+        </label>
+    </h1>
+    <input class="govuk-input"
+           id="@Model.Name"
+           name="@Model.Name"
+           type="@Model.Type"
+           placeholder="@Model.PlaceHolder"
+           title="@Model.Label"
+           value="@Model.Value" />
+
+    @if (!string.IsNullOrEmpty(validationMessage))
+    {
+        <span class="govuk-error-message">@validationMessage</span>
+    }
+
+</div>

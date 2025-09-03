@@ -1,0 +1,18 @@
+﻿@page "/about-you/email"
+@using INSS.Forms.RCL.Models
+@model AboutYouEmailModel
+
+<h1 class="govuk-heading-xl">
+    About You
+</h1>
+
+
+<form method="post">
+
+    <vc:input name="Form.Email" label="What is your email" type="email" value="@Model.Email" />
+
+    <vc:button model="@(new ButtonModel { Text = "Next" })" />
+
+</form>
+
+

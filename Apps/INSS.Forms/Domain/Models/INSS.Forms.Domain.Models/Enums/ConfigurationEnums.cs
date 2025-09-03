@@ -15,10 +15,17 @@ namespace INSS.Forms.Domain.Models.Enums
         /// </summary>
         [Description("Debt Relief Order")]
         Dro,
+
         /// <summary>
         /// Represents a Director Conduct Reporting Service (DCRS).
         /// </summary>
         [Description("Director Conduct Reporting Service")]
-        Dcrs
+        Dcrs,
+
+        /// <summary>
+        /// Represents an Unknown service.
+        /// </summary>
+        [Description("Unknown Service")]
+        Unknown
     }
 }
