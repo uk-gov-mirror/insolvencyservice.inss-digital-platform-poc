@@ -1,0 +1,23 @@
+@using INSS.Forms.Domain.Models.Composite
+@using INSS.Forms.Domain.Models.Forms
+
+@model Address
+
+
+<fieldset class="govuk-fieldset" id="inss-forms-id-address-fields">
+    <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+        <h1 class="govuk-fieldset__heading" id="inss-forms-id-address-fields-heading">
+            What is your Address ?
+        </h1>
+    </legend>
+
+
+    <vc:input name="Address.Address1" label="Address Line 1" value="@Model.Address1" small-text=true />
+    <vc:input name="Address.Address2" label="Address Line 2" value="@Model.Address2" small-text=true />
+    <vc:input name="Address.Town" label="Town" value="@Model.Town" small-text=true />
+    <vc:input name="Address.Postcode" label="Postcode" value="@Model.Postcode" small-text=true />
+  
+</fieldset>
+
+
+

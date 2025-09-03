@@ -1,0 +1,11 @@
+@using INSS.Forms.RCL.Models
+@model ButtonModel
+
+<button type="submit"
+        class="govuk-button @(Model.Disabled ? "govuk-button--disabled" : "")"
+        data-module="govuk-button"
+        title="@Model.Text"
+        disabled="@Model.Disabled"
+        aria-disabled="@Model.Disabled">
+    @Model.Text
+</button>

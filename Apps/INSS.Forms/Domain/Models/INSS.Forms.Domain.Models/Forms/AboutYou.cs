@@ -1,5 +1,6 @@
 ﻿using INSS.Forms.Domain.Models.Abstract;
 using INSS.Forms.Domain.Models.Composite;
+using System.ComponentModel.DataAnnotations;
 
 namespace INSS.Forms.Domain.Models.Forms
 {
@@ -11,6 +12,7 @@ namespace INSS.Forms.Domain.Models.Forms
         /// <summary>
         /// Gets or sets the name of the person.
         /// </summary>
+        [Required]
         public string Name { get; set; } = string.Empty;
 
         /// <summary>

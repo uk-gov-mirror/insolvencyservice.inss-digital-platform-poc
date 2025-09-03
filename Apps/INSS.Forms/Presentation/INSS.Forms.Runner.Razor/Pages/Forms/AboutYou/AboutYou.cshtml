@@ -1,0 +1,34 @@
+﻿@page "/about-you"
+@using INSS.Forms.RCL.Models
+@model AboutYouModel
+
+<h1 class="govuk-heading-xl">
+    About You
+</h1>
+
+
+<form method="post">
+
+    @if (Model.Form.PageIndex == 0)
+    {
+        <vc:input name="Form.Name" label="What is your name?" value="@Model.Form.Name" />
+    }
+
+    @if (Model.Form.PageIndex == 1)
+    {
+        <vc:address model="@Model.Form.Address" />
+    }
+
+    @if (Model.Form.PageIndex == 2)
+    {
+        <vc:input name="Form.Telephone" label="What is your telephone?" value="@Model.Form.Telephone" />
+    }
+
+    @if (Model.Form.PageIndex == 3)
+    {
+        <vc:input name="Form.Email" label="What is your email" type="email" value="@Model.Form.Email" />
+    }
+
+    <vc:button model="@(new ButtonModel { Text = "Next" })" />
+
+</form>

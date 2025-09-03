@@ -1,0 +1,18 @@
+﻿@page "/about-you/telephone"
+@using INSS.Forms.RCL.Models
+@model AboutYouTelephoneModel
+
+<h1 class="govuk-heading-xl">
+    About You
+</h1>
+
+
+<form method="post">
+
+    <vc:input name="Form.Telephone" label="What is your telephone?" value="@Model.Telephone" />
+
+    <vc:button model="@(new ButtonModel { Text = "Next" })" />
+
+</form>
+
+

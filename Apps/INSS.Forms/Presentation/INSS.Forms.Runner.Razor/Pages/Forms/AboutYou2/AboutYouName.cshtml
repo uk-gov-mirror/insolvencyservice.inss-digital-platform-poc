@@ -1,0 +1,16 @@
+﻿@page "/about-you/name"
+@using INSS.Forms.RCL.Models
+@model AboutYouNameModel
+
+<h1 class="govuk-heading-xl">
+    About You
+</h1>
+
+
+<form method="post">
+
+    <vc:input name="Form.Name" label="What is your name?" value="@Model.Name" />
+
+    <vc:button model="@(new ButtonModel { Text = "Next" })" />
+
+</form>
