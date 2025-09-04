@@ -1,4 +1,5 @@
-﻿using INSS.Forms.Domain.Models.Composite;
+﻿using INSS.Forms.Components.Abstract;
+using INSS.Forms.Domain.Models.Composite;
 using INSS.Forms.Domain.Models.Enums;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.WebUtilities;
@@ -60,8 +61,8 @@ namespace INSS.Forms.Components.Services
                 metadata.DigitalService = DigitalServiceType.Dro;
             else if (returnUrlLower.Contains("dcrs"))
                 metadata.DigitalService = DigitalServiceType.Dcrs;
-            else
-                throw new InvalidOperationException("Return URL does not contain a valid digital service name.");
+//            else
+//                throw new InvalidOperationException("Return URL does not contain a valid digital service name.");
 
             return metadata;
         }

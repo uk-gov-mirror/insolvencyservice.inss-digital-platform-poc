@@ -1,0 +1,35 @@
+﻿@page "/about-you2"
+
+@using Microsoft.AspNetCore.Components.Forms
+@inherits InssFormBase
+@inject AppStateService AppStateService;
+@inject NavigationManager NavigationManager
+
+
+<PageTitle>About You</PageTitle>
+
+<HeadingText Name="heading-about-you">About You</HeadingText>
+
+<h4> Name: @AppStateService?.Data?.Name </h4>
+
+<EditForm method="post" Formname="AboutYou2" Model="aboutYouForm" OnValidSubmit="Submit" class="col-md-4">
+    <DataAnnotationsValidator />
+    <GdsDateInputField Text="@Questions.WhatIsYour(Labels.DateOfBirth)" Name="@EntityNames.DateOfBirth" Hint="For example, 27 3 2007" @bind-Value="aboutYouForm.DateOfBirth" />
+    <button type="submit" class="govuk-button">Next</button>
+</EditForm>
+
+@code {
+
+    private AboutYou aboutYouForm = new AboutYou();
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized(aboutYouForm);
+    }
+
+    private void Submit()
+    {
+        AppStateService.Set(new AppState { DOB = (DateTime)aboutYouForm.DateOfBirth });
+        NavigationManager.NavigateTo("/about-you3");
+    }
+}

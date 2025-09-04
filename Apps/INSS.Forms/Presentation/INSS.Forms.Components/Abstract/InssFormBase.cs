@@ -1,5 +1,4 @@
-﻿using INSS.Forms.Components.Services;
-using INSS.Forms.Domain.Models.Abstract;
+﻿using INSS.Forms.Domain.Models.Abstract;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Configuration;
 
@@ -57,8 +56,8 @@ namespace INSS.Forms.Components.Abstract
             form.InitializeMetadata(FormMetadata.CreateFromQueryString());
             _formData = form;
 
-            FormPageNavigationService.OnPageChange += HandlePageChange;
-            FormPageNavigationService.OnReadyToSave += HandleReadyToSaveAsync;
+            //FormPageNavigationService.OnPageChange += HandlePageChange;
+            //FormPageNavigationService.OnReadyToSave += HandleReadyToSaveAsync;
 
             base.OnInitialized();
         }

@@ -1,6 +1,6 @@
 using INSS.Forms.Domain.Models.Composite;
 
-namespace INSS.Forms.Components.Services
+namespace INSS.Forms.Components.Abstract
 {
     /// <summary>
     /// Provides functionality to create <see cref="FormMetadata"/> from the current query string context.

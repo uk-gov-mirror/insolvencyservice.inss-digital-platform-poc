@@ -16,6 +16,8 @@ builder.Services.AddScoped<IFormMetadataService, FormMetadataService>();
 
 builder.Services.AddScoped<IFormApiClient, FormApiClient>();
 
+builder.Services.AddSingleton<AppStateService>();
+
 
 var app = builder.Build();
 

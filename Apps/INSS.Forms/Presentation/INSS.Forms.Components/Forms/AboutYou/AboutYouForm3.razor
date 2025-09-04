@@ -1,0 +1,34 @@
+﻿@page "/about-you3"
+
+@using Microsoft.AspNetCore.Components.Forms
+@inherits InssFormBase
+@inject AppStateService AppStateService;
+@inject NavigationManager NavigationManager
+
+<PageTitle>About You</PageTitle>
+
+<HeadingText Name="heading-about-you">About You</HeadingText>
+
+<h4> DOB: @AppStateService?.Data?.DOB </h4>
+
+<EditForm method="post" Formname="AboutYou2" Model="aboutYouForm" OnValidSubmit="Submit" class="col-md-4">
+    <DataAnnotationsValidator />
+    <AddressFields Text="@Questions.WhatIsYour(Labels.Address)" Name="@EntityNames.Address" @bind-Value="aboutYouForm.Address" />    
+    <button type="submit" class="govuk-button">Next</button>
+</EditForm>
+
+@code {
+
+    private AboutYou aboutYouForm = new AboutYou();
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized(aboutYouForm);
+    }
+
+    private void Submit()
+    {
+        AppStateService.Set(new AppState { Address = aboutYouForm.Address });
+        NavigationManager.NavigateTo("/about-you4");
+    }
+}

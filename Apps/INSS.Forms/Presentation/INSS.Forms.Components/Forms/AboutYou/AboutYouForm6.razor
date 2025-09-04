@@ -1,0 +1,25 @@
+﻿@page "/about-you6"
+
+@using Microsoft.AspNetCore.Components.Forms
+@inherits InssFormBase
+@inject AppStateService AppStateService;
+@inject NavigationManager NavigationManager
+
+<PageTitle>About You</PageTitle>
+
+<HeadingText Name="heading-about-you">About You</HeadingText>
+
+<h4> Name: @AppStateService?.Data?.Name</h4>
+<h4> Email: @AppStateService?.Data?.Email </h4>
+
+<AboutYouSummary Name="@EntityNames.Summary" FormData="@aboutYouForm" OnNext="@(page => FormPageNavigationService.NextPage(page))" />
+
+@code {
+
+    private AboutYou aboutYouForm = new AboutYou();
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized(aboutYouForm);
+    }
+}

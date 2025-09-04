@@ -1,4 +1,4 @@
-namespace INSS.Forms.Components.Services
+namespace INSS.Forms.Components.Abstract
 {
     /// <summary>
     /// Defines navigation functionality for multi-page forms, including page transitions and visibility logic.
