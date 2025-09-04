@@ -15,6 +15,10 @@
         <div id="@(id)-hint" class="govuk-hint">
             @Model.Hint
         </div>
+        @if (!string.IsNullOrEmpty(validationMessage))
+        {
+            <p class="govuk-error-message">Error: @validationMessage</p>
+        }
         <div class="govuk-radios @(Model.Inline ? "govuk-radios--inline" : "")" data-module="govuk-radios" id="@(id)-radios">
             @foreach (var item in @Model.Items)
             {
@@ -32,9 +36,5 @@
                 </div>
             }
         </div>
-        @if (!string.IsNullOrEmpty(validationMessage))
-        {
-            <span class="govuk-error-message">@validationMessage</span>
-        }
     </fieldset>
 </div>

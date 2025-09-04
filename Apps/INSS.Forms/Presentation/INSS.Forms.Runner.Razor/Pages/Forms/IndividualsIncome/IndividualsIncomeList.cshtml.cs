@@ -42,5 +42,32 @@ namespace INSS.Forms.Runner.Razor.Pages.Forms.IndividualsIncome
                 return Page();
             }
         }
+
+        public IActionResult OnPostChange(int itemIndex)
+        {
+            ItemIndex = itemIndex;
+            PageIndex = 0;
+
+            return RedirectToPage("./IndividualsIncome");
+        }
+
+        public IActionResult OnPostRemove(int itemIndex)
+        {
+            Form = GetFormFromSession();
+            Form.Income.RemoveAt(itemIndex);
+            SaveFormToSession(Form);
+
+            if(Form.Income.Count == 0)
+            {
+                PageIndex = 0;
+                ItemIndex = 0;
+                return RedirectToPage("./IndividualsIncome");
+            }
+            else
+            {
+                ItemIndex = Form.Income.Count - 1;
+                return RedirectToPage();
+            }
+        }
     }
 }

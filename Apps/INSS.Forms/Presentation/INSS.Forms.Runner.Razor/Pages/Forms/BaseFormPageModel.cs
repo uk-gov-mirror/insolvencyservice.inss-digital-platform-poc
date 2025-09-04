@@ -50,16 +50,14 @@ public abstract class BaseFormPageModel<TForm> : PageModel where TForm : FormBas
         _formMetadataService = formMetadataService;
         _formApiClient = formApiClient;
     }
-    public IActionResult OnPostBack()
+    public IActionResult OnPostBack(string pageName = "")
     {
-        var savedForm = GetFormFromSession();
         if (PageIndex > 0)
         {
             PageIndex--;
-            SaveFormToSession(savedForm);
         }
 
-        return RedirectToPage();
+        return RedirectToPage(pageName);
     }
 
     protected TForm GetFormFromSession()
@@ -87,7 +85,6 @@ public abstract class BaseFormPageModel<TForm> : PageModel where TForm : FormBas
             // This is session data is from a different form instance, so discard it and start a new form.
             Form = new TForm();
             PageIndex = 0;
-            ItemIndex = 0;
         }
 
         if (Form!.FormMetadata == null)

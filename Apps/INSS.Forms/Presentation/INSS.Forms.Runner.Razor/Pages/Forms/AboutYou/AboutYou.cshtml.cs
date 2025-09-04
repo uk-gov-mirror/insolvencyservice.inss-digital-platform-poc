@@ -12,7 +12,6 @@ namespace INSS.Forms.Runner.Razor.Pages.Forms.AboutYou
             SessionKey = nameof(AboutYouModel);
         }
 
-
         public void OnGet()
         {
             InitializeForm();

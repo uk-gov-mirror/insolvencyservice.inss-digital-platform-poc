@@ -10,30 +10,30 @@
 <vc:previous-button current-page-index="Model.PageIndex" />
 
 @{
-    string incomeItemName = $"Form.Income[{Model.ItemIndex}]";
-    Income incomeItem = Model.Form.Income[Model.ItemIndex];
+    // string incomeItemName = $"Form.Income[{Model.ItemIndex}]";
+    // Income incomeItem = Model.Form.Income[Model.ItemIndex];
 }
 
 <form method="post">
 
     @if (Model.PageIndex == 0)
     {
-        <vc:radio-buttons name="@($"{incomeItemName}.{nameof(Income.IncomeType)}")" text="@Questions.WhatIsThe(Labels.IncomeType)" items="@Model.IncomeTypeOptions" value="@incomeItem.IncomeType" />
+        <vc:radio-buttons name="@nameof(Income.IncomeType)" text="@Questions.WhatIsThe(Labels.IncomeType)" items="@Model.IncomeTypeOptions" value="@Model.IncomeItem.IncomeType" />
     }
 
     @if (Model.PageIndex == 1)
     {
-        <vc:input name="@($"{incomeItemName}.{nameof(Income.Amount)}")" label="@Questions.WhatIsThe(Labels.IncomeAmount)" value="@incomeItem.Amount" input-type="@InputComponentType.Currency" />
+        <vc:input name="@nameof(Income.Amount)" label="@Questions.WhatIsThe(Labels.IncomeAmount)" value="@Model.IncomeItem.Amount" input-type="@InputComponentType.Currency" />
     }
 
     @if (Model.PageIndex == 2)
     {
-        <vc:radio-buttons name="@($"{incomeItemName}.{nameof(Income.IncomeFrequency)}")" text="@Questions.WhatIsThe(Labels.IncomeFrequency)" items="@Model.IncomeFrequencyOptions" value="@incomeItem.IncomeFrequency" />
+        <vc:radio-buttons name="@nameof(Income.IncomeFrequency)" text="@Questions.WhatIsThe(Labels.IncomeFrequency)" items="@Model.IncomeFrequencyOptions" value="@Model.IncomeItem.IncomeFrequency" />
     }
 
     @if (Model.PageIndex == 3)
     {
-        <vc:input name="@($"{incomeItemName}.{nameof(Income.Provider)}")" label="@Questions.WhoIsThe(Labels.IncomeProvider)" value="@incomeItem.Provider" />
+        <vc:input name="@nameof(Income.Provider)" label="@Questions.WhoIsThe(Labels.IncomeProvider)" value="@Model.IncomeItem.Provider" />
     }
 
     <vc:button model="@(new ButtonModel { Text = "Next" })" />

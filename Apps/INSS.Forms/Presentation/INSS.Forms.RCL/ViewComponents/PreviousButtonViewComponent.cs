@@ -1,12 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using INSS.Forms.RCL.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace INSS.Forms.RCL.ViewComponents
 {
     public class PreviousButtonViewComponent : ViewComponent
     {
-        public IViewComponentResult Invoke(int currentPageIndex)
+        public IViewComponentResult Invoke(int currentPageIndex, string pageName = "")
         {
-            return View("Default", currentPageIndex);
+            return View(new PreviousButtonModel { CurrentPageIndex = currentPageIndex, PageName = pageName });
         }
     }
 }

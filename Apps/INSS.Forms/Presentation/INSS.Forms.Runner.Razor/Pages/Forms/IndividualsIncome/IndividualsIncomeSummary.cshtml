@@ -1,0 +1,70 @@
+﻿@page "/individuals-income-summary"
+@using INSS.Forms.Application.Common.Extensions
+@using INSS.Forms.Application.Common.Text
+@using INSS.Forms.Domain.Models.Composite
+@using INSS.Forms.Domain.Models.Constants
+
+@model IndividualsIncomeSummaryModel
+
+@functions{
+
+    private string IndexedName(string entityName, int index)
+    {
+        return $"{entityName}-{index.ToString()}";
+    }
+
+    private string[] GetValue(string? value)
+    {
+        return string.IsNullOrEmpty(value) ? [] : new[] { value };
+    }
+}
+
+<vc:heading text="Individual's Income" />
+
+<vc:heading text="@($"You have added {Model.Form.Income.Count} income{(Model.Form.Income.Count > 1 ? "s" : "")}")" />
+
+<vc:previous-button current-page-index="Model.PageIndex" page-name="./IndividualsIncomeList" />
+
+
+    <div id="@($"{EntityNames.AppIdPrefix}summary")">
+        @foreach (var dataItem in @Model.Form.Income.Select((item, index) => new { Index = index, Item = item }))
+        {
+            <div class="govuk-summary-card" id="@($"{EntityNames.AppIdPrefix}card-row-{dataItem.Index.ToString()}")">
+                <div class="govuk-summary-card__title-wrapper" id="@($"{EntityNames.AppIdPrefix}row-title-wrapper-{dataItem.Index.ToString()}")">
+                    <h2 class="govuk-summary-card__title" id="@($"{EntityNames.AppIdPrefix}row-title-{dataItem.Index.ToString()}")">
+                        @dataItem.Item.IncomeType.GetDescription()
+                    </h2>
+                </div>
+                <div class="govuk-summary-card__content" id="@($"{EntityNames.AppIdPrefix}row-content-{dataItem.Index.ToString()}")">
+                    <dl class="govuk-summary-list" id="@($"{EntityNames.AppIdPrefix}row-content-list-{dataItem.Index.ToString()}")">
+
+                        <vc:summary-row name="@IndexedName(EntityNames.IncomeAmount, dataItem.Index)"
+                                    text="@Labels.IncomeAmount"
+                                    values="@GetValue(@dataItem.Item.Amount.ToStringAsCurrency())"
+                                    aria-label="@Labels.IncomeType"
+                                    item-index="@dataItem.Index"
+                                    page-index="1"/>
+
+                        <vc:summary-row name="@IndexedName(EntityNames.IncomeFrequency, dataItem.Index)"
+                                        text="@Labels.IncomeFrequency"
+                                        values="@GetValue(dataItem.Item.IncomeFrequency.GetDescription())"
+                                        aria-label="@Labels.IncomeFrequency"
+                                        item-index="@dataItem.Index"
+                                        page-index="2" />
+
+                        <vc:summary-row name="@IndexedName(EntityNames.IncomeProvider, dataItem.Index)"
+                                        text="@Labels.IncomeProvider"
+                                        values="@GetValue(dataItem.Item.Provider)"
+                                        aria-label="@Labels.IncomeProvider"
+                                        item-index="@dataItem.Index"
+                                        page-index="3" />
+
+                    </dl>
+                </div>
+            </div>
+        }
+    </div>
+
+    <form method="post">
+        <vc:button model="@(new ButtonModel { Text = "Save" })" />
+    </form>
