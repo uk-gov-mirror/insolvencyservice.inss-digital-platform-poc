@@ -1,0 +1,44 @@
+﻿@page "/individuals-income-list"
+@using INSS.Forms.Application.Common.Extensions
+@using INSS.Forms.Application.Common.Text
+@using INSS.Forms.Domain.Models.Composite
+@using INSS.Forms.Domain.Models.Constants
+
+@model IndividualsIncomeListModel
+
+<vc:heading text="@($"You have added {Model.Form.Income.Count} income{(Model.Form.Income.Count > 1 ? "s" : "")}")" />
+
+<vc:previous-button current-page-index="Model.PageIndex" />
+
+
+<form method="post">
+
+    <div class="govuk-form-group" id="inss-forms-id-income-list">
+        <dl class="govuk-summary-list hmrc-list-with-actions hmrc-list-with-actions--short">
+            @foreach (var dataItem in Model.Form.Income.Select((item, index) => new { Index = index, Item = item }))
+            {
+                <p>@dataItem.Item.IncomeType.GetDescription()</p>
+
+@*                 <ListRow Name='@($"{EntityNames.IncomeType}-row")'
+                         Key="@dataItem.Index.ToString()"
+                         Text="@dataItem.Item.IncomeType.GetDescription()"
+                         OnChangeClick='() => OnChange.InvokeAsync(dataItem.Index)'
+                         OnRemoveClick='() => OnRemove.InvokeAsync(dataItem.Index)' />
+ *@            }
+        </dl>
+
+
+        <vc:radio-buttons 
+            name="AddNew" 
+            text="Do you need to add another income?" 
+            hint="You must tell us about all your income."
+            items="@Model.ConfirmOptions" 
+            value="@Model.AddNew" />
+
+    </div>
+
+
+
+    <vc:button model="@(new ButtonModel { Text = "Next" })" />
+
+</form>

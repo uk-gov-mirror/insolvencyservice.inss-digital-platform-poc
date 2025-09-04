@@ -6,7 +6,7 @@
         public string Label { get; set; } = string.Empty;
         public string Value { get; set; } = string.Empty;
         public string PlaceHolder { get; set; } = string.Empty;
-        public string Type { get; set; } = "text";
+        public InputComponentType InputType { get; set; } = InputComponentType.Text;
         public bool SmallText { get; set; } = false;
     }
 }

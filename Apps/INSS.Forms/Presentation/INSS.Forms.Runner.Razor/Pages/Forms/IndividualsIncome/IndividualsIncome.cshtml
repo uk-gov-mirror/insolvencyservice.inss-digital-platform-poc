@@ -1,0 +1,41 @@
+﻿@page "/individuals-income"
+@using INSS.Forms.Application.Common.Text
+@using INSS.Forms.Domain.Models.Composite
+@using INSS.Forms.Domain.Models.Constants
+
+@model IndividualsIncomeModel
+
+<vc:heading text="Individual's Income" />
+
+<vc:previous-button current-page-index="Model.PageIndex" />
+
+@{
+    string incomeItemName = $"Form.Income[{Model.ItemIndex}]";
+    Income incomeItem = Model.Form.Income[Model.ItemIndex];
+}
+
+<form method="post">
+
+    @if (Model.PageIndex == 0)
+    {
+        <vc:radio-buttons name="@($"{incomeItemName}.{nameof(Income.IncomeType)}")" text="@Questions.WhatIsThe(Labels.IncomeType)" items="@Model.IncomeTypeOptions" value="@incomeItem.IncomeType" />
+    }
+
+    @if (Model.PageIndex == 1)
+    {
+        <vc:input name="@($"{incomeItemName}.{nameof(Income.Amount)}")" label="@Questions.WhatIsThe(Labels.IncomeAmount)" value="@incomeItem.Amount" input-type="@InputComponentType.Currency" />
+    }
+
+    @if (Model.PageIndex == 2)
+    {
+        <vc:radio-buttons name="@($"{incomeItemName}.{nameof(Income.IncomeFrequency)}")" text="@Questions.WhatIsThe(Labels.IncomeFrequency)" items="@Model.IncomeFrequencyOptions" value="@incomeItem.IncomeFrequency" />
+    }
+
+    @if (Model.PageIndex == 3)
+    {
+        <vc:input name="@($"{incomeItemName}.{nameof(Income.Provider)}")" label="@Questions.WhoIsThe(Labels.IncomeProvider)" value="@incomeItem.Provider" />
+    }
+
+    <vc:button model="@(new ButtonModel { Text = "Next" })" />
+
+</form>

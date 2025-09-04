@@ -14,6 +14,32 @@ public abstract class BaseFormPageModel<TForm> : PageModel where TForm : FormBas
 
     protected string SessionKey { get; set; } = string.Empty;
 
+    public int PageIndex
+    {
+        get
+        {
+            var value = HttpContext.Session.GetInt32($"{SessionKey}_PageIndex");
+            return value ?? 0;
+        }
+        set
+        {
+            HttpContext.Session.SetInt32($"{SessionKey}_PageIndex", value);
+        }
+    }
+
+    public int ItemIndex
+    {
+        get
+        {
+            var value = HttpContext.Session.GetInt32($"{SessionKey}_ItemIndex");
+            return value ?? 0;
+        }
+        set
+        {
+            HttpContext.Session.SetInt32($"{SessionKey}_ItemIndex", value);
+        }
+    }
+
 
     [BindProperty]
     required public TForm Form { get; set; }
@@ -24,6 +50,17 @@ public abstract class BaseFormPageModel<TForm> : PageModel where TForm : FormBas
         _formMetadataService = formMetadataService;
         _formApiClient = formApiClient;
     }
+    public IActionResult OnPostBack()
+    {
+        var savedForm = GetFormFromSession();
+        if (PageIndex > 0)
+        {
+            PageIndex--;
+            SaveFormToSession(savedForm);
+        }
+
+        return RedirectToPage();
+    }
 
     protected TForm GetFormFromSession()
     {
@@ -33,7 +70,7 @@ public abstract class BaseFormPageModel<TForm> : PageModel where TForm : FormBas
 
     protected void SaveFormToSession(TForm form)
     {
-        HttpContext.Session.SetString(SessionKey, JsonSerializer.Serialize(Form));
+        HttpContext.Session.SetString(SessionKey, JsonSerializer.Serialize(form));
     }
 
     protected async Task SaveFormToDatabase()
@@ -49,6 +86,8 @@ public abstract class BaseFormPageModel<TForm> : PageModel where TForm : FormBas
         {
             // This is session data is from a different form instance, so discard it and start a new form.
             Form = new TForm();
+            PageIndex = 0;
+            ItemIndex = 0;
         }
 
         if (Form!.FormMetadata == null)
@@ -58,7 +97,7 @@ public abstract class BaseFormPageModel<TForm> : PageModel where TForm : FormBas
         }
     }
 
-    protected async Task<IActionResult> ContinueToNextAction(TForm form)
+    protected async Task<IActionResult> IfValidNextPage(TForm form, bool endOfForm = false)
     {
         // Validate, but only the items on the page
         if (!ModelState.IsValid)
@@ -67,12 +106,11 @@ public abstract class BaseFormPageModel<TForm> : PageModel where TForm : FormBas
             return Page();
         }
 
-        form.PageIndex++;
+        PageIndex++;
         Form = form;
         SaveFormToSession(Form);
 
-        // End of form so Save to Cosmos and return to the Launcher.
-        if (Form.PageIndex > 3)
+        if (endOfForm)
         {
             await SaveFormToDatabase();
             return Redirect(Form.FormMetadata.ReturnUrl);
@@ -81,7 +119,7 @@ public abstract class BaseFormPageModel<TForm> : PageModel where TForm : FormBas
         return RedirectToPage();
     }
 
-    protected IActionResult ContinueToNextAction2(TForm form, string page)
+    protected IActionResult IfValidShowList(TForm form, string page)
     {
         // Validate, but only the items on the page
         if (!ModelState.IsValid)
@@ -113,9 +151,15 @@ public abstract class BaseFormPageModel<TForm> : PageModel where TForm : FormBas
         return Redirect(Form.FormMetadata.ReturnUrl);
     }
 
-    protected void AssignAndValidate(ModelStateDictionary modelState, TForm form, string property, object value)
+    protected void AssignAndValidate(ModelStateDictionary modelState, TForm form, string property, object? value)
     {
         ModelStateHelpers.OnlyValidateProperty(modelState, property);
         ModelStateHelpers.SetPropertyValueByName(form, property, value);
+    }
+
+    protected void AssignAndValidate(ModelStateDictionary modelState, TForm form, string collectionPropertyName, int collectionIndex, string property, object? value)
+    {
+        ModelStateHelpers.OnlyValidateCollectionProperty(modelState, collectionPropertyName, collectionIndex, property);
+        ModelStateHelpers.SetCollectionPropertyValueByName(form, collectionPropertyName, collectionIndex, property, value);
     }
 }

@@ -12,6 +12,7 @@ namespace INSS.Forms.Runner.Razor.Pages.Forms.AboutYou
             SessionKey = nameof(AboutYouModel);
         }
 
+
         public void OnGet()
         {
             InitializeForm();
@@ -21,7 +22,7 @@ namespace INSS.Forms.Runner.Razor.Pages.Forms.AboutYou
         {
             var savedForm = GetFormFromSession();
 
-            switch (savedForm.PageIndex)
+            switch (PageIndex)
             {
                 case 0:
                     AssignAndValidate(ModelState, savedForm, nameof(Form.Name), Form.Name);
@@ -37,7 +38,7 @@ namespace INSS.Forms.Runner.Razor.Pages.Forms.AboutYou
                     break;
             }
 
-            return await ContinueToNextAction(savedForm);
+            return await IfValidNextPage(savedForm, PageIndex == 3);
         }
     }
 }
