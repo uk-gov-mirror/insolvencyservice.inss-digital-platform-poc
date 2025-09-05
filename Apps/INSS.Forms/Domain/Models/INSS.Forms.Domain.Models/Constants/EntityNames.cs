@@ -5,6 +5,8 @@
     /// </summary>
     public static class EntityNames
     {
+        public const string AppIdPrefix = "inss-forms-id-";
+
         public const string Name = "name-entity";
         public const string DateOfBirth = "date-of-birth-entity";
         public const string Address = "address-entity";

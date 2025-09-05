@@ -22,12 +22,51 @@ public static class ModelStateHelpers
         }
     }
 
+    public static void OnlyValidateCollectionProperty(ModelStateDictionary modelState, string collectionPropertyName, int collectionIndex, params string[] propertyNames)
+    {
+        if (string.IsNullOrEmpty(collectionPropertyName) || propertyNames == null || propertyNames.Length == 0)
+            return;
+
+        // Example key: "CollectionPropertyName[0].PropertyName"
+        var keysToKeep = propertyNames
+            .Select(p => $"{collectionPropertyName}[{collectionIndex}].{p}")
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+        var keysToRemove = modelState.Keys
+            .Where(key => !keysToKeep.Any(keepKey => key.EndsWith(keepKey, StringComparison.OrdinalIgnoreCase)))
+            .ToList();
+
+        foreach (var key in keysToRemove)
+        {
+            modelState.Remove(key);
+        }
+    }
+
+
     public static void SetPropertyValueByName(object target, string propertyName, object? value)
     {
         var property = target.GetType().GetProperty(propertyName);
         if (property != null && property.CanWrite)
         {
             property.SetValue(target, value);
+        }
+    }
+
+    public static void SetCollectionPropertyValueByName(object target, string collectionPropertyName, int collectionIndex, string propertyName, object? value)
+    {
+        var collectionProperty = target.GetType().GetProperty(collectionPropertyName);
+        if (collectionProperty != null && collectionProperty.CanRead)
+        {
+            var collection = collectionProperty.GetValue(target) as System.Collections.IList;
+            if (collection != null && collectionIndex >= 0 && collectionIndex < collection.Count)
+            {
+                var item = collection[collectionIndex];
+                var itemProperty = item?.GetType()?.GetProperty(propertyName);
+                if (itemProperty != null && itemProperty.CanWrite)
+                {
+                    itemProperty.SetValue(item, value);
+                }
+            }
         }
     }
 

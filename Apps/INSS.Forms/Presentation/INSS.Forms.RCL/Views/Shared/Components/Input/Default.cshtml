@@ -3,6 +3,30 @@
 @{
     var propertyName = Model.Name;
     var validationMessage = ViewContext.ViewData.ModelState[propertyName]?.Errors.FirstOrDefault()?.ErrorMessage;
+
+    var style = "govuk-input";
+    var type = Model.InputType.ToString().ToLower();
+    var inputMode = Model.InputType.ToString().ToLower();
+    var ariaLabel = string.Empty;
+
+    switch (Model.InputType)
+    {
+        case InputComponentType.Number:
+            style += " govuk-input--width-10";
+            inputMode = "numeric";
+            break;
+        case InputComponentType.Telephone:
+            style += " govuk-input--width-30";
+            inputMode = "tel";
+            break;
+        case InputComponentType.Currency:
+            style += " govuk-input--width-10";
+            type = "decimal";
+            inputMode = "decimal"; 
+            ariaLabel = "Amount in pounds";
+            break;
+
+    }
 }
 
 <div class="govuk-form-group" id="inss-forms-id-input-group">
@@ -11,17 +35,31 @@
             @Model.Label
         </label>
     </h1>
-    <input class="govuk-input"
-           id="@Model.Name"
-           name="@Model.Name"
-           type="@Model.Type"
-           placeholder="@Model.PlaceHolder"
-           title="@Model.Label"
-           value="@Model.Value" />
 
     @if (!string.IsNullOrEmpty(validationMessage))
     {
-        <span class="govuk-error-message">@validationMessage</span>
+        <p class="govuk-error-message">@validationMessage</p>
     }
+
+    <div class="govuk-input__wrapper">
+
+        @if (Model.InputType == InputComponentType.Currency)
+        {
+            <span class="govuk-input__prefix">£</span>
+        }
+
+        <input class="@style"
+               id="@Model.Name"
+               name="@Model.Name"
+               type="@type"
+               inputmode="@inputMode"
+               placeholder="@Model.PlaceHolder"
+               title="@Model.Label"
+               value="@Model.Value" 
+               aria-label="@ariaLabel"/>
+
+
+
+    </div>
 
 </div>

@@ -18,8 +18,6 @@ namespace INSS.Forms.Domain.Models.Abstract
             FormType = GetType().AssemblyQualifiedName ?? string.Empty;
         }
 
-        public int PageIndex { get; set; } = 0;
-
         /// <summary>
         /// Gets or sets the unique identifier for this form instance.
         /// </summary>

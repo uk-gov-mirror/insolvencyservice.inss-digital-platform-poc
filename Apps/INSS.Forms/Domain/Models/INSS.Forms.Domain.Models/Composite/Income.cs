@@ -11,11 +11,13 @@ namespace INSS.Forms.Domain.Models.Composite
         /// <summary>
         /// Gets or sets the type of income.
         /// </summary>
+        [Required]
         public IncomeType? IncomeType { get; set; }
 
         /// <summary>
         /// Gets or sets the amount of income.
         /// </summary>
+        [Required]
         [DataType(DataType.Currency)]
         public decimal? Amount { get; set; }
 
