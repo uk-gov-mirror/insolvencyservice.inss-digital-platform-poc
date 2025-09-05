@@ -20,9 +20,9 @@ namespace INSS.Forms.Runner.Razor.Pages.Forms.IndividualsIncome
         [BindProperty]
         public string? AddNew { get; set; } = null;
 
-        public void OnGet()
+        public IActionResult OnGet()
         {
-            InitializeForm();
+            return InitializeForm();
         }
 
         public IActionResult OnPost()

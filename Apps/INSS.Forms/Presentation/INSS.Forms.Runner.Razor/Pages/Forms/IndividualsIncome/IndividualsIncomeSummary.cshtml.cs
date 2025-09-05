@@ -12,9 +12,9 @@ namespace INSS.Forms.Runner.Razor.Pages.Forms.IndividualsIncome
             SessionKey = nameof(IndividualsIncomeModel);
         }
 
-        public void OnGet()
+        public IActionResult OnGet()
         {
-            InitializeForm();
+            return InitializeForm();
         }
 
         public async Task<IActionResult> OnPost()

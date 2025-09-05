@@ -76,7 +76,8 @@ public abstract class BaseFormPageModel<TForm> : PageModel where TForm : FormBas
     {
         return await _formApiClient.PostFormDataAsync(Form, _configuration["FormsApi-Url"]!);
     }
-    protected void InitializeForm()
+
+    protected IActionResult InitializeForm()
     {
         Form = GetFormFromSession();
 
@@ -97,8 +98,27 @@ public abstract class BaseFormPageModel<TForm> : PageModel where TForm : FormBas
             // Always update metadata from the query on first call.
             Form.FormMetadata = formMetadata;
             SaveFormToSession(Form);
-            return;
+            
+            return Page();
         }
+
+        return ValidateMetadata();
+    }
+
+    private IActionResult ValidateMetadata()
+    {
+        if (Form?.FormMetadata is null)
+        {
+            TempData["ErrorCode"] = "MissingFormMetadata";
+
+            TempData["ErrorTitle"] = "Missing Form Metadata";
+
+            TempData["ErrorMessage"] = "The form metadata is missing from the query string, you must navigate to this page via the Forms Launcher.";
+
+            return RedirectToPage("/Error");
+        }
+
+        return Page();
     }
 
     protected async Task<IActionResult> IfValidNextPage(TForm form, bool endOfForm = false)

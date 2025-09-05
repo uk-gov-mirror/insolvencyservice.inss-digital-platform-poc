@@ -12,9 +12,9 @@ namespace INSS.Forms.Runner.Razor.Pages.Forms.AboutYou
             SessionKey = nameof(AboutYouModel);
         }
 
-        public void OnGet()
+        public IActionResult OnGet()
         {
-            InitializeForm();
+            return InitializeForm();
         }
 
         public async Task<IActionResult> OnPost()

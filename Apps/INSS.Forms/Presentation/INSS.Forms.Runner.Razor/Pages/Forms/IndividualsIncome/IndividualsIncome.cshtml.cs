@@ -28,11 +28,13 @@ namespace INSS.Forms.Runner.Razor.Pages.Forms.IndividualsIncome
 
 
 
-        public void OnGet()
+        public IActionResult OnGet()
         {
-            InitializeForm();
+            var result = InitializeForm();
 
             InitializeIncomeItem();
+
+            return result;
         }
 
         public IActionResult OnPost()
