@@ -67,6 +67,7 @@ namespace INSS.Forms.Runner.Razor.Pages.Forms.IndividualsIncome
             }
             else
             {
+                ModelState.AddModelError(nameof(AddNew), "Select 'Yes' if you want to add another income or 'No' if you want to proceed to the summary");
                 return Page();
             }
         }
