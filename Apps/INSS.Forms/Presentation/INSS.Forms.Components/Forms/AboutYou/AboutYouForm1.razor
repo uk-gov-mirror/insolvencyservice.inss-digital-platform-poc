@@ -1,33 +1,43 @@
 ﻿@page "/about-you1"
 
+@using System.Diagnostics
+@using System.ComponentModel.DataAnnotations
 @using Microsoft.AspNetCore.Components.Forms
-@inherits InssFormBase
-@inject AppStateService AppStateService;
+
 @inject NavigationManager NavigationManager
+@inject AppStateService AppStateService;
 
+<h3>Page1</h3>
 
-<PageTitle>About You</PageTitle>
+<form method="post" @onsubmit="HandleSubmit" @formname="Person" class="col-md-4">
+    <AntiforgeryToken/>
+    <div class="mb-2">
+<label for="firstName" class="form-label">First Name:</label>
+<input id="firstName"  class="form-control" name="firstName"value="@firstName" />
+</div>
+@* <div class="mb-2">
+<label for="email" class="form-label">Email:</label>
+<input id="email" class="form-control" name="email" value="@email" />
+</div> *@
 
-<HeadingText Name="heading-about-you">About You</HeadingText>
+    @* <GdsTextInputField2 Text="@Questions.WhatIsYour(Labels.Name)" Name="@EntityNames.Name" value="Name" /> *@
 
-<EditForm method="post" Formname="AboutYou1" Model="aboutYouForm" OnValidSubmit="Submit" class="col-md-4">
-    <DataAnnotationsValidator />
-    <GdsTextInputField Text="@Questions.WhatIsYour(Labels.Name)" Name="@EntityNames.Name" @bind-Value="aboutYouForm.Name" />
-    <button type="submit" class="govuk-button">Next</button>
-</EditForm>
+    <div class="mb-2">
+        <button type="submit" class="govuk-button" data-module="govuk-button" name="Action" value="Next">Save and continue</button>
+    </div>
+</form>
 
 @code {
+    [SupplyParameterFromForm] public string? Action { get; set; }
+    [SupplyParameterFromForm] public string? firstName { get; set; }
 
-    private AboutYou aboutYouForm = new AboutYou();
-
-    protected override void OnInitialized()
+    private void HandleSubmit()
     {
-        base.OnInitialized(aboutYouForm);
-    }
+        AppStateService.Set(new AppState { Name = firstName});
 
-    private void Submit()
-    {
-        AppStateService.Set(new AppState { Name = aboutYouForm.Name });
-        NavigationManager.NavigateTo("/about-you2");
+        if (Action == "Next")
+        {
+            NavigationManager.NavigateTo("/about-you2");
+        }
     }
 }

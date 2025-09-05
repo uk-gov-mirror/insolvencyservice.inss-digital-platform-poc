@@ -53,7 +53,7 @@ namespace INSS.Forms.Components.Abstract
         /// <param name="form">The form instance to initialize.</param>
         protected void OnInitialized<T>(T form) where T : FormBase
         {
-            form.InitializeMetadata(FormMetadata.CreateFromQueryString());
+            //form.InitializeMetadata(FormMetadata.CreateFromQueryString());
             _formData = form;
 
             //FormPageNavigationService.OnPageChange += HandlePageChange;

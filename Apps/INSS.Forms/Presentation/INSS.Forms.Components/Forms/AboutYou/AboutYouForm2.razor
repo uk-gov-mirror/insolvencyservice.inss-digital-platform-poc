@@ -12,14 +12,27 @@
 
 <h4> Name: @AppStateService?.Data?.Name </h4>
 
-<EditForm method="post" Formname="AboutYou2" Model="aboutYouForm" OnValidSubmit="Submit" class="col-md-4">
+@* <EditForm method="post" Formname="AboutYou2" Model="aboutYouForm" OnValidSubmit="Submit" class="col-md-4">
     <DataAnnotationsValidator />
     <GdsDateInputField Text="@Questions.WhatIsYour(Labels.DateOfBirth)" Name="@EntityNames.DateOfBirth" Hint="For example, 27 3 2007" @bind-Value="aboutYouForm.DateOfBirth" />
     <button type="submit" class="govuk-button">Next</button>
-</EditForm>
+</EditForm> *@
+
+<form method="post" @onsubmit="HandleSubmit" @formname="Person" class="col-md-4">
+    <AntiforgeryToken />
+@*     <div class="mb-2">
+        <label for="dob" class="form-label">DOB:</label>
+        <input id="dob" class="form-control" name="dob" value="@dob" />
+    </div> *@
+    <div class="mb-2">
+        <button type="submit" class="btn btn-primary" name="Action" value="Back">Back</button>
+        <button type="submit" class="btn btn-primary" name="Action" value="Next">Save and continue</button>
+    </div>
+</form>
 
 @code {
-
+    [SupplyParameterFromForm] public string? Action { get; set; }
+    [SupplyParameterFromForm] public string? dob { get; set; }
     private AboutYou aboutYouForm = new AboutYou();
 
     protected override void OnInitialized()
@@ -29,7 +42,22 @@
 
     private void Submit()
     {
-        AppStateService.Set(new AppState { DOB = (DateTime)aboutYouForm.DateOfBirth });
+        //AppStateService.Set(new AppState { DOB = (DateTime)aboutYouForm.DateOfBirth });
         NavigationManager.NavigateTo("/about-you3");
     }
+
+    private void HandleSubmit()
+    {
+        //AppStateService.Set(new AppState { Name = firstName, Email = email });
+        if (Action == "Back")
+        {
+            NavigationManager.NavigateTo("/about-you1");
+        }
+        else if (Action == "Next")
+        {
+            NavigationManager.NavigateTo("/about-you3");
+        }
+    }
+
+
 }

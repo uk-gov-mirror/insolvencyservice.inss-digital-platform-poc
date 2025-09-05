@@ -1,0 +1,42 @@
+﻿@inherits InssComponentBase
+
+<div class="govuk-form-group" id="@GenerateElementId()">
+    <h1 class="govuk-label-wrapper" id="@GenerateElementId("label-wrapper")">
+        <label class="govuk-label @(SmallText ? "" : "govuk-label--l")" for=" @GenerateElementId("input")" id="@GenerateElementId("label")">
+            @Text
+        </label>
+    </h1>
+    <input class="govuk-input"
+           id="@GenerateElementId("input")"
+           name="@GenerateElementName("input")"
+           type=@Type
+           placeholder="@Placeholder"
+           title="@Text"
+           value="@Value"
+           @oninput="OnInputChanged">
+</div>
+
+@code {
+    [Parameter]
+    public string Text { get; set; } = string.Empty;
+
+    [Parameter]
+    public bool SmallText { get; set; } = false;
+
+    [Parameter]
+    public string Type { get; set; } = "text";
+
+    [Parameter]
+    public string? Placeholder { get; set; } = string.Empty;
+
+    [Parameter]
+    public string? Value { get; set; }
+
+    [Parameter]
+    public EventCallback<string> ValueChanged { get; set; }
+
+    private async Task OnInputChanged(ChangeEventArgs e)
+    {
+        await ValueChanged.InvokeAsync(e.Value?.ToString());
+    }
+}

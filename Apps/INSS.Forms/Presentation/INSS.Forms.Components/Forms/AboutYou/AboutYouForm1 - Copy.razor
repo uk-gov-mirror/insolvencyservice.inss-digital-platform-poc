@@ -1,0 +1,51 @@
+﻿@page "/about-you123"
+
+@using Microsoft.AspNetCore.Components.Forms
+@inherits InssFormBase
+@inject AppStateService AppStateService;
+@inject NavigationManager NavigationManager
+
+
+<PageTitle>About You</PageTitle>
+
+<HeadingText Name="heading-about-you">About You</HeadingText>
+
+@* <EditForm method="post" Formname="AboutYou1" Model="aboutYouForm" OnValidSubmit="Submit" class="col-md-4"> *@
+<EditForm method="post" Formname="Person" Model="aboutYouForm" OnSubmit="Submit" class="col-md-4">   
+    <DataAnnotationsValidator />
+
+    
+    @* <GdsTextInputField Text="@Questions.WhatIsYour(Labels.Name)" Name="@EntityNames.Name" @bind-Value="aboutYouForm.Name" /> *@
+    @* <InputText id="firstName" class="form-control" @bind-Value="aboutYouForm.Name" /> *@
+    <InputText id="firstName" class="form-control" @bind-Value="MyProperty" />
+    <button type="submit" class="govuk-button">Next</button>
+</EditForm>
+
+@code {
+   
+    [SupplyParameterFromForm]
+    public AboutYou aboutYouForm { get; set; } = new AboutYou();
+
+    [SupplyParameterFromForm]
+    public string MyProperty { get; set; }
+
+    protected override void OnInitialized()
+    {
+        //base.OnInitialized(aboutYouForm);
+    }
+
+    private void Submit()
+    {
+        AppStateService!.Data!.Name = aboutYouForm.Name; // not working without javascript
+       
+        NavigationManager.NavigateTo("/about-you2");
+    }
+
+
+
+}
+
+
+
+
+

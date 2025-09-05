@@ -2,7 +2,7 @@
 {
     public class AppStateService
     {
-        public AppState? Data { get; private set; }
+        public AppState? Data { get; set; } = new AppState();
 
         public void Set(AppState data)
         {

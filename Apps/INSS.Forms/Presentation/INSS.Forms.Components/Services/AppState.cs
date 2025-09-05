@@ -7,7 +7,7 @@ namespace INSS.Forms.Components.Services
         public string? Name { get; set; }
         public string? Email { get; set; }
         public DateTime? DOB { get; set; }
-        public Address? Address { get; set; }
+        public Address? Address { get; set; } = new Address();
         public string? Telephone { get; set; }
     }
 }

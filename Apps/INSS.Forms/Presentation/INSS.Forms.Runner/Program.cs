@@ -5,8 +5,8 @@ using INSS.Forms.Runner.WebApp.Components;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddRazorComponents()
-    .AddInteractiveServerComponents();
+builder.Services.AddRazorComponents();
+    //.AddInteractiveServerComponents();
 
 builder.Services.AddHttpClient();
 
@@ -36,7 +36,7 @@ app.UseAntiforgery();
 
 
 app.MapRazorComponents<App>()
-    .AddAdditionalAssemblies(typeof(INSS.Forms.Components.RegisterSharedComponents).Assembly) //This is needed to register the shared components from the INSS.Forms.Components assembly, without this the components routes return a 404.
-    .AddInteractiveServerRenderMode();
+    .AddAdditionalAssemblies(typeof(INSS.Forms.Components.RegisterSharedComponents).Assembly); //This is needed to register the shared components from the INSS.Forms.Components assembly, without this the components routes return a 404.
+    //.AddInteractiveServerRenderMode();
 
 app.Run();
