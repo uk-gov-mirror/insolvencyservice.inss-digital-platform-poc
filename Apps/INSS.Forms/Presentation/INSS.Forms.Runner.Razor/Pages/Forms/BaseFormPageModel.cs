@@ -68,29 +68,36 @@ public abstract class BaseFormPageModel<TForm> : PageModel where TForm : FormBas
 
     protected void SaveFormToSession(TForm form)
     {
-        HttpContext.Session.SetString(SessionKey, JsonSerializer.Serialize(form));
+        Form = form;
+        HttpContext.Session.SetString(SessionKey, JsonSerializer.Serialize(Form));
     }
 
-    protected async Task SaveFormToDatabase()
+    protected async Task<bool> SaveFormToDatabase()
     {
-        await _formApiClient.PostFormDataAsync(Form, _configuration["FormsApi-Url"]!);
+        return await _formApiClient.PostFormDataAsync(Form, _configuration["FormsApi-Url"]!);
     }
     protected void InitializeForm()
     {
         Form = GetFormFromSession();
 
         var formMetadata = _formMetadataService.CreateFromQueryString();
-        if (Form != null && formMetadata != null && Form.FormMetadata?.FormSetInstanceId != formMetadata.FormSetInstanceId)
-        {
-            // This is session data is from a different form instance, so discard it and start a new form.
-            Form = new TForm();
-            PageIndex = 0;
-        }
 
-        if (Form!.FormMetadata == null)
+        // If metadata is present in the query, treat this as the first call from the launcher.
+        if (formMetadata is not null)
         {
-            Form.FormMetadata = formMetadata!;
+            ItemIndex = 0;
+            PageIndex = 0;
+
+            // If this is a different form set instance, start a new form.
+            if (Form.FormMetadata?.FormSetInstanceId != formMetadata.FormSetInstanceId)
+            {
+                Form = new TForm();
+            }
+
+            // Always update metadata from the query on first call.
+            Form.FormMetadata = formMetadata;
             SaveFormToSession(Form);
+            return;
         }
     }
 
@@ -109,8 +116,10 @@ public abstract class BaseFormPageModel<TForm> : PageModel where TForm : FormBas
 
         if (endOfForm)
         {
-            await SaveFormToDatabase();
-            return Redirect(Form.FormMetadata.ReturnUrl);
+            if (await SaveFormToDatabase())
+            { 
+                return Redirect(Form.FormMetadata.ReturnUrl);
+            }
         }
 
         return RedirectToPage();
@@ -143,9 +152,14 @@ public abstract class BaseFormPageModel<TForm> : PageModel where TForm : FormBas
         Form = form;
         SaveFormToSession(Form);
 
-        await SaveFormToDatabase();
-
-        return Redirect(Form.FormMetadata.ReturnUrl);
+        if(await SaveFormToDatabase())
+        {
+            return Redirect(Form.FormMetadata.ReturnUrl);
+        }
+        else
+        {
+            return Page();
+        }
     }
 
     protected void AssignAndValidate(ModelStateDictionary modelState, TForm form, string property, object? value)

@@ -17,9 +17,18 @@ namespace INSS.Forms.Runner.Razor.Pages.Forms.IndividualsIncome
             InitializeForm();
         }
 
-        public IActionResult OnPost()
+        public async Task<IActionResult> OnPost()
         {
-            return Page();
+            Form = GetFormFromSession();
+
+            if (await SaveFormToDatabase())
+            {
+                return Redirect(Form.FormMetadata.ReturnUrl);
+            }
+            else
+            {
+                return Page();
+            }
         }
 
         public IActionResult OnPostChange(int itemIndex, int pageIndex)
