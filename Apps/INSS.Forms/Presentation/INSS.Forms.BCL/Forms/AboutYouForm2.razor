@@ -1,0 +1,177 @@
+﻿@page "/about-you"
+@inject IHttpContextAccessor HttpContextAccessor
+@inject IFormApiClient ApiClient
+@inject IFormMetadataService FormMetadataService
+@inject NavigationManager NavigationManager
+@inject IConfiguration Configuration
+
+@using INSS.Forms.BCL.Components
+@using INSS.Forms.BCL.Services
+@using Microsoft.AspNetCore.Http
+@using System.Text.Json
+@using Microsoft.Extensions.Configuration
+
+<PageTitle>About You</PageTitle>
+
+<HeadingText Name="heading-about-you">About You</HeadingText>
+
+<EditForm Enhance Model="aboutYouModel" FormName="aboutYouForm" OnValidSubmit="SubmitFormValid" OnInvalidSubmit="SubmitFormInvalid">
+
+@*     <DataAnnotationsValidator />
+    <CustomValidator @ref="_customValidator" CurrentField="@_currentField" />
+ *@   
+ 
+    @if(PageIndex == 0)
+    {
+        <TextInput Text="@Questions.WhatIsYour(Labels.Name)" Name="AboutYouModel.Name" Value="@aboutYouModel.Name" />
+    }
+
+    @if(PageIndex == 1)
+    {
+        <TextInput Text="@Questions.WhatIsYour(Labels.Telephone)" Name="AboutYouModel.Telephone" Value="@aboutYouModel.Telephone" />
+    }
+
+    @if (PageIndex == 2)
+    {
+        <TextInput Text="@Questions.WhatIsYour(Labels.Email)" Name="AboutYouModel.Email" Value="@aboutYouModel.Email" />
+    }
+
+@*     <ValidationMessage For="@(() => AboutYouModel.Name)" class="govuk-error-message" style="margin-top: -16px;" />
+ *@
+
+    <SubmitButton Name="@EntityNames.NextButton" Text="Next" />
+</EditForm>
+
+@code {
+
+    [SupplyParameterFromForm(FormName = "aboutYouForm")]
+    public AboutYou aboutYouModel { get; set; } = new();
+
+    protected override void OnInitialized()
+    {
+        InitializeForm();
+
+        base.OnInitialized();
+    }
+
+
+    public static void SetPropertyValueByName(object target, string propertyName, object? value)
+    {
+        var property = target.GetType().GetProperty(propertyName);
+        if (property != null && property.CanWrite)
+        {
+            property.SetValue(target, value);
+        }
+    }
+
+    private async Task SubmitFormValid()
+    {
+        var savedForm = LoadFormFromSession();
+
+        switch(PageIndex)
+        {
+            case 0:
+                SetPropertyValueByName(savedForm, "Name", aboutYouModel.Name);
+                break;
+            case 1:
+                SetPropertyValueByName(savedForm, "Telephone", aboutYouModel.Telephone);
+                break;
+            case 2:
+                SetPropertyValueByName(savedForm, "Email", aboutYouModel.Email);
+                await SaveFormToDatabase(savedForm);
+                NavigationManager.NavigateTo(savedForm.FormMetadata.ReturnUrl);
+                break;
+            default:
+                throw new InvalidOperationException("Invalid page index");
+        }
+
+        SaveFormToSession(savedForm);
+
+        PageIndex++;
+    }
+
+    private void SubmitFormInvalid()
+    {
+        Console.WriteLine("SubmitFormInvalid()");
+    }
+
+    private void SubmitForm()
+    {
+        Console.WriteLine("SubmitForm()");
+    }
+
+    protected async Task<bool> SaveFormToDatabase(AboutYou form)
+    {
+        return await ApiClient.PostFormDataAsync(form, Configuration["FormsApi-Url"]!);
+    }
+
+    protected string SessionKey => "INSS-Forms-Runner-Session";
+
+    public int PageIndex
+    {
+        get
+        {
+            var value = HttpContextAccessor.HttpContext!.Session.GetInt32($"{SessionKey}_PageIndex");
+            return value ?? 0;
+        }
+        set
+        {
+            HttpContextAccessor.HttpContext!.Session.SetInt32($"{SessionKey}_PageIndex", value);
+        }
+    }
+
+
+    protected AboutYou LoadFormFromSession()
+    {
+        var json = HttpContextAccessor.HttpContext!.Session.GetString(SessionKey);
+
+        var form = string.IsNullOrEmpty(json) ? new AboutYou() : JsonSerializer.Deserialize<AboutYou>(json)!;
+
+        return form;
+    }
+
+    protected void InitializeForm()
+    {
+        var savedForm = LoadFormFromSession();
+
+        var formMetadata = FormMetadataService.CreateFromQueryString();
+
+        // If metadata is present in the query, treat this as the first call from the launcher.
+        if (formMetadata is not null)
+        {
+            PageIndex = 0;
+
+            // If this is a different form set instance, start a new form.
+            if (savedForm.FormMetadata?.FormSetInstanceId != formMetadata.FormSetInstanceId)
+            {
+                savedForm = new AboutYou();
+            }
+
+            // Always update metadata from the query on first call.
+            savedForm.FormMetadata = formMetadata;
+            SaveFormToSession(savedForm);
+
+            // Remove query parameters, 
+            // we do not want to keep reading them with every page load 
+            // and it is also useful to indicate the very first time the form instance is created.
+            var uri = NavigationManager.Uri;
+            var baseUri = uri.Split('?')[0];
+            NavigationManager.NavigateTo(baseUri, forceLoad: false, replace: true);
+        }
+
+        ValidateMetadata(savedForm);
+    }
+
+    protected void SaveFormToSession(AboutYou form)
+    {
+        HttpContextAccessor.HttpContext!.Session.SetString(SessionKey, JsonSerializer.Serialize(form));
+    }
+
+    private void ValidateMetadata(AboutYou form)
+    {
+        if (form?.FormMetadata is null)
+        {
+            NavigationManager.NavigateTo("/Error");
+        }
+    }
+}

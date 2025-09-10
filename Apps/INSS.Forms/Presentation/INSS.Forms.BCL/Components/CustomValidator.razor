@@ -1,0 +1,69 @@
+@using System.Linq.Expressions
+@inherits ComponentBase
+
+@code {
+    [Parameter]
+    public string CurrentField { get; set; } = string.Empty;
+
+    [CascadingParameter]
+    private EditContext CurrentEditContext { get; set; } = default!;
+
+    private ValidationMessageStore? _messageStore;
+
+    protected override void OnInitialized()
+    {
+        if (CurrentEditContext == null)
+        {
+            throw new InvalidOperationException($"{nameof(CustomValidator)} requires a cascading " +
+                $"parameter of type {nameof(EditContext)}.");
+        }
+
+        _messageStore = new ValidationMessageStore(CurrentEditContext);
+        CurrentEditContext.OnValidationRequested += OnValidationRequested;
+        CurrentEditContext.OnFieldChanged += OnFieldChanged;
+    }
+
+    private void OnValidationRequested(object? sender, ValidationRequestedEventArgs args)
+    {
+        // Let validation complete first, then filter on next render
+        InvokeAsync(FilterValidationMessages);
+    }
+
+    private void OnFieldChanged(object? sender, FieldChangedEventArgs args)
+    {
+        if (_messageStore != null)
+        {
+            _messageStore.Clear(args.FieldIdentifier);
+            CurrentEditContext.NotifyValidationStateChanged();
+        }
+    }
+
+    private void FilterValidationMessages()
+    {
+        if (string.IsNullOrEmpty(CurrentField) || CurrentEditContext == null)
+            return;
+
+        // Get properties that should NOT show validation errors
+        var properties = CurrentEditContext.Model.GetType().GetProperties()
+            .Where(p => !string.Equals(p.Name, CurrentField, StringComparison.OrdinalIgnoreCase));
+            
+        // Clear validation errors for all fields except the current one
+        foreach (var property in properties)
+        {
+            var fieldId = new FieldIdentifier(CurrentEditContext.Model, property.Name);
+            CurrentEditContext.MarkAsUnmodified(fieldId);
+            _messageStore?.Clear(fieldId);
+        }
+        
+        CurrentEditContext.NotifyValidationStateChanged();
+    }
+
+    public void Dispose()
+    {
+        if (CurrentEditContext != null)
+        {
+            CurrentEditContext.OnValidationRequested -= OnValidationRequested;
+            CurrentEditContext.OnFieldChanged -= OnFieldChanged;
+        }
+    }
+}

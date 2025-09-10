@@ -67,6 +67,8 @@
         formApiBaseUrl = Configuration["FormApi-BaseUrl"]
             ?? throw new InvalidOperationException("The 'FormApi-BaseUrl' configuration value is missing.");
 
+        formSetInstanceId ??= Guid.NewGuid();
+
         var hostHeader = HttpContextAccessor.HttpContext!.Request.Headers["Host"].ToString();
 
         string hostName = string.Empty;
