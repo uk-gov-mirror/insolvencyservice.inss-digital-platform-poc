@@ -36,7 +36,6 @@ namespace INSS.Forms.Domain.Models.Abstract
         /// <summary>
         /// Gets or sets the metadata information for the form, including identifiers and user context.
         /// </summary>
-        [Required]
         public FormMetadata FormMetadata { get; set; } = null!;
 
         public void InitializeMetadata(FormMetadata metadata)

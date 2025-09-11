@@ -15,7 +15,7 @@
 
 <HeadingText Name="heading-about-you">About You</HeadingText>
 
-<EditForm Enhance Model="aboutYouModel" FormName="aboutYouForm" OnValidSubmit="SubmitFormValid" OnInvalidSubmit="SubmitFormInvalid">
+<EditForm Enhance EditContext="_editContext" FormName="aboutYouForm" OnValidSubmit="SubmitFormValid" OnInvalidSubmit="SubmitFormInvalid">
 
 @*     <DataAnnotationsValidator />
     <CustomValidator @ref="_customValidator" CurrentField="@_currentField" />
@@ -43,12 +43,15 @@
 </EditForm>
 
 @code {
+    private EditContext _editContext = null!;
 
     [SupplyParameterFromForm(FormName = "aboutYouForm")]
     public AboutYou aboutYouModel { get; set; } = new();
 
     protected override void OnInitialized()
     {
+        _editContext = new EditContext(aboutYouModel);
+
         InitializeForm();
 
         base.OnInitialized();
@@ -68,16 +71,18 @@
     {
         var savedForm = LoadFormFromSession();
 
+        var updatedModel = _editContext.Model as AboutYou;
+        
         switch(PageIndex)
         {
             case 0:
-                SetPropertyValueByName(savedForm, "Name", aboutYouModel.Name);
+                SetPropertyValueByName(savedForm, "Name", updatedModel!.Name);
                 break;
             case 1:
-                SetPropertyValueByName(savedForm, "Telephone", aboutYouModel.Telephone);
+                SetPropertyValueByName(savedForm, "Telephone", updatedModel!.Telephone);
                 break;
             case 2:
-                SetPropertyValueByName(savedForm, "Email", aboutYouModel.Email);
+                SetPropertyValueByName(savedForm, "Email", updatedModel!.Email);
                 await SaveFormToDatabase(savedForm);
                 NavigationManager.NavigateTo(savedForm.FormMetadata.ReturnUrl);
                 break;
@@ -160,6 +165,8 @@
         }
 
         ValidateMetadata(savedForm);
+
+        aboutYouModel = savedForm;
     }
 
     protected void SaveFormToSession(AboutYou form)
