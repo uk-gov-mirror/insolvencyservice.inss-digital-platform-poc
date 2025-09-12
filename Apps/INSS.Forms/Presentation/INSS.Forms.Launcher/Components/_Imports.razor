@@ -1,4 +1,6 @@
-﻿@using System.Net.Http
+﻿@using System.Text.Json
+@using System.Text.Json.Serialization
+@using System.Net.Http
 @using System.Net.Http.Json
 @using Microsoft.AspNetCore.Components.Forms
 @using Microsoft.AspNetCore.Components.Routing
@@ -8,10 +10,12 @@
 @using Microsoft.JSInterop
 @using INSS.Forms.Launcher.WebApp
 @using INSS.Forms.Launcher.WebApp.Components
-@using INSS.Forms.Components.GdsFields
-@using INSS.Forms.Components.Fields
-@using INSS.Forms.Components.Content
-@using INSS.Forms.Components.Layout
-@using INSS.Forms.Components.Errors
-@using INSS.Forms.Components.Models
 @using INSS.Forms.Domain.Models.Configuration
+@using INSS.Forms.BCL.Models
+@using INSS.Forms.BCL.Components.Errors
+@using INSS.Forms.BCL.Components.Content
+@using INSS.Forms.BCL.Components.Layout
+@using INSS.Forms.BCL.Components.Buttons
+@using INSS.Forms.Domain.Models.Abstract
+@using INSS.Forms.Domain.Models.Composite
+@using INSS.Forms.Domain.Models.Constants

@@ -9,6 +9,7 @@
         public const string NextButton = "next-btn";
         public const string SaveButton = "save-btn";
         public const string PreviousButton = "previous-btn";
+        public const string ApplyButton = "apply-btn";
 
         public const string Name = "name-entity";
         public const string DateOfBirth = "date-of-birth-entity";

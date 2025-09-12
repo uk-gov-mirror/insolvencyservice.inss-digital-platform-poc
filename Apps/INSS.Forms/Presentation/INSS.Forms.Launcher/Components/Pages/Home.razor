@@ -1,9 +1,5 @@
 ﻿@page "/"
 @page "/{formSetInstanceId:guid?}"
-@using INSS.Forms.Domain.Models.Abstract
-@using System.Text.Json
-@using System.Text.Json.Serialization
-@using INSS.Forms.Domain.Models.Composite
 @inject IHttpContextAccessor HttpContextAccessor
 @inject IConfiguration Configuration
 @inject NavigationManager NavigationManager
@@ -33,16 +29,16 @@
                 <ParagraphText Name="section-description">@digitalServiceSection.Description</ParagraphText>
             </RowTwoThirdsLayout>
 
-            <GdsTaskListFieldMetadata 
+            <TaskListFieldMetadata 
                 Name="section-forms" 
                 Items="@(sectionTaskListItems.TryGetValue(digitalServiceSection.Id, out var items) ? items : Array.Empty<TaskListItemMetadata>())" 
             />
         }
 
         <form name="ds-apply" method="get" action="/completed/@formSetInstanceId">
-            <GdsButtonField Name="apply-btn" IsDisabled="@(!allFormsCompleted)">
-                Apply
-            </GdsButtonField>
+
+            <SubmitButton Name="@EntityNames.ApplyButton" Disabled="@(!allFormsCompleted)" Text="Apply" />
+
         </form>
     }
 

@@ -1,12 +1,13 @@
 ﻿@inherits LayoutComponentBase
 
-<GdsHeaderField Name="inss-form-element-id-header" />
+
+<GovHeader Name="@($"{Config.AppIdPrefix}-gov-header")" />
 
 <div class="govuk-width-container">
     @Body
 </div>
 
-<GdsFooterField Name="inss-form-element-id-footer" />
+<GovFooter Name="@($"{Config.AppIdPrefix}-gov-footer")" />
 
 <div id="blazor-error-ui">
     An unhandled error has occurred.

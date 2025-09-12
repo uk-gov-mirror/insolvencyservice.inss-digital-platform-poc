@@ -1,0 +1,11 @@
+﻿@inherits InssComponentBase
+
+<h1 class="govuk-body" id="@GenerateElementId()">
+    @ChildContent
+</h1>
+
+@code {
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+}
