@@ -1,0 +1,84 @@
+﻿@page "/about-you"
+@inherits InssFormBase<AboutYou>
+
+<HeadingText Name="@EntityNames.HeadingText">@Resource.AboutYouTitle</HeadingText>
+
+<PreviousButton Name="@EntityNames.PreviousButton" />
+
+<EditForm Enhance EditContext="EditContext" FormName="@FormName" OnValidSubmit="OnNext">
+
+    @if(PageIndex == 0)
+    {
+        <Input Text="@Questions.WhatIsYour(Labels.Name)" Name="@FieldName(nameof(Form.Name))" Value="@Form.Name" />
+    }
+
+    @if (PageIndex == 1)
+    {
+        <AddressInput Text="@Questions.WhatIsYour(Labels.Address)" Name="@FieldName(nameof(Form.Address))" Value="@Form.Address" />
+    }
+
+    @if(PageIndex == 2)
+    {
+        <Input Text="@Questions.WhatIsYour(Labels.Telephone)" Name="@FieldName(nameof(Form.Telephone))" Value="@Form.Telephone" Type="@InputFieldType.Telephone" />
+    }
+
+    @if (PageIndex == 3)
+    {
+        <Input Text="@Questions.WhatIsYour(Labels.Email)" Name="@FieldName(nameof(Form.Email))" Value="@Form.Email" Type="@InputFieldType.Email" />
+    }
+
+    <SubmitButton Name="@EntityNames.NextButton" Text="@(PageIndex == 3 ? Resource.Save : Resource.Next)" />
+
+</EditForm>
+
+@code {
+
+    protected override void OnInitialized()
+    {
+        EditContext = new EditContext(Form);
+
+        InitializeFormInstance();
+
+        base.OnInitialized();
+    }
+
+    private async Task OnNext()
+    {
+        var modifiedForm = EditContext.Model as AboutYou;
+        var cachedForm = RetrieveCachedFormState();
+
+        bool lastPage = false;
+        switch (PageIndex)
+        {
+            case 0:
+                cachedForm.Name = modifiedForm!.Name;
+                break;
+            case 1:
+                cachedForm.Address = modifiedForm!.Address;
+                break;
+            case 2:
+                cachedForm.Telephone = modifiedForm!.Telephone;
+                break;
+            case 3:
+                cachedForm.Email = modifiedForm!.Email;
+                lastPage = true;
+                break;
+            default:
+                throw new InvalidOperationException(Resource.InvalidPageIndexMessage);
+        }
+
+        CacheFormState(cachedForm);
+
+        if (lastPage)
+        {
+            await SaveFormToDatabase(cachedForm);
+
+            NavigationManager.NavigateTo(cachedForm.FormMetadata.ReturnUrl);
+        }
+        else
+        {
+            PageIndex++;
+            NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
+        }
+    }
+}

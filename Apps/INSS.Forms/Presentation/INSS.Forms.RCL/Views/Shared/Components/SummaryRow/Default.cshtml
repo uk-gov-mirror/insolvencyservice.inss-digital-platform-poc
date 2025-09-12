@@ -3,11 +3,11 @@
 
 @model RowModel
 
-<div class="govuk-summary-list__row" id="@($"{EntityNames.AppIdPrefix}-summary-row-{Model.Name}")">
-    <dt class="govuk-summary-list__key" id="@($"{EntityNames.AppIdPrefix}-row-{Model.Name}-label")">
+<div class="govuk-summary-list__row" id="@($"{Config.AppIdPrefix}-summary-row-{Model.Name}")">
+    <dt class="govuk-summary-list__key" id="@($"{Config.AppIdPrefix}-row-{Model.Name}-label")">
         @Model.Text
     </dt>
-    <dd class="govuk-summary-list__value" id="@($"{EntityNames.AppIdPrefix}-summary-row-{Model.Name}-value")">
+    <dd class="govuk-summary-list__value" id="@($"{Config.AppIdPrefix}-summary-row-{Model.Name}-value")">
         @foreach (var value in Model.Values)
         {
             <span>@value</span>
@@ -18,7 +18,7 @@
         }
     </dd>
 
-    <dd class="govuk-summary-list__actions" id="@($"{EntityNames.AppIdPrefix}-summary-row-{Model.Name}-action")">
+    <dd class="govuk-summary-list__actions" id="@($"{Config.AppIdPrefix}-summary-row-{Model.Name}-action")">
 
         <form method="post" asp-page-handler="Change">
 

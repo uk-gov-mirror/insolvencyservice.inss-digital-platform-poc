@@ -1,0 +1,114 @@
+﻿@page "/individuals-income"
+@inherits InssFormListItemBase<IndividualsIncome, Income>
+
+<HeadingText Name="@EntityNames.HeadingText">@Resource.IndividualsIncomeTitle</HeadingText>
+
+<PreviousButton Name="@EntityNames.PreviousButton" />
+
+<EditForm Enhance EditContext="EditContext" FormName="@FormName" OnValidSubmit="OnNext">
+
+    @if (PageIndex == 0)
+    {
+        <RadioButtons Name="@FieldName(nameof(FormListItem.IncomeType))"
+                      Text="@Questions.WhatIsThe(Labels.IncomeType)"
+                      Inline="false"
+                      Items="@incomeTypeOptions"
+                      Value="@FormListItem.IncomeType.GetDescription()" />
+    }
+
+    @if (PageIndex == 1)
+    {
+        <Input Text="@Questions.WhatIsThe(Labels.IncomeAmount)" Name="@FieldName(nameof(FormListItem.Amount))" Value="@FormListItem.Amount.ToString()" Type="@InputFieldType.Currency" />
+    }
+
+    @if (PageIndex == 2)
+    {
+        <RadioButtons Name="@FieldName(nameof(FormListItem.IncomeFrequency))"
+                      Text="@Questions.WhatIsThe(Labels.IncomeFrequency)"
+                      Inline="false"
+                      Items="@incomeFrequencyOptions"
+                      Value="@FormListItem.IncomeFrequency.GetDescription()" />
+    }
+
+    @if (PageIndex == 3)
+    {
+        <Input Text="@Questions.WhoIsThe(Labels.IncomeProvider)" Name="@FieldName(nameof(FormListItem.Provider))" Value="@FormListItem.Provider" />
+    }
+
+    <SubmitButton Name="@EntityNames.NextButton" Text="@Resource.Next" />
+
+</EditForm>
+
+
+@code {
+
+    private List<RadioOption<string>> incomeTypeOptions = EnumHelper.ToRadioOptions<IncomeType>();
+    private List<RadioOption<string>> incomeFrequencyOptions = EnumHelper.ToRadioOptions<IncomeFrequencyType>();
+
+    protected override void OnInitialized()
+    {
+        // FormListItem is bound to the form, ensure the edit context contains any changes after a form submission.
+        // If a field was not populated, FormListItem will be null, so create a new instance in that case.
+        EditContext = new EditContext(FormListItem ?? new());
+
+        // Ensure the main form instance is created or loaded.
+        InitializeFormInstance();
+
+        // Ensure the list has an entry for the current ListIndex, creating a new instance if needed.
+        if(Form.Income.Count <= ListIndex)
+            Form.Income.Add(EditContext.Model as Income ?? new());
+
+        // Bind the current list item to the form so that the fields are updated after a page reload..
+        FormListItem = Form.Income[ListIndex];
+
+        base.OnInitialized();
+    }
+
+    /// <summary>
+    /// Handles the logic for progressing to the next page of the form or completing the form entry.
+    /// Updates the persisted form data in session and navigates to the income list when finished.
+    /// </summary>
+    private void OnNext()
+    {
+        var modifiedForm = EditContext.Model as Income;
+
+        var cachedForm = RetrieveCachedFormState();
+
+        if (cachedForm.Income.Count <= ListIndex)
+            cachedForm.Income.Add(new Income());
+
+        var persistedListItem = cachedForm.Income[ListIndex];
+
+        bool lastPage = false;
+        switch (PageIndex)
+        {
+            case 0:
+                persistedListItem.IncomeType = modifiedForm!.IncomeType;
+                break;
+            case 1:
+                persistedListItem.Amount = modifiedForm!.Amount;
+                break;
+            case 2:
+                persistedListItem.IncomeFrequency = modifiedForm!.IncomeFrequency;
+                break;
+            case 3:
+                persistedListItem.Provider = modifiedForm!.Provider;
+                lastPage = true;
+                break;
+            default:
+                throw new InvalidOperationException("Invalid page index");
+        }
+
+        CacheFormState(cachedForm);
+
+        if (lastPage)
+        {
+            NavigationManager.NavigateTo("/individuals-income-list");
+        }
+        else
+        {
+            PageIndex++;
+            NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
+        }
+    }
+}

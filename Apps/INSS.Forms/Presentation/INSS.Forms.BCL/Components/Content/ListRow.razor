@@ -1,0 +1,57 @@
+﻿@inherits InssComponentBase
+
+<div class="govuk-summary-list__row" id="@GenerateElementId()">
+    <dt class="govuk-summary-list__key govuk-!-font-weight-regular hmrc-summary-list__key" id="@GenerateElementId("label")">
+        @Text
+    </dt>
+    <dd class="govuk-summary-list__actions hmrc-summary-list__actions" id="@GenerateElementId("action")">
+        <ul class="govuk-summary-list__actions-list" id="@GenerateElementId("action-list")">
+            <li class="govuk-summary-list__actions-list-item" id="@GenerateElementId("action-change", "@Key")">
+
+                <form @formname="@($"form-income-list-change-{Key}")" method="post" @onsubmit="OnSubmitChange">
+                    <AntiforgeryToken />
+                    <button type="submit" class="govuk-link" style="background:none;border:none;padding:0;color:#1d70b8;text-decoration:underline;cursor:pointer;font-size:1rem;">
+                        Change <span class="govuk-visually-hidden">@Text</span>
+                    </button>
+                </form>
+
+            </li>
+            <li class="govuk-summary-list__actions-list-item" id="@GenerateElementId("action-remove", "@Key")">
+
+                <form @formname="@($"form-income-list-remove-{Key}")" method="post" @onsubmit="OnSubmitRemove">
+                    <AntiforgeryToken />
+                    <button type="submit" class="govuk-link" style="background:none;border:none;padding:0;color:#1d70b8;text-decoration:underline;cursor:pointer;font-size:1rem;">
+                        Remove <span class="govuk-visually-hidden">@Text</span>
+                    </button>
+                </form>
+
+            </li>
+        </ul>
+    </dd>
+</div>
+
+@code {
+
+    [Parameter]
+    public string Key { get; set; } = string.Empty;
+
+    [Parameter]
+    public string Text { get; set; } = string.Empty;
+
+    [Parameter]
+    public EventCallback<int> OnChange { get; set; }
+
+    [Parameter]
+    public EventCallback<int> OnRemove { get; set; }
+
+    private async Task OnSubmitChange()
+    {
+        await OnChange.InvokeAsync();
+    }
+
+    private async Task OnSubmitRemove()
+    {
+        await OnRemove.InvokeAsync();
+    }
+}
+

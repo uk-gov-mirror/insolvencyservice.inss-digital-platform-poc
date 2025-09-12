@@ -1,0 +1,105 @@
+﻿@page "/individuals-income-list"
+@inherits InssFormBase<IndividualsIncome>
+
+<HeadingText Name="@EntityNames.HeadingText">@Resource.IndividualsIncomeTitle</HeadingText>
+
+<HeadingText Name="heading-list">
+    @string.Format(Resource.IncomeListIncomeCount, Form.Income.Count, Form.Income.Count > 1 ? "s" : "")
+</HeadingText>
+
+<PreviousButton Name="@EntityNames.PreviousButton" TargetPage="/individuals-income" />
+
+<div class="govuk-form-group" id="@GenerateElementId("income-list")">
+    <dl class="govuk-summary-list hmrc-list-with-actions hmrc-list-with-actions--short">
+        @foreach (var dataItem in Form.Income.Select((item, index) => new { Index = index, Item = item }))
+        {
+            <ListRow Name='@($"{EntityNames.IncomeType}-row")'
+                Key="@dataItem.Index.ToString()"
+                Text="@dataItem.Item.IncomeType.GetDescription()"
+                OnChange="@(() => OnChangeItem(dataItem.Index))" 
+                OnRemove="@(() => OnRemoveItem(dataItem.Index))" />
+        }
+    </dl>
+
+    <EditForm EditContext="EditContext" FormName="@FormName" OnValidSubmit="OnAddNew">
+
+        <RadioButtons Name="@($"{nameof(AddNewItem)}.{nameof(AddNewItem.AddNew)}")"
+            Text="@Resource.IncomeListAddAnotherIncome"
+            Hint="@Resource.IncomeListHint"
+            Inline="true"
+            Items=@confirmOptions
+            Value=@addNewItem.AddNew />
+
+        <ValidationMessage class="govuk-error-message" For="() => addNewItem.AddNew" />
+
+        <SubmitButton Name="@EntityNames.NextButton" Text="@Resource.Next" />
+    </EditForm>
+</div>
+
+
+
+@code {
+
+    private List<RadioOption<string>> confirmOptions = EnumHelper.ToRadioOptions<ConfirmType>();
+    private ValidationMessageStore? _messageStore;
+
+    [SupplyParameterFromForm(FormName = FormName)]
+    private AddNewItem addNewItem { get; set; } = new();
+
+    protected override void OnInitialized()
+    {
+        InitializeFormInstance();
+
+        addNewItem ??= new();
+        EditContext = new EditContext(addNewItem);
+        _messageStore = new ValidationMessageStore(EditContext);
+
+        base.OnInitialized();
+    }
+
+    private void OnAddNew()
+    {
+        var addNewItem = EditContext.Model as AddNewItem;
+        if (addNewItem!.AddNew == ConfirmType.Yes.GetDescription())
+        {
+            ListIndex++;
+            PageIndex = 0;
+            NavigationManager.NavigateTo("/individuals-income");
+        }
+        else if (addNewItem.AddNew == ConfirmType.No.GetDescription())
+        {
+            NavigationManager.NavigateTo("/individuals-income-summary");
+        }
+        else
+        {
+            var fieldIdentifier = new FieldIdentifier(addNewItem, nameof(addNewItem.AddNew));
+            _messageStore?.Add(fieldIdentifier, Resource.IncomeListAddNewValidationMessage);
+            EditContext.NotifyValidationStateChanged();
+        }
+    }
+
+    private void OnChangeItem(int listIndex)
+    {
+        ListIndex = listIndex;
+        NavigationManager.NavigateTo("/individuals-income-item");
+    }
+
+    private void OnRemoveItem(int index)
+    {
+        Form = RetrieveCachedFormState();
+        Form.Income.RemoveAt(index);
+        CacheFormState(Form);
+
+        if (Form.Income.Count == 0)
+        {
+            PageIndex = 0;
+            ListIndex = 0;
+            NavigationManager.NavigateTo("./individuals-income");
+        }
+        else
+        {
+            ListIndex = Form.Income.Count - 1;
+            NavigationManager.NavigateTo(NavigationManager.Uri);
+        }
+    }
+}
