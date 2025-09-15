@@ -13,7 +13,7 @@ namespace INSS.Forms.Domain.Models.Composite
         /// <remarks>
         /// Note: This identifier is unique to each form instance and is different from the form definition ID.  This is set as a unique key in Cosmos DB.
         /// </remarks>
-        public Guid FormInstanceId { get; set; } = Guid.NewGuid();
+        public Guid FormInstanceId { get; set; }
 
         /// <summary>
         /// Gets or sets the unique identifier for the form set instance.

@@ -5,12 +5,21 @@
     {
         <li class="govuk-task-list__item govuk-task-list__item--with-link" id="@GenerateElementId($"list-item", item.Id.ToString("N"))">
             <div class="govuk-task-list__name-and-hint" id="@GenerateElementId($"list-item-hint", item.Id.ToString("N"))">
-                <a class="govuk-link govuk-task-list__link"
-                   href="@AssembleUrl(item)"
-                aria-describedby="@GenerateElementId($"list-item-status", item.Id.ToString("N"))"
-                id="@GenerateElementId($"list-item-link", item.Id.ToString("N"))">
-                    @item.Title
-                </a>
+                @if(item.Status.ToLowerInvariant() != "completed")
+                {
+                    <a class="govuk-link govuk-task-list__link"
+                       href="@AssembleUrl(item)"
+                       aria-describedby="@GenerateElementId($"list-item-status", item.Id.ToString("N"))"
+                       id="@GenerateElementId($"list-item-link", item.Id.ToString("N"))">
+                        @item.Title
+                    </a>
+                }
+                else
+                {
+                    <span aria-describedby="@GenerateElementId($"list-item-status", item.Id.ToString("N"))">
+                        @item.Title
+                    </span>
+                }
             </div>
             <div class="govuk-task-list__status" id="@GenerateElementId($"list-item-status", item.Id.ToString("N"))">
                 @item.Status

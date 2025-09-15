@@ -36,7 +36,8 @@ namespace INSS.Forms.BCL.Services
             {
                 Username = query.TryGetValue("Username", out var username) && !StringValues.IsNullOrEmpty(username) ? username.ToString() : string.Empty,
                 FormId = query.TryGetValue("Form", out var formId) && Guid.TryParse(formId, out var fid) ? fid : Guid.Empty,
-                FormSetInstanceId = query.TryGetValue("FormSetInstanceId", out var formsInstanceId) && Guid.TryParse(formsInstanceId, out var fsid) ? fsid : Guid.Empty
+                FormInstanceId = query.TryGetValue("FormInstanceId", out var formsInstanceId) && Guid.TryParse(formsInstanceId, out var fiid) ? fiid : Guid.NewGuid(),
+                FormSetInstanceId = query.TryGetValue("FormSetInstanceId", out var formsSetInstanceId) && Guid.TryParse(formsSetInstanceId, out var fsid) ? fsid : Guid.NewGuid(),
             };
 
             if (query.TryGetValue("ReturnUrl", out var returnUrl))

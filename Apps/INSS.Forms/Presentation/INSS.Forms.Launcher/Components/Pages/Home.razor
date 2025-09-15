@@ -63,8 +63,6 @@
         formApiBaseUrl = Configuration["FormApi-BaseUrl"]
             ?? throw new InvalidOperationException("The 'FormApi-BaseUrl' configuration value is missing.");
 
-        formSetInstanceId ??= Guid.NewGuid();
-
         var hostHeader = HttpContextAccessor.HttpContext!.Request.Headers["Host"].ToString();
 
         string hostName = string.Empty;
@@ -260,6 +258,12 @@
                 if (formSetInstanceId.HasValue)
                 {
                     var query = $"formSetInstanceId={formSetInstanceId.Value}";
+
+                    Guid formInstanceId = formInstances.FirstOrDefault(fi => fi.FormMetadata.FormId == form.Id)?.FormMetadata.FormInstanceId ?? Guid.Empty;
+
+                    if (formInstanceId != Guid.Empty)
+                        query += ($"&formInstanceId={formInstanceId}");
+                    
                     uriBuilder.Query = string.IsNullOrEmpty(uriBuilder.Query) ? query : uriBuilder.Query.TrimStart('?') + "&" + query;
                 }
                 return new TaskListItemMetadata

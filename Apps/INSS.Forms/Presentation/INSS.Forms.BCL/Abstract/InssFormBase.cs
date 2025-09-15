@@ -66,7 +66,7 @@ public abstract class InssFormBase<TForm> : InssCommonBase where TForm : FormBas
             PageIndex = 0;
 
             // If this is a different form set instance, start a new form.
-            if (cachedForm.FormMetadata?.FormSetInstanceId != formMetadata.FormSetInstanceId)
+            if (cachedForm.FormMetadata?.FormInstanceId != formMetadata.FormInstanceId)
             {
                 cachedForm = new TForm();
             }
