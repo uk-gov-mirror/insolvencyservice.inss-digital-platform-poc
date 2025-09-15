@@ -77,22 +77,22 @@
         if (cachedForm.Income.Count <= ListIndex)
             cachedForm.Income.Add(new Income());
 
-        var persistedListItem = cachedForm.Income[ListIndex];
+        var cachedListItem = cachedForm.Income[ListIndex];
 
         bool lastPage = false;
         switch (PageIndex)
         {
             case 0:
-                persistedListItem.IncomeType = modifiedForm!.IncomeType;
+                cachedListItem.IncomeType = modifiedForm!.IncomeType;
                 break;
             case 1:
-                persistedListItem.Amount = modifiedForm!.Amount;
+                cachedListItem.Amount = modifiedForm!.Amount;
                 break;
             case 2:
-                persistedListItem.IncomeFrequency = modifiedForm!.IncomeFrequency;
+                cachedListItem.IncomeFrequency = modifiedForm!.IncomeFrequency;
                 break;
             case 3:
-                persistedListItem.Provider = modifiedForm!.Provider;
+                cachedListItem.Provider = modifiedForm!.Provider;
                 lastPage = true;
                 break;
             default:
