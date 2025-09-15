@@ -64,7 +64,7 @@
         var addNewItem = EditContext.Model as AddNewItem;
         if (addNewItem!.AddNew == ConfirmType.Yes.GetDescription())
         {
-            ListIndex++;
+            PrepareListIndexForNewItem();
             PageIndex = 0;
             NavigationManager.NavigateTo("/individuals-income");
         }
@@ -78,6 +78,19 @@
             _messageStore?.Add(fieldIdentifier, Resource.IncomeListAddNewValidationMessage);
             EditContext.NotifyValidationStateChanged();
         }
+    }
+
+    /// <summary>
+    /// Prepares the list index for adding a new income item.
+    /// <remarks> 
+    /// The ListIndex might have changed due to a user navigating back to this page after modifying an item in the list.
+    /// So ensure the ListIndex is set to the end of the list so that a new item is added rather than modifying an existing one.
+    /// </remarks>
+    /// </summary>
+    private void PrepareListIndexForNewItem()
+    {
+        var cachedForm = RetrieveCachedFormState();
+        ListIndex = cachedForm.Income.Count;
     }
 
     private void OnChangeItem(int listIndex)
