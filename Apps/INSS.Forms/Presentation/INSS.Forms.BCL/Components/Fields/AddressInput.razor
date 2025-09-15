@@ -1,0 +1,26 @@
+﻿@inherits InssComponentBase
+
+<fieldset class="govuk-fieldset" id="@GenerateElementId()">
+    <FieldSetHeadingText Name="fieldset-address-heading">
+        @Text
+    </FieldSetHeadingText>
+
+    <Input text="Address line 1" Name="@($"{Name}.{nameof(Value.Address1)}")" SmallText="true" Value="@Value.Address1" />
+
+    <Input text="Address line 2" Name="@($"{Name}.{nameof(Value.Address2)}")" SmallText="true" Value="@Value.Address2" />
+
+    <Input text="Town" Name="@($"{Name}.{nameof(Value.Town)}")" SmallText="true" Value="@Value.Town" />
+
+    <Input text="Postcode" Name="@($"{Name}.{nameof(Value.Postcode)}")" SmallText="true" Value="@Value.Postcode" />
+
+</fieldset>
+
+
+@code {
+    [Parameter]
+    public string Text { get; set; } = string.Empty;
+
+    [Parameter]
+    public Address Value { get; set; } = new Address();
+}
+

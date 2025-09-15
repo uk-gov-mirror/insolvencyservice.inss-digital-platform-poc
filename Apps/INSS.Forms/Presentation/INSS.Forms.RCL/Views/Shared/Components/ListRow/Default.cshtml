@@ -3,13 +3,13 @@
 
 @model RowModel
 
-<div class="govuk-summary-list__row" id="@($"{EntityNames.AppIdPrefix}-list-row-{Model.Name}")">
-    <dt class="govuk-summary-list__key govuk-!-font-weight-regular hmrc-summary-list__key" id="@($"{EntityNames.AppIdPrefix}-list-row-{Model.Name}-label")">
+<div class="govuk-summary-list__row" id="@($"{Config.AppIdPrefix}-list-row-{Model.Name}")">
+    <dt class="govuk-summary-list__key govuk-!-font-weight-regular hmrc-summary-list__key" id="@($"{Config.AppIdPrefix}-list-row-{Model.Name}-label")">
         @Model.Text
     </dt>
-    <dd class="govuk-summary-list__actions hmrc-summary-list__actions" id="@($"{EntityNames.AppIdPrefix}-list-row-{Model.Name}-action")">
-        <ul class="govuk-summary-list__actions-list" id="@($"{EntityNames.AppIdPrefix}-list-row-{Model.Name}-action-list")">
-            <li class="govuk-summary-list__actions-list-item" id="@($"{EntityNames.AppIdPrefix}-list-row-{Model.Name}-action-change-{Model.ItemIndex}")">
+    <dd class="govuk-summary-list__actions hmrc-summary-list__actions" id="@($"{Config.AppIdPrefix}-list-row-{Model.Name}-action")">
+        <ul class="govuk-summary-list__actions-list" id="@($"{Config.AppIdPrefix}-list-row-{Model.Name}-action-list")">
+            <li class="govuk-summary-list__actions-list-item" id="@($"{Config.AppIdPrefix}-list-row-{Model.Name}-action-change-{Model.ItemIndex}")">
 
                 <form method="post" asp-page-handler="Change">
 
@@ -21,7 +21,7 @@
                 </form>
 
             </li>
-            <li class="govuk-summary-list__actions-list-item" id="@($"{EntityNames.AppIdPrefix}-list-row-{Model.Name}-action-remove-{Model.ItemIndex}")">
+            <li class="govuk-summary-list__actions-list-item" id="@($"{Config.AppIdPrefix}-list-row-{Model.Name}-action-remove-{Model.ItemIndex}")">
 
                 <form method="post" asp-page-handler="Remove">
 

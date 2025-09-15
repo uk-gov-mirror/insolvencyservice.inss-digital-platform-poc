@@ -11,7 +11,7 @@
         "Action": "Start"
       },
       {
-        "Path": "Presentation\\INSS.Forms.Runner.Razor\\INSS.Forms.Runner.Razor.csproj",
+        "Path": "Presentation\\INSS.Forms.Runner.Blazor\\INSS.Forms.Runner.Blazor.csproj",
         "Action": "Start"
       }
     ]

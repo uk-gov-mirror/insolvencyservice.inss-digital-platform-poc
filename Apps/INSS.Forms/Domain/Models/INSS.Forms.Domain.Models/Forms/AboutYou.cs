@@ -12,7 +12,7 @@ namespace INSS.Forms.Domain.Models.Forms
         /// <summary>
         /// Gets or sets the name of the person.
         /// </summary>
-        [Required]
+        [Required(ErrorMessage = "Name is required.")]
         public string Name { get; set; } = string.Empty;
 
         /// <summary>

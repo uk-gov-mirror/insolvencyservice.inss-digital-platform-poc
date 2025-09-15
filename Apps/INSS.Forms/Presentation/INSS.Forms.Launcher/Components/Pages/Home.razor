@@ -1,9 +1,5 @@
 ﻿@page "/"
 @page "/{formSetInstanceId:guid?}"
-@using INSS.Forms.Domain.Models.Abstract
-@using System.Text.Json
-@using System.Text.Json.Serialization
-@using INSS.Forms.Domain.Models.Composite
 @inject IHttpContextAccessor HttpContextAccessor
 @inject IConfiguration Configuration
 @inject NavigationManager NavigationManager
@@ -33,16 +29,16 @@
                 <ParagraphText Name="section-description">@digitalServiceSection.Description</ParagraphText>
             </RowTwoThirdsLayout>
 
-            <GdsTaskListFieldMetadata 
+            <TaskListFieldMetadata 
                 Name="section-forms" 
                 Items="@(sectionTaskListItems.TryGetValue(digitalServiceSection.Id, out var items) ? items : Array.Empty<TaskListItemMetadata>())" 
             />
         }
 
         <form name="ds-apply" method="get" action="/completed/@formSetInstanceId">
-            <GdsButtonField Name="apply-btn" IsDisabled="@(!allFormsCompleted)">
-                Apply
-            </GdsButtonField>
+
+            <SubmitButton Name="@EntityNames.ApplyButton" Disabled="@(!allFormsCompleted)" Text="Apply" />
+
         </form>
     }
 
@@ -262,6 +258,12 @@
                 if (formSetInstanceId.HasValue)
                 {
                     var query = $"formSetInstanceId={formSetInstanceId.Value}";
+
+                    Guid formInstanceId = formInstances.FirstOrDefault(fi => fi.FormMetadata.FormId == form.Id)?.FormMetadata.FormInstanceId ?? Guid.Empty;
+
+                    if (formInstanceId != Guid.Empty)
+                        query += ($"&formInstanceId={formInstanceId}");
+                    
                     uriBuilder.Query = string.IsNullOrEmpty(uriBuilder.Query) ? query : uriBuilder.Query.TrimStart('?') + "&" + query;
                 }
                 return new TaskListItemMetadata

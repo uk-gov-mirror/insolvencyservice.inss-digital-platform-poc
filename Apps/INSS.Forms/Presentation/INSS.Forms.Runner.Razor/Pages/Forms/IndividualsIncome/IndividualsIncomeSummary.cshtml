@@ -26,17 +26,17 @@
 <vc:previous-button current-page-index="Model.PageIndex" page-name="./IndividualsIncomeList" />
 
 
-    <div id="@($"{EntityNames.AppIdPrefix}summary")">
+    <div id="@($"{Config.AppIdPrefix}summary")">
         @foreach (var dataItem in @Model.Form.Income.Select((item, index) => new { Index = index, Item = item }))
         {
-            <div class="govuk-summary-card" id="@($"{EntityNames.AppIdPrefix}card-row-{dataItem.Index.ToString()}")">
-                <div class="govuk-summary-card__title-wrapper" id="@($"{EntityNames.AppIdPrefix}row-title-wrapper-{dataItem.Index.ToString()}")">
-                    <h2 class="govuk-summary-card__title" id="@($"{EntityNames.AppIdPrefix}row-title-{dataItem.Index.ToString()}")">
+            <div class="govuk-summary-card" id="@($"{Config.AppIdPrefix}card-row-{dataItem.Index.ToString()}")">
+                <div class="govuk-summary-card__title-wrapper" id="@($"{Config.AppIdPrefix}row-title-wrapper-{dataItem.Index.ToString()}")">
+                    <h2 class="govuk-summary-card__title" id="@($"{Config.AppIdPrefix}row-title-{dataItem.Index.ToString()}")">
                         @dataItem.Item.IncomeType.GetDescription()
                     </h2>
                 </div>
-                <div class="govuk-summary-card__content" id="@($"{EntityNames.AppIdPrefix}row-content-{dataItem.Index.ToString()}")">
-                    <dl class="govuk-summary-list" id="@($"{EntityNames.AppIdPrefix}row-content-list-{dataItem.Index.ToString()}")">
+                <div class="govuk-summary-card__content" id="@($"{Config.AppIdPrefix}row-content-{dataItem.Index.ToString()}")">
+                    <dl class="govuk-summary-list" id="@($"{Config.AppIdPrefix}row-content-list-{dataItem.Index.ToString()}")">
 
                         <vc:summary-row name="@IndexedName(EntityNames.IncomeAmount, dataItem.Index)"
                                     text="@Labels.IncomeAmount"

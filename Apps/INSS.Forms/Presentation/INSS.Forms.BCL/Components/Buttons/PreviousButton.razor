@@ -1,0 +1,36 @@
+﻿@inherits InssComponentBase
+
+
+@if (PageIndex > 0)
+{
+    <form @formname="previous-button-form" method="post" @onsubmit="OnPrevious">
+        <AntiforgeryToken />
+
+        <button type="submit" class="govuk-back-link" style="background:none;border:none;padding:0;color:#1d70b8;text-decoration:underline;cursor:pointer;font-size:1rem;">
+            Back
+        </button>
+
+    </form>
+}
+
+
+
+@code {
+
+    [Parameter]
+    public string TargetPage { get; set; } = string.Empty;
+
+    private void OnPrevious()
+    {
+        if (!String.IsNullOrWhiteSpace(TargetPage))
+        {
+            NavigationManager.NavigateTo(TargetPage);
+            return;
+        }
+        else
+        {
+            PageIndex--;
+            NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
+        }
+    }
+}

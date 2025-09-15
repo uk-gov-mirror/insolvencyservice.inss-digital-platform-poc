@@ -1,0 +1,75 @@
+﻿@page "/individuals-income-summary"
+@inherits InssFormBase<IndividualsIncome>
+
+<HeadingText Name="@EntityNames.HeadingText">@Resource.IndividualsIncomeTitle</HeadingText>
+
+<PreviousButton Name="@EntityNames.PreviousButton" TargetPage="/individuals-income-list" />
+
+<div id="@GenerateElementId()">
+    @foreach (var dataItem in Form.Income.Select((item, index) => new { Index = index, Item = item }))
+    {
+        <div class="govuk-summary-card" id="@GenerateElementId("card-row", dataItem.Index.ToString())">
+            <div class="govuk-summary-card__title-wrapper" id="@GenerateElementId("row-title-wrapper", dataItem.Index.ToString())">
+                <h2 class="govuk-summary-card__title" id="@GenerateElementId("row-title", dataItem.Index.ToString())">
+                    @dataItem.Item.IncomeType.GetDescription()
+                </h2>
+            </div>
+            <div class="govuk-summary-card__content" id="@GenerateElementId("row-content", dataItem.Index.ToString())">
+                <dl class="govuk-summary-list" id="@GenerateElementId("row-content-list", dataItem.Index.ToString())">
+
+                    <SummaryRow Name="@IndexedName(EntityNames.IncomeAmount, dataItem.Index)"
+                                Text="@Labels.IncomeAmount"
+                                Values="@GetValue(@dataItem.Item.Amount.ToStringAsCurrency())"
+                                OnChange="@(() => OnChangeItem(dataItem.Index, 1))" />
+
+                    <SummaryRow Name="@IndexedName(EntityNames.IncomeFrequency, dataItem.Index)"
+                                Text="@Labels.IncomeFrequency"
+                                Values="@GetValue(dataItem.Item.IncomeFrequency.GetDescription())"
+                                OnChange="@(() => OnChangeItem(dataItem.Index, 2))" />
+
+                    <SummaryRow Name="@IndexedName(EntityNames.IncomeProvider, dataItem.Index)"
+                                Text="@Labels.IncomeProvider"
+                                Values="@GetValue(@dataItem.Item.Provider)"
+                                OnChange="@(() => OnChangeItem(dataItem.Index, 3))" />
+                </dl>
+            </div>
+        </div>
+    }
+</div>
+
+<form @formname="@($"form-income-summary-save")" method="post" @onsubmit="OnSave">
+    <AntiforgeryToken />
+
+    <SubmitButton Name="@EntityNames.SaveButton" Text="@Resource.Save" />
+</form>
+
+
+
+@code {
+
+
+    protected override void OnInitialized()
+    {
+        InitializeFormInstance();
+
+        base.OnInitialized();
+    }
+
+    private void OnChangeItem(int listIndex, int pageIndex)
+    {
+        ListIndex = listIndex;
+        PageIndex = pageIndex;
+
+        NavigationManager.NavigateTo("/individuals-income");
+    }
+
+    private async Task OnSave()
+    {
+        var form = RetrieveCachedFormState();
+
+        if(await SaveFormToDatabase(form))
+        {
+            NavigationManager.NavigateTo(form.FormMetadata.ReturnUrl);
+        }
+    }
+}

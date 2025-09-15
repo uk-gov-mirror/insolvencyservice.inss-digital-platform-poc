@@ -1,0 +1,56 @@
+﻿@page "/individuals-income-item"
+@inherits InssFormListItemBase<IndividualsIncome, Income>
+
+<HeadingText Name="@EntityNames.HeadingText">@Resource.IndividualsIncomeTitle</HeadingText>
+
+<HeadingText Name="heading-individuals-debts-list">
+    @($"Change {FormListItem.IncomeType.GetDescription()} details")
+</HeadingText>
+
+<PreviousButton Name="@EntityNames.PreviousButton" TargetPage="/individuals-income-list" />
+
+<dl class="govuk-summary-list" id="@GenerateElementId()">
+
+    <SummaryRow Name="@EntityNames.IncomeType"
+                Text="@Labels.IncomeType"
+                Values="@GetValue(FormListItem.IncomeType.GetDescription())"
+                OnChange="@(() => OnChangeItem(ListIndex, 0))" />
+
+    <SummaryRow Name="@EntityNames.IncomeAmount"
+                Text="@Labels.IncomeAmount"
+                Values="@GetValue(FormListItem.Amount.ToStringAsCurrency())"
+                OnChange="@(() => OnChangeItem(ListIndex, 1))" />
+
+    <SummaryRow Name="@EntityNames.IncomeFrequency"
+                Text="@Labels.IncomeFrequency"
+                Values="@GetValue(FormListItem.IncomeFrequency.GetDescription())"
+                OnChange="@(() => OnChangeItem(ListIndex, 2))" />
+
+    <SummaryRow Name="@EntityNames.IncomeProvider"
+                Text="@Labels.IncomeProvider"
+                Values="@GetValue(FormListItem.Provider)"
+                OnChange="@(() => OnChangeItem(ListIndex, 3))" />
+
+</dl>
+
+
+
+@code {
+
+    protected override void OnInitialized()
+    {
+        InitializeFormInstance();
+
+        FormListItem = Form.Income[ListIndex];
+
+        base.OnInitialized();
+    }
+
+    private void OnChangeItem(int listIndex, int pageIndex)
+    {
+        ListIndex = listIndex;
+        PageIndex = pageIndex;
+
+        NavigationManager.NavigateTo("/individuals-income");
+    }
+}
