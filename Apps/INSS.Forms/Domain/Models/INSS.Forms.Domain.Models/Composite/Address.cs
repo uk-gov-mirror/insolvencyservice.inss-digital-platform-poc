@@ -1,4 +1,6 @@
-﻿namespace INSS.Forms.Domain.Models.Composite
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace INSS.Forms.Domain.Models.Composite
 {
     /// <summary>
     /// Represents a postal address.
@@ -8,6 +10,7 @@
         /// <summary>
         /// Gets or sets the first line of the address.
         /// </summary>
+        [Required(ErrorMessage = "Address line 1 is required.")]
         public string Address1 { get; set; } = string.Empty;
 
         /// <summary>
@@ -23,6 +26,7 @@
         /// <summary>
         /// Gets or sets the postcode of the address.
         /// </summary>
+        [Required(ErrorMessage = "Postcode is required.")]
         public string Postcode { get; set; } = string.Empty;
     }
 }

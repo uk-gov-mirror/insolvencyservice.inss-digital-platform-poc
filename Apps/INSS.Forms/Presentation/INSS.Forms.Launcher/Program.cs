@@ -22,11 +22,13 @@ if (builder.Environment.IsDevelopment())
                     string selfSignedCertificatePassword = builder.Configuration["Certificates:SelfSignedPassword"] ?? string.Empty;
 
                     // If you get access denied here, run VS as administrator to allow it to read the certificate private key.
+                    #pragma warning disable
                     return new X509Certificate2(
                         Path.Combine(selfSignedCertificatePath, $"{hostname}.pfx"),
                         selfSignedCertificatePassword,
                         X509KeyStorageFlags.UserKeySet | X509KeyStorageFlags.PersistKeySet
                     );
+                    #pragma warning restore
                 };
             });
         });

@@ -123,9 +123,6 @@
   <data name="IncomeListAddAnotherIncome" xml:space="preserve">
     <value>Do you need to add another income?</value>
   </data>
-  <data name="IncomeListAddNewValidationMessage" xml:space="preserve">
-    <value>Select 'Yes' if you want to add another income or 'No' if you want to proceed to the summary</value>
-  </data>
   <data name="IncomeListHint" xml:space="preserve">
     <value>You must tell us about all your income.</value>
   </data>

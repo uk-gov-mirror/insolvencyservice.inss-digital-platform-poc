@@ -1,0 +1,29 @@
+﻿@typeparam TValue
+@inherits InssComponentBase
+
+<Input Name="@Name" Text="@Text" SmallText="@SmallText" Placeholder="@Placeholder" Value="@Value">
+    <ValidationMessage TValue="TValue" class="govuk-error-message" For="@ValidateFor" />
+</Input>
+
+@code {
+
+    [Parameter]
+    public string Text { get; set; } = string.Empty;
+
+    [Parameter]
+    public bool SmallText { get; set; } = false;
+
+    [Parameter]
+    public InputFieldType Type { get; set; } = InputFieldType.Text;
+
+    [Parameter]
+    public string? Placeholder { get; set; } = string.Empty;
+
+    [Parameter]
+    public string? Value { get; set; }
+
+    [Parameter]
+    [EditorRequired]
+    public Expression<Func<TValue>> ValidateFor { get; set; }
+
+}

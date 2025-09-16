@@ -1,0 +1,38 @@
+﻿@typeparam TValue
+@inherits InssComponentBase
+
+
+<RadioButtons 
+    Name="@Name"
+    Text="@Text"
+    Hint="@Hint"
+    Inline="@Inline"
+    Items="@Items"
+    Value="@Value">
+    
+        <ValidationMessage TValue="TValue" class="govuk-error-message" For="@ValidateFor" />
+
+</RadioButtons>
+
+
+@code {
+    [Parameter]
+    [EditorRequired]
+    public List<RadioOption<string>> Items { get; set; }
+
+    [Parameter]
+    public string Text { get; set; } = string.Empty;
+
+    [Parameter]
+    public string Hint { get; set; } = string.Empty;
+
+    [Parameter]
+    public bool Inline { get; set; } = false;
+
+    [Parameter]
+    public string Value { get; set; } = string.Empty;
+
+    [Parameter]
+    [EditorRequired]
+    public Expression<Func<TValue>> ValidateFor { get; set; }
+}

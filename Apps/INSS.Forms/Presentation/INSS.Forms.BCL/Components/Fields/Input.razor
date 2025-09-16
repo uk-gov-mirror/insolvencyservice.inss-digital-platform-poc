@@ -7,6 +7,11 @@
         </label>
     </h1>
 
+    @if (ChildContent != null)
+    {
+        @ChildContent
+    }
+
     <div class="govuk-input__wrapper">
 
         @if (Type == InputFieldType.Currency)
@@ -42,6 +47,9 @@
 
     [Parameter]
     public string? Value { get; set; }
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; } = null;
 
     string style = "govuk-input";
     string type = string.Empty;

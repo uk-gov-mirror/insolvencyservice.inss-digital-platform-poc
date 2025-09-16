@@ -34,6 +34,8 @@ public abstract class InssFormBase<TForm> : InssCommonBase where TForm : FormBas
     /// </summary>
     [Inject] protected IFormApiClient ApiClient { get; set; } = default!;
 
+    [Inject] protected IPropertyValidator PropertyValidator { get; set; } = default!;
+
     /// <summary>
     /// The name of the main form used for parameter binding.
     /// </summary>
@@ -42,7 +44,7 @@ public abstract class InssFormBase<TForm> : InssCommonBase where TForm : FormBas
     /// <summary>
     /// Gets or sets the <see cref="EditContext"/> for the current form, used for validation and editing.
     /// </summary>
-    protected EditContext EditContext { get; set; } = null!;
+    protected EditContext CurrentEditContext { get; set; } = null!;
 
     /// <summary>
     /// Gets or sets the form model bound to the main form.
@@ -55,7 +57,7 @@ public abstract class InssFormBase<TForm> : InssCommonBase where TForm : FormBas
     /// </summary>
     protected void InitializeFormInstance()
     {
-        var cachedForm = RetrieveCachedFormState();
+        var cachedForm = RetrieveFormFromCache();
 
         var formMetadata = FormMetadataService.CreateFromQueryString();
 
@@ -73,7 +75,7 @@ public abstract class InssFormBase<TForm> : InssCommonBase where TForm : FormBas
 
             // Always update metadata from the query on first call.
             cachedForm.FormMetadata = formMetadata;
-            CacheFormState(cachedForm);
+            WriteFormToCache(cachedForm);
 
             // Remove query parameters, 
             // we do not want to keep reading them with every page load 
@@ -99,7 +101,7 @@ public abstract class InssFormBase<TForm> : InssCommonBase where TForm : FormBas
     /// <returns>
     /// The form model of type <typeparamref name="TForm"/> retrieved from session, or a new instance if not found.
     /// </returns>
-    protected TForm RetrieveCachedFormState()
+    protected TForm RetrieveFormFromCache()
     {
         var json = HttpContextAccessor.HttpContext!.Session.GetString(Config.SessionKey);
 
@@ -117,7 +119,7 @@ public abstract class InssFormBase<TForm> : InssCommonBase where TForm : FormBas
     /// </para>
     /// </summary>
     /// <param name="form">The form model to cache.</param>
-    protected void CacheFormState(TForm form)
+    protected void WriteFormToCache(TForm form)
     {
         HttpContextAccessor.HttpContext!.Session.SetString(Config.SessionKey, JsonSerializer.Serialize(form));
     }
@@ -138,6 +140,118 @@ public abstract class InssFormBase<TForm> : InssCommonBase where TForm : FormBas
     }
 
     /// <summary>
+    /// Validates the specified properties of a model and updates the <see cref="ValidationMessageStore"/> for the given <see cref="EditContext"/>.
+    /// </summary>
+    /// <typeparam name="TModel">The type of the model to validate.</typeparam>
+    /// <param name="editContext">The <see cref="EditContext"/> associated with the form.</param>
+    /// <param name="model">The model instance to validate.</param>
+    /// <param name="properties">An array of property names to validate.</param>
+    /// <returns>
+    /// <c>true</c> if the model is valid for the specified properties; otherwise, <c>false</c>.
+    /// </returns>
+    protected bool IsValid<TModel>(EditContext editContext, TModel model, string[] properties)
+    {
+        if (model is null)
+        {
+            throw new ArgumentNullException(nameof(model));
+        }
+
+        var errors = PropertyValidator.ValidateProperties(model, properties);
+        if (errors.Any())
+        {
+            ValidationMessageStore validationMessageStore = new ValidationMessageStore(editContext);
+
+            foreach (var error in errors)
+            {
+                var fieldIdentifier = new FieldIdentifier(model, error.MemberNames.First());
+                validationMessageStore.Add(fieldIdentifier, error.ErrorMessage!);
+            }
+
+            editContext.NotifyValidationStateChanged();
+            return false;
+        }
+
+        return true;
+    }
+
+    /// <summary>
+    /// Validates a single property of the form and, if valid, assigns its value to the persisted form instance.
+    /// Updates the <see cref="ValidationMessageStore"/> for the current <see cref="EditContext"/>.
+    /// </summary>
+    /// <param name="formToValidate">The form instance containing the property to validate.</param>
+    /// <param name="formToPersist">The form instance to which the property value will be assigned if valid.</param>
+    /// <param name="property">The name of the property to validate and assign.</param>
+    /// <returns>
+    /// <c>true</c> if the property is valid and assigned; otherwise, <c>false</c>.
+    /// </returns>
+    protected bool ValidateAndAssignFormProperty(TForm formToValidate, TForm formToPersist, string property)
+    {
+        var errors = PropertyValidator.ValidateProperties(formToValidate, new[] { property });
+        if (errors.Any())
+        {
+            var validationMessageStore = new ValidationMessageStore(CurrentEditContext);
+            foreach (var error in errors)
+            {
+                var fieldIdentifier = new FieldIdentifier(Form, error.MemberNames.First());
+                validationMessageStore.Add(fieldIdentifier, error.ErrorMessage!);
+            }
+            CurrentEditContext.NotifyValidationStateChanged();
+            return false;
+        }
+
+        var value = formToValidate.GetType().GetProperty(property)?.GetValue(formToValidate);
+        SetPropertyValueByName(formToPersist, property, value);
+
+        return true;
+    }
+
+    /// <summary>
+    /// Validates all properties of a complex property and, if valid, assigns it to the persisted form instance.
+    /// Updates the <see cref="ValidationMessageStore"/> for the current <see cref="EditContext"/>.
+    /// </summary>
+    /// <typeparam name="TComplex">The type of the complex property to validate.</typeparam>
+    /// <param name="complexPropertyToValidate">The complex property instance to validate.</param>
+    /// <param name="formToPersist">The form instance to which the complex property will be assigned if valid.</param>
+    /// <param name="propertyName">The name of the property on the form to assign.</param>
+    /// <returns>
+    /// <c>true</c> if the complex property is valid and assigned; otherwise, <c>false</c>.
+    /// </returns>
+    /// <exception cref="NullReferenceException">
+    /// Thrown if the property to validate does not exist on the bound instance of the <see cref="Form"/> property.
+    /// </exception>
+    protected bool ValidateAndAssignFormProperty<TComplex>(
+        TComplex complexPropertyToValidate,
+        TForm formToPersist,
+        string propertyName)
+    {
+        var errors = PropertyValidator.ValidateAllProperties(complexPropertyToValidate);
+        if (errors.Any())
+        {
+            var validationMessageStore = new ValidationMessageStore(CurrentEditContext);
+
+            var formInstance = typeof(TForm).GetProperty(propertyName)?.GetValue(Form);
+            if (formInstance is null)
+            {
+                throw new NullReferenceException("The property to validate must exist on the bound instance of the Form property.");
+            }
+
+            foreach (var error in errors)
+            {
+                foreach (var memberName in error.MemberNames)
+                {
+                    var fieldIdentifier = new FieldIdentifier(formInstance, memberName);
+                    validationMessageStore.Add(fieldIdentifier, error.ErrorMessage!);
+                }
+            }
+            CurrentEditContext.NotifyValidationStateChanged();
+            return false;
+        }
+
+        SetPropertyValueByName(formToPersist, propertyName, complexPropertyToValidate);
+        return true;
+    }
+
+    /// <summary>
     /// Returns the full field name for a property of the <see cref="Form"/>.
     /// </summary>
     /// <param name="propertyName">The name of the property for which to generate the field name.</param>
@@ -147,6 +261,27 @@ public abstract class InssFormBase<TForm> : InssCommonBase where TForm : FormBas
     protected override string FieldName(string propertyName)
     {
         return string.Concat(nameof(Form), ".", propertyName);
+    }
+
+    /// <summary>
+    /// Sets the value of a property on the specified target object by property name.
+    /// </summary>
+    /// <param name="target">
+    /// The object whose property value will be set.
+    /// </param>
+    /// <param name="propertyName">
+    /// The name of the property to set.
+    /// </param>
+    /// <param name="value">
+    /// The value to assign to the property.
+    /// </param>
+    protected void SetPropertyValueByName(object target, string propertyName, object? value)
+    {
+        var property = target.GetType().GetProperty(propertyName);
+        if (property != null && property.CanWrite)
+        {
+            property.SetValue(target, value);
+        }
     }
 
     /// <summary>

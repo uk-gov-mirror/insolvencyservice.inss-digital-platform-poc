@@ -10,6 +10,12 @@
         <div id="@GenerateElementId("hint")" class="govuk-hint">
             @Hint
         </div>
+
+        @if (ChildContent != null)
+        {
+            @ChildContent
+        }
+
         <div class="govuk-radios @(Inline ? "govuk-radios--inline" : "")" data-module="govuk-radios" id="@GenerateElementId("radios")">
             @foreach(var item in Items)
             {
@@ -27,6 +33,7 @@
                 </div>
             }
         </div>
+
     </fieldset>
 </div>
 
@@ -46,4 +53,7 @@
 
     [Parameter]
     public string Value { get; set; } = string.Empty;
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; } = null;
 }

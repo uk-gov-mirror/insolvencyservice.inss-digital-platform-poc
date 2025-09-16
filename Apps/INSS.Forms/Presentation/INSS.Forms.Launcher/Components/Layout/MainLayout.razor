@@ -1,5 +1,17 @@
 ﻿@inherits LayoutComponentBase
 
+<noscript>
+    <div style="background-color: #ddffdd; color:  #070; padding: 10px; text-align: center;">
+        JavaScript is currently turned off in your browser. You can still access and use all site features with JavaScript disabled.
+    </div>
+</noscript>
+<div id="js-enabled-message" style="display:none; background-color: #ffdddd; color: #900; padding: 10px; text-align: center;">
+    JavaScript is enabled in your browser, disable it to ensure that this application still works with JavaScript disabled.
+</div>
+<script>
+    document.getElementById('js-enabled-message').style.display = 'block';
+</script>
+
 
 <GovHeader Name="@($"{Config.AppIdPrefix}-gov-header")" />
 

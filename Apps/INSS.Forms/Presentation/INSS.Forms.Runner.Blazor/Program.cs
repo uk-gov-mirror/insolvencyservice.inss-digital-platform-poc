@@ -18,7 +18,7 @@ builder.Services.AddHttpClient();
 
 builder.Services.AddScoped<IFormMetadataService, FormMetadataService>();
 builder.Services.AddScoped<IFormApiClient, FormApiClient>();
-
+builder.Services.AddSingleton<IPropertyValidator, PropertyValidator>();
 
 builder.Services.AddRazorComponents();
 

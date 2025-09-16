@@ -5,13 +5,13 @@
         @Text
     </FieldSetHeadingText>
 
-    <Input text="Address line 1" Name="@($"{Name}.{nameof(Value.Address1)}")" SmallText="true" Value="@Value.Address1" />
+    <ValidatedInput text="Address line 1" Name="@($"{Name}.{nameof(Value.Address1)}")" SmallText="true" Value="@Value.Address1" ValidateFor="() => Value.Address1" />
 
-    <Input text="Address line 2" Name="@($"{Name}.{nameof(Value.Address2)}")" SmallText="true" Value="@Value.Address2" />
+    <ValidatedInput text="Address line 2" Name="@($"{Name}.{nameof(Value.Address2)}")" SmallText="true" Value="@Value.Address2" ValidateFor="() => Value.Address2" />
 
-    <Input text="Town" Name="@($"{Name}.{nameof(Value.Town)}")" SmallText="true" Value="@Value.Town" />
+    <ValidatedInput text="Town" Name="@($"{Name}.{nameof(Value.Town)}")" SmallText="true" Value="@Value.Town" ValidateFor="() => Value.Town" />
 
-    <Input text="Postcode" Name="@($"{Name}.{nameof(Value.Postcode)}")" SmallText="true" Value="@Value.Postcode" />
+    <ValidatedInput text="Postcode" Name="@($"{Name}.{nameof(Value.Postcode)}")" SmallText="true" Value="@Value.Postcode" ValidateFor="() => Value.Postcode" />
 
 </fieldset>
 
