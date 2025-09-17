@@ -6,6 +6,8 @@
     <ErrorSummary Name="@GenerateElementName(Name)" Errors="@summaryErrors" />
 }
 
+<div class="govuk-form-group @divErrorClass">
+
 <RadioButtons 
     Id="@id"
     Name="@Name"
@@ -19,6 +21,7 @@
 
 </RadioButtons>
 
+</div>
 
 @code {
     [CascadingParameter]
@@ -50,6 +53,8 @@
 
     private bool hasValidationError => summaryErrors.Any();
 
+    private string divErrorClass = string.Empty;
+
     protected override void OnInitialized()
     {
         id = GenerateElementId("input");
@@ -68,8 +73,11 @@
     private void UpdateSummaryErrors()
     {
         var validationErrors = EditContext?.GetValidationMessages(FieldIdentifier.Create(ValidateFor)) ?? Enumerable.Empty<string>();
-        summaryErrors = validationErrors.Any()
-            ? validationErrors.Select(e => new SummaryError { ElementId = id, Error = e })
-            : Enumerable.Empty<SummaryError>();
+
+        if (validationErrors.Any())
+        {
+            summaryErrors = validationErrors.Select(e => new SummaryError { ElementId = id, Error = e });
+            divErrorClass = "govuk-form-group--error";
+        }
     }
 }

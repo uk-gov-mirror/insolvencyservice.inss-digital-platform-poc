@@ -73,10 +73,11 @@
     private void UpdateSummaryErrors()
     {
         var validationErrors = EditContext?.GetValidationMessages(FieldIdentifier.Create(ValidateFor)) ?? Enumerable.Empty<string>();
-        summaryErrors = validationErrors.Any()
-            ? validationErrors.Select(e => new SummaryError { ElementId = id, Error = e })
-            : Enumerable.Empty<SummaryError>();
 
-        divErrorClass = "govuk-form-group--error";
+        if(validationErrors.Any())
+        {
+            summaryErrors = validationErrors.Select(e => new SummaryError { ElementId = id, Error = e });
+            divErrorClass = "govuk-form-group--error";
+        }
     }
 }
