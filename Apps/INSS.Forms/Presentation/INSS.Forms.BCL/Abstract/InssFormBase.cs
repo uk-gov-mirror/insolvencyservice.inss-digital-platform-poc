@@ -196,6 +196,7 @@ public abstract class InssFormBase<TForm> : InssCommonBase where TForm : FormBas
                 validationMessageStore.Add(fieldIdentifier, error.ErrorMessage!);
             }
             CurrentEditContext.NotifyValidationStateChanged();
+            Form = formToValidate;
             return false;
         }
 
@@ -244,6 +245,7 @@ public abstract class InssFormBase<TForm> : InssCommonBase where TForm : FormBas
                 }
             }
             CurrentEditContext.NotifyValidationStateChanged();
+            SetPropertyValueByName(Form, propertyName, complexPropertyToValidate);
             return false;
         }
 

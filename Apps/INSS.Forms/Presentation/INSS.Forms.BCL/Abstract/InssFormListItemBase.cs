@@ -42,6 +42,7 @@ public abstract class InssFormListItemBase<TForm, TFormListItem> : InssFormBase<
             }
 
             CurrentEditContext.NotifyValidationStateChanged();
+            FormListItem = itemToValidate;
             return false;
         }
 

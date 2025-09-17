@@ -97,7 +97,10 @@
     }
     private void UpdateSummaryErrors()
     {
-        var validationErrors = EditContext?.GetValidationMessages() ?? Enumerable.Empty<string>();
+        //This is not ideal as it relies on the validation message containing the property name.
+        //To get around this we could extend IPropertyValidator or supply additional parameters to the component that will get the exact matching messages from the EditContext.
+        var validationErrors = EditContext?.GetValidationMessages()
+            .Where(e => e.Contains(Name.Split(".").Last())).ToList() ?? new List<string>();
 
         if (validationErrors.Any())
             style += " govuk-input--error";
