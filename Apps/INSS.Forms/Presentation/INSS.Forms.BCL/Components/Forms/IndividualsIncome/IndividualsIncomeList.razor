@@ -43,21 +43,16 @@
 @code {
 
     private List<RadioOption<string>> confirmOptions = EnumHelper.ToRadioOptions<ConfirmType>();
-    private ValidationMessageStore? _messageStore;
-//    private EditContext editContext;
 
     [SupplyParameterFromForm(FormName = FormName)]
     private AddNewItem addNewItem { get; set; } = new();
 
     protected override void OnInitialized()
     {
-        //editContext = new EditContext(addNewItem ?? new());
-
         InitializeFormInstance();
 
         addNewItem ??= new();
         CurrentEditContext = new EditContext(addNewItem);
-        _messageStore = new ValidationMessageStore(CurrentEditContext);
 
         base.OnInitialized();
     }

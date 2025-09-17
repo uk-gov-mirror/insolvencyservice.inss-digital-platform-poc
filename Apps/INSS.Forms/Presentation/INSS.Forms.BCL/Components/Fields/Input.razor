@@ -20,7 +20,7 @@
         }
 
         <input class="@style"
-               id="@GenerateElementId("input")"
+               id="@(Id ?? @GenerateElementId("input"))"
                name="@Name"
                type="@type"
                inputmode="@inputMode"
@@ -33,8 +33,14 @@
 
 
 @code {
+    [CascadingParameter]
+    private EditContext? EditContext { get; set; }
+
     [Parameter]
     public string Text { get; set; } = string.Empty;
+
+    [Parameter]
+    public string? Id { get; set; } = null;
 
     [Parameter]
     public bool SmallText { get; set; } = false;
@@ -58,6 +64,14 @@
 
     protected override void OnInitialized()
     {
+        if (EditContext != null)
+        {
+            EditContext.OnValidationStateChanged += (s, e) =>
+            {
+                UpdateSummaryErrors();
+            };
+        }
+
         type = Type.ToString().ToLower();
         inputMode = Type.ToString().ToLower();
 
@@ -77,9 +91,15 @@
                 inputMode = "decimal";
                 ariaLabel = "Amount in pounds";
                 break;
-
         }
 
         base.OnInitialized();
+    }
+    private void UpdateSummaryErrors()
+    {
+        var validationErrors = EditContext?.GetValidationMessages() ?? Enumerable.Empty<string>();
+
+        if (validationErrors.Any())
+            style += " govuk-input--error";
     }
 }

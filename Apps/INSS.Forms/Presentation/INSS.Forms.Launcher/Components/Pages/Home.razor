@@ -13,7 +13,7 @@
 
     @if (errors.Any())
     {
-        <SummaryErrors Title="Service Error" Errors="@errors" Name="summary-error" />
+        <ErrorSummary Title="Service Error" Errors="@errors" Name="summary-error" />
     }
 
     @if (digitalService != null)
@@ -50,7 +50,7 @@
     private DigitalService? digitalService = null;
     private List<OrderedSection> sections = new();
     private List<FormBase> formInstances = new();
-    private List<string> errors = new();
+    private List<SummaryError> errors = new();
     private string returnUrl = string.Empty;
     private string userName = Environment.UserName;
     private bool allFormsCompleted = false;
@@ -96,7 +96,7 @@
         }
         else
         {
-            errors.Add($"Service not found for host: {hostName}");
+            errors.Add(new SummaryError { ElementId = string.Empty, Error = $"Service not found for host: {hostName}" });
         }
 
         await base.OnInitializedAsync();
@@ -213,22 +213,22 @@
         }
         catch (HttpRequestException ex)
         {
-            errors.Add($"The HTTP request failed calling:{apiUrl}");
-            errors.Add(ex.Message);
+            errors.Add(new SummaryError { Error = $"The HTTP request failed calling:{apiUrl}" });
+            errors.Add(new SummaryError { Error = ex.Message });
         }
         catch (TaskCanceledException)
         {
-            errors.Add($"Request timed out or was canceled calling:{apiUrl}");
+            errors.Add(new SummaryError { Error = $"Request timed out or was canceled calling:{apiUrl}" });
         }
         catch (JsonException ex)
         {
-            errors.Add($"Deserialization failed for JSON: {json}");
-            errors.Add(ex.Message);
+            errors.Add(new SummaryError { Error = $"Deserialization failed for JSON: {json}" });
+            errors.Add(new SummaryError { Error = ex.Message });
         }
         catch (Exception ex)
         {
-            errors.Add($"Failed to return objects from API: {apiUrl}");
-            errors.Add(ex.Message);
+            errors.Add(new SummaryError { Error = $"Failed to return objects from API: {apiUrl}" });
+            errors.Add(new SummaryError { Error = ex.Message });
         }
 
         return default(T);

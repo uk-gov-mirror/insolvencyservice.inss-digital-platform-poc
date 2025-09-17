@@ -18,11 +18,6 @@ namespace INSS.Forms.BCL.Abstract
         [Inject] protected IHttpContextAccessor HttpContextAccessor { get; set; } = default!;
 
         /// <summary>
-        /// A unique GUID string used to ensure element IDs are unique per component instance.
-        /// </summary>
-        private readonly string _guid = Guid.NewGuid().ToString("N");
-
-        /// <summary>
         /// Gets or sets the list index of the current list item stored in the session.
         /// </summary>
         public int ListIndex
@@ -67,30 +62,15 @@ namespace INSS.Forms.BCL.Abstract
         [EditorRequired] // This makes the parameter mandatory
         public string Name { get; set; } = string.Empty;
 
+
         /// <summary>
-        /// Generates a unique element ID using the specified context and key.
+        /// Generates an element ID using the specified context and key.
         /// </summary>
         /// <param name="context">An optional context string to further qualify the ID.</param>
         /// <param name="key">An optional key to further qualify the ID.</param>
-        /// <returns>A unique element ID string.</returns>
-        /// <remarks>
-        /// Example usages of GenerateElementId and their outputs:
-        /// Assume:
-        /// Name = "form"
-        /// _guid = "a1b2c3d4e5f6g7h8i9j0" (example GUID, actual value will differ per instance)
-        /// 1. No context or key
-        /// GenerateElementId()
-        /// Output: "inss-form-element-id-form-a1b2c3d4e5f6g7h8i9j0"
-        /// 2. With context only
-        /// GenerateElementId("section1")
-        /// Output: "inss-form-element-id-form-section1-a1b2c3d4e5f6g7h8i9j0"
-        /// 3. With key only
-        /// GenerateElementId(null, "row5")
-        /// Output: "inss-form-element-id-form-row5-a1b2c3d4e5f6g7h8i9j0"
-        /// 4. With both context and key
-        /// GenerateElementId("section1", "row5")
-        /// Output: "inss-form-element-id-form-section1-row5-a1b2c3d4e5f6g7h8i9j0"
-        /// </remarks>
+        /// <returns>
+        /// An element ID string constructed from the component name, context, and key.
+        /// </returns>
         protected string GenerateElementId(string? context = null, string? key = null)
         {
             return BuildElementString(context, key, true);
@@ -151,9 +131,15 @@ namespace INSS.Forms.BCL.Abstract
         /// <param name="key">An optional key string.</param>
         /// <param name="includeGuid">Whether to include a unique GUID in the result.</param>
         /// <returns>The constructed element string.</returns>
-        private string BuildElementString(string? context, string? key, bool includeGuid)
+        private string BuildElementString(string? context, string? key, bool includeId)
         {
             var sb = new System.Text.StringBuilder(Config.AppIdPrefix);
+
+            if (includeId)
+            {
+                sb.Append("id-");
+            }
+
             sb.Append(Name.ToLowerInvariant());
 
             if (!string.IsNullOrEmpty(context))
@@ -164,11 +150,6 @@ namespace INSS.Forms.BCL.Abstract
             if (!string.IsNullOrEmpty(key))
             {
                 sb.Append('-').Append(key);
-            }
-
-            if (includeGuid)
-            {
-                sb.Append('-').Append(_guid);
             }
 
             return sb.ToString();

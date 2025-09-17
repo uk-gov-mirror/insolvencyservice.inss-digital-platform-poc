@@ -1,8 +1,13 @@
 ﻿@typeparam TValue
 @inherits InssComponentBase
 
+@if (hasValidationError)
+{
+    <ErrorSummary Name="@GenerateElementName(Name)" Errors="@summaryErrors" />
+}
 
 <RadioButtons 
+    Id="@id"
     Name="@Name"
     Text="@Text"
     Hint="@Hint"
@@ -16,6 +21,9 @@
 
 
 @code {
+    [CascadingParameter]
+    private EditContext? EditContext { get; set; }
+
     [Parameter]
     [EditorRequired]
     public List<RadioOption<string>> Items { get; set; }
@@ -35,4 +43,33 @@
     [Parameter]
     [EditorRequired]
     public Expression<Func<TValue>> ValidateFor { get; set; }
+
+    private string id = string.Empty;
+
+    private IEnumerable<SummaryError> summaryErrors = Enumerable.Empty<SummaryError>();
+
+    private bool hasValidationError => summaryErrors.Any();
+
+    protected override void OnInitialized()
+    {
+        id = GenerateElementId("input");
+
+        if (EditContext != null)
+        {
+            EditContext.OnValidationStateChanged += (s, e) =>
+            {
+                UpdateSummaryErrors();
+            };
+        }
+
+        base.OnInitialized();
+    }
+
+    private void UpdateSummaryErrors()
+    {
+        var validationErrors = EditContext?.GetValidationMessages(FieldIdentifier.Create(ValidateFor)) ?? Enumerable.Empty<string>();
+        summaryErrors = validationErrors.Any()
+            ? validationErrors.Select(e => new SummaryError { ElementId = id, Error = e })
+            : Enumerable.Empty<SummaryError>();
+    }
 }

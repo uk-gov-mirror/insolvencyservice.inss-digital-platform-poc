@@ -10,6 +10,6 @@
     {
         public const string SessionKey = "INSS-Forms-Runner-Session";
 
-        public const string AppIdPrefix = "inss-forms-id-";
+        public const string AppIdPrefix = "inss-forms-";
     }
 }

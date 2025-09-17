@@ -1,11 +1,31 @@
 ﻿@typeparam TValue
 @inherits InssComponentBase
 
-<Input Name="@Name" Text="@Text" SmallText="@SmallText" Placeholder="@Placeholder" Value="@Value">
-    <ValidationMessage TValue="TValue" class="govuk-error-message" For="@ValidateFor" />
-</Input>
+@if (hasValidationError && !HideErrorSummary)
+{
+    <ErrorSummary Name="@GenerateElementName(Name)" Errors="@summaryErrors" />
+}
+
+<div class="govuk-form-group @divErrorClass">
+
+    <Input Id="@id" Name="@Name" Text="@Text" SmallText="@SmallText" Placeholder="@Placeholder" Value="@Value">
+        <ValidationMessage TValue="TValue" class="govuk-error-message" For="@ValidateFor" />
+    </Input>
+
+</div>
+
 
 @code {
+
+    [CascadingParameter] 
+    private EditContext? EditContext { get; set; }
+
+    [Parameter]
+    [EditorRequired]
+    public Expression<Func<TValue>> ValidateFor { get; set; }
+
+    [Parameter]
+    public bool HideErrorSummary { get; set; } = false;
 
     [Parameter]
     public string Text { get; set; } = string.Empty;
@@ -20,10 +40,43 @@
     public string? Placeholder { get; set; } = string.Empty;
 
     [Parameter]
-    public string? Value { get; set; }
+    public string? Id { get; set; } = null;
 
     [Parameter]
-    [EditorRequired]
-    public Expression<Func<TValue>> ValidateFor { get; set; }
+    public string? Value { get; set; }
 
+    private string id = string.Empty;
+
+    private IEnumerable<SummaryError> summaryErrors = Enumerable.Empty<SummaryError>();
+
+    private bool hasValidationError => summaryErrors.Any();
+
+    private string divErrorClass = string.Empty;
+
+    protected override void OnInitialized()
+    {
+        id = Id ?? GenerateElementId("input");
+
+        if (EditContext != null)
+        {
+            EditContext.OnValidationStateChanged += (s, e) => {
+                UpdateSummaryErrors();
+            };
+        }
+
+        base.OnInitialized();
+    }
+
+    /// <summary>
+    /// Updates the <see cref="summaryErrors"/> collection based on the current validation messages.
+    /// </summary>
+    private void UpdateSummaryErrors()
+    {
+        var validationErrors = EditContext?.GetValidationMessages(FieldIdentifier.Create(ValidateFor)) ?? Enumerable.Empty<string>();
+        summaryErrors = validationErrors.Any()
+            ? validationErrors.Select(e => new SummaryError { ElementId = id, Error = e })
+            : Enumerable.Empty<SummaryError>();
+
+        divErrorClass = "govuk-form-group--error";
+    }
 }

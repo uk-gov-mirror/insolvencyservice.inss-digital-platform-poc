@@ -21,7 +21,7 @@
             {
                 <div class="govuk-radios__item" id="@GenerateElementId("radio-item")">
                     <input class="govuk-radios__input"
-                           id="@GenerateElementId(item.Value)"
+                           id="@(Id ?? @GenerateElementId("item.Value"))" 
                            name="@Name"
                            type="radio"
                            value="@item.Value"
@@ -41,6 +41,9 @@
     [Parameter]
     [EditorRequired]
     public List<RadioOption<string>> Items { get; set; }
+
+    [Parameter]
+    public string? Id { get; set; } = null;
 
     [Parameter]
     public string Text { get; set; } = string.Empty;
