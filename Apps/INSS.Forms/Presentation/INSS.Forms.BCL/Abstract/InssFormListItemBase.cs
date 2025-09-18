@@ -30,6 +30,8 @@ public abstract class InssFormListItemBase<TForm, TFormListItem> : InssFormBase<
     /// </returns>
     protected bool ValidateAndAssignProperty(TFormListItem itemToValidate, TFormListItem itemToPersist, string property)
     {
+        var value = itemToValidate.GetType().GetProperty(property)?.GetValue(itemToValidate);
+
         var errors = PropertyValidator.ValidateProperties(itemToValidate, [property]);
         if (errors.Any())
         {
@@ -41,12 +43,16 @@ public abstract class InssFormListItemBase<TForm, TFormListItem> : InssFormBase<
                 validationMessageStore.Add(fieldIdentifier, error.ErrorMessage!);
             }
 
+            // Show the validation message
             CurrentEditContext.NotifyValidationStateChanged();
-            FormListItem = itemToValidate;
+
+            // Ensure the invalid value remains in the form for user correction.
+            SetPropertyValueByName(FormListItem, property, value);
+
             return false;
         }
 
-        var value = itemToValidate.GetType().GetProperty(property)?.GetValue(itemToValidate);
+        // Set the valid value to the item to persist
         SetPropertyValueByName(itemToPersist, property, value);
 
         return true;

@@ -186,6 +186,8 @@ public abstract class InssFormBase<TForm> : InssCommonBase where TForm : FormBas
     /// </returns>
     protected bool ValidateAndAssignFormProperty(TForm formToValidate, TForm formToPersist, string property)
     {
+        var value = formToValidate.GetType().GetProperty(property)?.GetValue(formToValidate);
+
         var errors = PropertyValidator.ValidateProperties(formToValidate, new[] { property });
         if (errors.Any())
         {
@@ -195,12 +197,17 @@ public abstract class InssFormBase<TForm> : InssCommonBase where TForm : FormBas
                 var fieldIdentifier = new FieldIdentifier(Form, error.MemberNames.First());
                 validationMessageStore.Add(fieldIdentifier, error.ErrorMessage!);
             }
+
+            // Show the validation message.
             CurrentEditContext.NotifyValidationStateChanged();
-            Form = formToValidate;
+
+            // Ensure the invalid value remains in the form for user correction.
+            SetPropertyValueByName(Form, property, value);
+
             return false;
         }
 
-        var value = formToValidate.GetType().GetProperty(property)?.GetValue(formToValidate);
+        // Set the valid value to the item to persist
         SetPropertyValueByName(formToPersist, property, value);
 
         return true;
@@ -244,12 +251,31 @@ public abstract class InssFormBase<TForm> : InssCommonBase where TForm : FormBas
                     validationMessageStore.Add(fieldIdentifier, error.ErrorMessage!);
                 }
             }
+
+            // Show the validation message.
             CurrentEditContext.NotifyValidationStateChanged();
-            SetPropertyValueByName(Form, propertyName, complexPropertyToValidate);
+
+            /// Copies all property values from <paramref name="complexPropertyToValidate"/> to the corresponding properties
+            /// of <paramref name="formInstance"/>. This is used to ensure the invalid values remain in the form for user correction.
+            foreach (var prop in typeof(TComplex).GetProperties())
+            {
+                var value = prop.GetValue(complexPropertyToValidate);
+                prop.SetValue(formInstance, value);
+            }
+
             return false;
         }
 
-        SetPropertyValueByName(formToPersist, propertyName, complexPropertyToValidate);
+        /// Copies all property values from <paramref name="complexPropertyToValidate"/> to the corresponding properties
+        /// of the target instance on <paramref name="formToPersist"/>. This is used to ensure the valid values are assigned
+        /// to the persisted form instance after successful validation.
+        var targetInstance = typeof(TForm).GetProperty(propertyName)?.GetValue(formToPersist);
+        foreach (var prop in typeof(TComplex).GetProperties())
+        {
+            var value = prop.GetValue(complexPropertyToValidate);
+            prop.SetValue(targetInstance, value);
+        }
+
         return true;
     }
 
