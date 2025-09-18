@@ -21,16 +21,16 @@
         }
     </dl>
 
-    <EditForm EditContext="EditContext" FormName="@FormName" OnValidSubmit="OnAddNew">
+    <EditForm EditContext="CurrentEditContext" FormName="@FormName" OnValidSubmit="OnAddNew">
 
-        <RadioButtons Name="@($"{nameof(AddNewItem)}.{nameof(AddNewItem.AddNew)}")"
+        <ValidatedRadioButtons
+            Name="@($"{nameof(AddNewItem)}.{nameof(AddNewItem.AddNew)}")"
             Text="@Resource.IncomeListAddAnotherIncome"
             Hint="@Resource.IncomeListHint"
             Inline="true"
             Items=@confirmOptions
-            Value=@addNewItem.AddNew />
-
-        <ValidationMessage class="govuk-error-message" For="() => addNewItem.AddNew" />
+            Value=@addNewItem.AddNew 
+            ValidateFor="() => addNewItem.AddNew"/>
 
         <br/>
         <SubmitButton Name="@EntityNames.NextButton" Text="@Resource.Next" />
@@ -43,7 +43,6 @@
 @code {
 
     private List<RadioOption<string>> confirmOptions = EnumHelper.ToRadioOptions<ConfirmType>();
-    private ValidationMessageStore? _messageStore;
 
     [SupplyParameterFromForm(FormName = FormName)]
     private AddNewItem addNewItem { get; set; } = new();
@@ -53,15 +52,20 @@
         InitializeFormInstance();
 
         addNewItem ??= new();
-        EditContext = new EditContext(addNewItem);
-        _messageStore = new ValidationMessageStore(EditContext);
+        CurrentEditContext = new EditContext(addNewItem);
 
         base.OnInitialized();
     }
 
     private void OnAddNew()
     {
-        var addNewItem = EditContext.Model as AddNewItem;
+        var addNewItem = CurrentEditContext.Model as AddNewItem ?? new();
+
+        if (!IsValid(CurrentEditContext, addNewItem, new[] { nameof(addNewItem.AddNew) }))
+        {
+            return;
+        }
+
         if (addNewItem!.AddNew == ConfirmType.Yes.GetDescription())
         {
             PrepareListIndexForNewItem();
@@ -71,12 +75,6 @@
         else if (addNewItem.AddNew == ConfirmType.No.GetDescription())
         {
             NavigationManager.NavigateTo("/individuals-income-summary");
-        }
-        else
-        {
-            var fieldIdentifier = new FieldIdentifier(addNewItem, nameof(addNewItem.AddNew));
-            _messageStore?.Add(fieldIdentifier, Resource.IncomeListAddNewValidationMessage);
-            EditContext.NotifyValidationStateChanged();
         }
     }
 
@@ -89,7 +87,7 @@
     /// </summary>
     private void PrepareListIndexForNewItem()
     {
-        var cachedForm = RetrieveCachedFormState();
+        var cachedForm = RetrieveFormFromCache();
         ListIndex = cachedForm.Income.Count;
     }
 
@@ -101,9 +99,9 @@
 
     private void OnRemoveItem(int index)
     {
-        Form = RetrieveCachedFormState();
+        Form = RetrieveFormFromCache();
         Form.Income.RemoveAt(index);
-        CacheFormState(Form);
+        WriteFormToCache(Form);
 
         if (Form.Income.Count == 0)
         {

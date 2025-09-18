@@ -79,15 +79,6 @@ namespace INSS.Forms.BCL {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Select &apos;Yes&apos; if you want to add another income or &apos;No&apos; if you want to proceed to the summary.
-        /// </summary>
-        internal static string IncomeListAddNewValidationMessage {
-            get {
-                return ResourceManager.GetString("IncomeListAddNewValidationMessage", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to You must tell us about all your income..
         /// </summary>
         internal static string IncomeListHint {

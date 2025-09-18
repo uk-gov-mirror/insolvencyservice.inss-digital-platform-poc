@@ -28,11 +28,15 @@ namespace INSS.Forms.Domain.Models.Forms
         /// <summary>
         /// Gets or sets the telephone number of the person.
         /// </summary>
+        [Required(ErrorMessage = "Telephone is required.")]
+        [Phone(ErrorMessage = "Invalid telephone number.")]
         public string Telephone { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the email address of the person.
         /// </summary>
+        [Required(ErrorMessage = "Email is required.")]
+        [EmailAddress(ErrorMessage = "Invalid email address.")]
         public string Email { get; set; } = string.Empty;
     }
 }

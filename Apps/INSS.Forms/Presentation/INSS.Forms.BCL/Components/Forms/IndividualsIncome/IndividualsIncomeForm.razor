@@ -5,34 +5,38 @@
 
 <PreviousButton Name="@EntityNames.PreviousButton" />
 
-<EditForm Enhance EditContext="EditContext" FormName="@FormName" OnValidSubmit="OnNext">
+<EditForm Enhance EditContext="CurrentEditContext" FormName="@FormName" OnValidSubmit="OnNext">
 
     @if (PageIndex == 0)
     {
-        <RadioButtons Name="@FieldName(nameof(FormListItem.IncomeType))"
-                      Text="@Questions.WhatIsThe(Labels.IncomeType)"
-                      Inline="false"
-                      Items="@incomeTypeOptions"
-                      Value="@FormListItem.IncomeType.GetDescription()" />
+        <ValidatedRadioButtons 
+            Name="@FieldName(nameof(FormListItem.IncomeType))"
+            Text="@Questions.WhatIsThe(Labels.IncomeType)"
+            Inline="false"
+            Items="@incomeTypeOptions"
+            Value="@FormListItem.IncomeType.GetDescription()"
+            ValidateFor="() => FormListItem.IncomeType" />
     }
 
     @if (PageIndex == 1)
     {
-        <Input Text="@Questions.WhatIsThe(Labels.IncomeAmount)" Name="@FieldName(nameof(FormListItem.Amount))" Value="@FormListItem.Amount.ToString()" Type="@InputFieldType.Currency" />
+        <ValidatedInput Text="@Questions.WhatIsThe(Labels.IncomeAmount)" Name="@FieldName(nameof(FormListItem.Amount))" Value="@FormListItem.Amount.ToString()" Type="InputFieldType.Currency" ValidateFor="() => FormListItem.Amount" />
     }
 
     @if (PageIndex == 2)
     {
-        <RadioButtons Name="@FieldName(nameof(FormListItem.IncomeFrequency))"
-                      Text="@Questions.WhatIsThe(Labels.IncomeFrequency)"
-                      Inline="false"
-                      Items="@incomeFrequencyOptions"
-                      Value="@FormListItem.IncomeFrequency.GetDescription()" />
+        <ValidatedRadioButtons 
+            Name="@FieldName(nameof(FormListItem.IncomeFrequency))"
+            Text="@Questions.WhatIsThe(Labels.IncomeFrequency)"
+            Inline="false"
+            Items="@incomeFrequencyOptions"
+            Value="@FormListItem.IncomeFrequency.GetDescription()"
+            ValidateFor="() => FormListItem.IncomeFrequency" />
     }
 
     @if (PageIndex == 3)
     {
-        <Input Text="@Questions.WhoIsThe(Labels.IncomeProvider)" Name="@FieldName(nameof(FormListItem.Provider))" Value="@FormListItem.Provider" />
+        <ValidatedInput Text="@Questions.WhoIsThe(Labels.IncomeProvider)" Name="@FieldName(nameof(FormListItem.Provider))" Value="@FormListItem.Provider" ValidateFor="() => FormListItem.Provider" />
     }
 
     <SubmitButton Name="@EntityNames.NextButton" Text="@Resource.Next" />
@@ -49,14 +53,17 @@
     {
         // FormListItem is bound to the form, ensure the edit context contains any changes after a form submission.
         // If a field was not populated, FormListItem will be null, so create a new instance in that case.
-        EditContext = new EditContext(FormListItem ?? new());
+        CurrentEditContext = new EditContext(FormListItem ?? new());
 
         // Ensure the main form instance is created or loaded.
         InitializeFormInstance();
 
         // Ensure the list has an entry for the current ListIndex, creating a new instance if needed.
         if(Form.Income.Count <= ListIndex)
-            Form.Income.Add(EditContext.Model as Income ?? new());
+        {
+            Form.Income.Add(CurrentEditContext.Model as Income ?? new());
+            WriteFormToCache(Form);
+        }
 
         // Bind the current list item to the form so that the fields are updated after a page reload..
         FormListItem = Form.Income[ListIndex];
@@ -70,12 +77,9 @@
     /// </summary>
     private void OnNext()
     {
-        var modifiedForm = EditContext.Model as Income;
+        var modifiedListItem = CurrentEditContext.Model as Income ?? new();
 
-        var cachedForm = RetrieveCachedFormState();
-
-        if (cachedForm.Income.Count <= ListIndex)
-            cachedForm.Income.Add(new Income());
+        var cachedForm = RetrieveFormFromCache();
 
         var cachedListItem = cachedForm.Income[ListIndex];
 
@@ -83,23 +87,35 @@
         switch (PageIndex)
         {
             case 0:
-                cachedListItem.IncomeType = modifiedForm!.IncomeType;
+                if (!ValidateAndAssignProperty(modifiedListItem, cachedListItem, nameof(FormListItem.IncomeType)))
+                {
+                    return;
+                }
                 break;
             case 1:
-                cachedListItem.Amount = modifiedForm!.Amount;
+                if (!ValidateAndAssignProperty(modifiedListItem, cachedListItem, nameof(FormListItem.Amount)))
+                {
+                    return;
+                }
                 break;
             case 2:
-                cachedListItem.IncomeFrequency = modifiedForm!.IncomeFrequency;
+                if (!ValidateAndAssignProperty(modifiedListItem, cachedListItem, nameof(FormListItem.IncomeFrequency)))
+                {
+                    return;
+                }
                 break;
             case 3:
-                cachedListItem.Provider = modifiedForm!.Provider;
+                if (!ValidateAndAssignProperty(modifiedListItem, cachedListItem, nameof(FormListItem.Provider)))
+                {
+                    return;
+                }
                 lastPage = true;
                 break;
             default:
                 throw new InvalidOperationException("Invalid page index");
         }
 
-        CacheFormState(cachedForm);
+        WriteFormToCache(cachedForm);
 
         if (lastPage)
         {

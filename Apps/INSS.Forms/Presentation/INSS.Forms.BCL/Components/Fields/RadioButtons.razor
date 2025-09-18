@@ -10,12 +10,18 @@
         <div id="@GenerateElementId("hint")" class="govuk-hint">
             @Hint
         </div>
+
+        @if (ChildContent != null)
+        {
+            @ChildContent
+        }
+
         <div class="govuk-radios @(Inline ? "govuk-radios--inline" : "")" data-module="govuk-radios" id="@GenerateElementId("radios")">
             @foreach(var item in Items)
             {
                 <div class="govuk-radios__item" id="@GenerateElementId("radio-item")">
                     <input class="govuk-radios__input"
-                           id="@GenerateElementId(item.Value)"
+                           id="@(Id ?? @GenerateElementId("item.Value"))" 
                            name="@Name"
                            type="radio"
                            value="@item.Value"
@@ -27,6 +33,7 @@
                 </div>
             }
         </div>
+
     </fieldset>
 </div>
 
@@ -34,6 +41,9 @@
     [Parameter]
     [EditorRequired]
     public List<RadioOption<string>> Items { get; set; }
+
+    [Parameter]
+    public string? Id { get; set; } = null;
 
     [Parameter]
     public string Text { get; set; } = string.Empty;
@@ -46,4 +56,7 @@
 
     [Parameter]
     public string Value { get; set; } = string.Empty;
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; } = null;
 }

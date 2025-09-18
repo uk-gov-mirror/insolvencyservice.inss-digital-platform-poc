@@ -5,11 +5,11 @@
 
 <PreviousButton Name="@EntityNames.PreviousButton" />
 
-<EditForm Enhance EditContext="EditContext" FormName="@FormName" OnValidSubmit="OnNext">
+<EditForm Enhance EditContext="CurrentEditContext" FormName="@FormName" OnValidSubmit="OnNext">
 
     @if(PageIndex == 0)
     {
-        <Input Text="@Questions.WhatIsYour(Labels.Name)" Name="@FieldName(nameof(Form.Name))" Value="@Form.Name" />
+        <ValidatedInput Text="@Questions.WhatIsYour(Labels.Name)" Name="@FieldName(nameof(Form.Name))" Value="@Form.Name" ValidateFor="() => Form.Name" />
     }
 
     @if (PageIndex == 1)
@@ -19,12 +19,12 @@
 
     @if(PageIndex == 2)
     {
-        <Input Text="@Questions.WhatIsYour(Labels.Telephone)" Name="@FieldName(nameof(Form.Telephone))" Value="@Form.Telephone" Type="@InputFieldType.Telephone" />
+        <ValidatedInput Text="@Questions.WhatIsYour(Labels.Telephone)" Name="@FieldName(nameof(Form.Telephone))" Value="@Form.Telephone" Type="@InputFieldType.Telephone" ValidateFor="() => Form.Telephone" />
     }
 
     @if (PageIndex == 3)
     {
-        <Input Text="@Questions.WhatIsYour(Labels.Email)" Name="@FieldName(nameof(Form.Email))" Value="@Form.Email" Type="@InputFieldType.Email" />
+        <ValidatedInput Text="@Questions.WhatIsYour(Labels.Email)" Name="@FieldName(nameof(Form.Email))" Value="@Form.Email" Type="@InputFieldType.Email" ValidateFor="() => Form.Email" />
     }
 
     <SubmitButton Name="@EntityNames.NextButton" Text="@(PageIndex == 3 ? Resource.Save : Resource.Next)" />
@@ -35,7 +35,7 @@
 
     protected override void OnInitialized()
     {
-        EditContext = new EditContext(Form);
+        CurrentEditContext = new EditContext(Form);
 
         InitializeFormInstance();
 
@@ -44,30 +44,43 @@
 
     private async Task OnNext()
     {
-        var modifiedForm = EditContext.Model as AboutYou;
-        var cachedForm = RetrieveCachedFormState();
+        var modifiedForm = CurrentEditContext.Model as AboutYou ?? new();
+        var cachedForm = RetrieveFormFromCache();
 
         bool lastPage = false;
         switch (PageIndex)
         {
             case 0:
-                cachedForm.Name = modifiedForm!.Name;
+                if (!ValidateAndAssignFormProperty(modifiedForm, cachedForm, nameof(Form.Name)))
+                {
+                    return;
+                }
+
                 break;
             case 1:
-                cachedForm.Address = modifiedForm!.Address;
+                if (!ValidateAndAssignFormProperty(modifiedForm.Address, cachedForm, nameof(Form.Address)))
+                {
+                    return;
+                }
                 break;
             case 2:
-                cachedForm.Telephone = modifiedForm!.Telephone;
+                if (!ValidateAndAssignFormProperty(modifiedForm, cachedForm, nameof(Form.Telephone)))
+                {
+                    return;
+                }
                 break;
             case 3:
-                cachedForm.Email = modifiedForm!.Email;
+                if (!ValidateAndAssignFormProperty(modifiedForm, cachedForm, nameof(Form.Email)))
+                {
+                    return;
+                }
                 lastPage = true;
                 break;
             default:
                 throw new InvalidOperationException(Resource.InvalidPageIndexMessage);
         }
 
-        CacheFormState(cachedForm);
+        WriteFormToCache(cachedForm);
 
         if (lastPage)
         {

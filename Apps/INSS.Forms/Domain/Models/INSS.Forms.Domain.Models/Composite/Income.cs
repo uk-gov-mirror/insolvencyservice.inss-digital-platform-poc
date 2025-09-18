@@ -11,24 +11,27 @@ namespace INSS.Forms.Domain.Models.Composite
         /// <summary>
         /// Gets or sets the type of income.
         /// </summary>
-        [Required]
+        [Required(ErrorMessage = "Income Type is required")]
         public IncomeType? IncomeType { get; set; }
 
         /// <summary>
         /// Gets or sets the amount of income.
         /// </summary>
-        [Required]
+        [Required(ErrorMessage = "Amount is required")]
         [DataType(DataType.Currency)]
+        [Range(0.01, double.MaxValue, ErrorMessage = "Amount must be greater than zero")]
         public decimal? Amount { get; set; }
 
         /// <summary>
         /// Gets or sets the frequency of the income.
         /// </summary>
+        [Required(ErrorMessage = "Income Frequency is required")]
         public IncomeFrequencyType? IncomeFrequency { get; set; }
 
         /// <summary>
         /// Gets or sets the provider of the income.
         /// </summary>
+        [Required(ErrorMessage = "Provider is required")]
         public string Provider { get; set; } = string.Empty;
     }
 }

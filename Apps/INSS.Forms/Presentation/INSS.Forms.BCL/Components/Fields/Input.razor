@@ -7,6 +7,11 @@
         </label>
     </h1>
 
+    @if (ChildContent != null)
+    {
+        @ChildContent
+    }
+
     <div class="govuk-input__wrapper">
 
         @if (Type == InputFieldType.Currency)
@@ -15,7 +20,7 @@
         }
 
         <input class="@style"
-               id="@GenerateElementId("input")"
+               id="@(Id ?? @GenerateElementId("input"))"
                name="@Name"
                type="@type"
                inputmode="@inputMode"
@@ -28,8 +33,14 @@
 
 
 @code {
+    [CascadingParameter]
+    private EditContext? EditContext { get; set; }
+
     [Parameter]
     public string Text { get; set; } = string.Empty;
+
+    [Parameter]
+    public string? Id { get; set; } = null;
 
     [Parameter]
     public bool SmallText { get; set; } = false;
@@ -43,6 +54,9 @@
     [Parameter]
     public string? Value { get; set; }
 
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; } = null;
+
     string style = "govuk-input";
     string type = string.Empty;
     string inputMode = string.Empty;
@@ -50,6 +64,14 @@
 
     protected override void OnInitialized()
     {
+        if (EditContext != null)
+        {
+            EditContext.OnValidationStateChanged += (s, e) =>
+            {
+                UpdateSummaryErrors();
+            };
+        }
+
         type = Type.ToString().ToLower();
         inputMode = Type.ToString().ToLower();
 
@@ -69,9 +91,19 @@
                 inputMode = "decimal";
                 ariaLabel = "Amount in pounds";
                 break;
-
         }
 
         base.OnInitialized();
+    }
+    private void UpdateSummaryErrors()
+    {
+        //This is not ideal as it relies on the validation message containing the property name or text.
+        //To get around this we could extend IPropertyValidator or supply additional parameters to the component that will get the exact matching messages from the EditContext.
+        var validationErrors = EditContext?.GetValidationMessages()
+            .Where(e => e.Contains(Name.Split(".").Last())
+                || e.ToLowerInvariant().Contains(Text.ToLower())).ToList() ?? new List<string>();
+
+        if (validationErrors.Any())
+            style += " govuk-input--error";
     }
 }

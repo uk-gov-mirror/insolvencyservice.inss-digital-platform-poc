@@ -65,7 +65,7 @@
 
     private async Task OnSave()
     {
-        var form = RetrieveCachedFormState();
+        var form = RetrieveFormFromCache();
 
         if(await SaveFormToDatabase(form))
         {

@@ -1,0 +1,83 @@
+﻿@typeparam TValue
+@inherits InssComponentBase
+
+@if (hasValidationError)
+{
+    <ErrorSummary Name="@GenerateElementName(Name)" Errors="@summaryErrors" />
+}
+
+<div class="govuk-form-group @divErrorClass">
+
+<RadioButtons 
+    Id="@id"
+    Name="@Name"
+    Text="@Text"
+    Hint="@Hint"
+    Inline="@Inline"
+    Items="@Items"
+    Value="@Value">
+    
+        <ValidationMessage TValue="TValue" class="govuk-error-message" For="@ValidateFor" />
+
+</RadioButtons>
+
+</div>
+
+@code {
+    [CascadingParameter]
+    private EditContext? EditContext { get; set; }
+
+    [Parameter]
+    [EditorRequired]
+    public List<RadioOption<string>> Items { get; set; }
+
+    [Parameter]
+    public string Text { get; set; } = string.Empty;
+
+    [Parameter]
+    public string Hint { get; set; } = string.Empty;
+
+    [Parameter]
+    public bool Inline { get; set; } = false;
+
+    [Parameter]
+    public string Value { get; set; } = string.Empty;
+
+    [Parameter]
+    [EditorRequired]
+    public Expression<Func<TValue>> ValidateFor { get; set; }
+
+    private string id = string.Empty;
+
+    private IEnumerable<SummaryError> summaryErrors = Enumerable.Empty<SummaryError>();
+
+    private bool hasValidationError => summaryErrors.Any();
+
+    private string divErrorClass = string.Empty;
+
+    protected override void OnInitialized()
+    {
+        id = GenerateElementId("input");
+
+        if (EditContext != null)
+        {
+            EditContext.OnValidationStateChanged += (s, e) =>
+            {
+                UpdateSummaryErrors();
+            };
+        }
+
+        base.OnInitialized();
+    }
+
+    private void UpdateSummaryErrors()
+    {
+        var validationErrors = EditContext?.GetValidationMessages(FieldIdentifier.Create(ValidateFor)) ?? Enumerable.Empty<string>();
+
+        if (validationErrors.Any())
+        {
+            summaryErrors = validationErrors.Select(e => new SummaryError { ElementId = id, Error = e });
+            divErrorClass = "govuk-form-group--error";
+        }
+    }
+}
