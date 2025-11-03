@@ -6,11 +6,18 @@ namespace INSS.Forms.Runner.MVC.Controllers
 {
     public class HomeController : Controller
     {
+        [HttpGet]
         public IActionResult Index()
+        {
+            return View(new HomeModel{ AccountNumber = "12345678" });
+        }
+
+        [HttpPost]
+        public IActionResult Index(HomeModel model)
         {
             return View();
         }
-
+        
         public IActionResult Privacy()
         {
             return View();
