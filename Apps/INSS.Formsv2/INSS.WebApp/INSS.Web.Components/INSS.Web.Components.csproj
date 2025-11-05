@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <ItemGroup>
+      <PackageReference Include="GovUk.Frontend.AspNetCore" />
+      <PackageReference Include="Microsoft.AspNetCore.Mvc" />
+      <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" />
+      <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" />
+      <PackageReference Include="Microsoft.Extensions.Http" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" />
+    </ItemGroup>
+    <ItemGroup>
+      <None Remove="Views\BankAccount\Index.cshtml" />
+      <EmbeddedResource Include="Views\BankAccount\Index.cshtml" />
+      <None Remove="Views\Address\Index.cshtml" />
+      <EmbeddedResource Include="Views\Address\Index.cshtml" />
+    </ItemGroup>
+</Project>

@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\INSS.Forms.MVC\INSS.Forms.MVC.csproj" />
+	  <!--ProjectReference Include="..\INSS.Forms.MVC\INSS.Forms.MVC.csproj" /-->
   </ItemGroup>
 
 </Project>
