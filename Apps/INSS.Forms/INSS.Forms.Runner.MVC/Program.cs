@@ -1,10 +1,14 @@
 using GovUk.Frontend.AspNetCore;
+using INSS.Forms.Runner.MVC.Models;
+using INSS.Forms.Runner.MVC.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddGovUkFrontend();
+builder.Services.AddGovUkFrontend(options => options.Rebrand = true);
+builder.Services.AddHttpClient();
+builder.Services.AddTransient<IModelService<BankAccountModel>, BankAccountService>();
 
 var app = builder.Build();
 
