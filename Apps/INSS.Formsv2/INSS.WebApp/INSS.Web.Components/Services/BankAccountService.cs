@@ -12,7 +12,7 @@ public class BankAccountService : IModelService<BankAccountModel>
         _clientFactory = clientFactory;
     }
 
-    public async Task<BankAccountModel> LoadAsync()
+    public async Task<BankAccountModel> LoadAsync(string? id)
     {
         await Task.Delay(100); // Simulate async work
         return new BankAccountModel();

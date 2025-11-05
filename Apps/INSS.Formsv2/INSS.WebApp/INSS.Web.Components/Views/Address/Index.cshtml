@@ -5,6 +5,8 @@
 @addTagHelper INSS.Web.Components.TagHelpers.*, INSS.Web.Components
 @model INSS.Web.Components.Models.AddressModel
 
+<govuk-back-link asp-controller="@Model.Url.Controller" asp-action="@Model.Url.Action" />
+
 <form method="post">       
     <govuk-fieldset>
         <govuk-fieldset-legend class="govuk-fieldset__legend govuk-fieldset__legend--l">What is your address?</govuk-fieldset-legend>
@@ -33,7 +35,7 @@
             <govuk-input-label is-page-heading="false" class="govuk-label">Postcode</govuk-input-label>
         </govuk-input>
         <inss-error-message asp-for="@Model.Postcode"/>
-
+        
         <govuk-button type="submit">Save and continue</govuk-button>
 
     </govuk-fieldset>

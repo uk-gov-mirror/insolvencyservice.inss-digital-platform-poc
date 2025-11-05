@@ -2,7 +2,7 @@
 
 namespace INSS.Web.Components.Models;
 
-public class AddressModel
+public class AddressModel : BaseQuestionModel
 {
     [Required(ErrorMessage = "Enter address line 1")]
     public string AddressLine1 { get; set; } = string.Empty;

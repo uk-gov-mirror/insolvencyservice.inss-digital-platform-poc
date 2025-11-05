@@ -14,9 +14,9 @@ public class BaseController<T> : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(string? id)
     {
-        var model = await _modelService.LoadAsync();
+        var model = await _modelService.LoadAsync(id);
         return View(model);
     }
 
@@ -28,7 +28,10 @@ public class BaseController<T> : Controller
         if (ModelState.IsValid)
         {
             await _modelService.SaveAsync(model);
-            return View();
+            
+            // TODO: Navigate to next page
+            //model = await _modelService.LoadAsync();
+            return View(model);
         }
 
         return View();

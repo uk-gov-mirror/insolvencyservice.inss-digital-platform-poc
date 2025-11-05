@@ -7,6 +7,8 @@
  
 @model INSS.Web.Components.Models.BankAccountModel
 
+<govuk-back-link asp-controller="@Model.Url.Controller" asp-action="@Model.Url.Action" />
+
 <form method="post">
     <govuk-input for="@Model.AccountNumber" input-class="govuk-input--width-10" inputmode="text" spellcheck="false">
         <govuk-input-label is-page-heading="true" class="govuk-label--l">What is your account number?</govuk-input-label>
