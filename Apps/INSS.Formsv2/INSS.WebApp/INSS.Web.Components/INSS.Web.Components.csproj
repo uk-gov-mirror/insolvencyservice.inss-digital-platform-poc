@@ -8,6 +8,7 @@
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" />
     </ItemGroup>
     <ItemGroup>
+      <EmbeddedResource Include="Views\Form\Index.cshtml" />
       <None Remove="Views\BankAccount\Index.cshtml" />
       <EmbeddedResource Include="Views\BankAccount\Index.cshtml" />
       <None Remove="Views\Address\Index.cshtml" />
