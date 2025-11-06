@@ -6,55 +6,32 @@ public class FormModel : BaseModel
     
     public Navigation Path { get; init; } = Navigation.Default;
     
-    public PageModel FindPage(string pageId)
-    {
-        var page = Sections.SelectMany(section => section.Pages).FirstOrDefault(page => page.Id == pageId);
-
-        return page ?? throw new Exception("Unable to find the page!"); // TODO: Better error
-    }
-
-    public PageModel FindPageFromQuestion(string questionId)
+    public TPage FindPage<TPage>(string pageId) where TPage : PageModel
     {
         foreach (var section in Sections)
         {
             foreach (var page in section.Pages)
             {
-                if (page.Question.Id == questionId)
+                if (page.Id == pageId && page is TPage modelPage)
                 {
-                    return page;
+                    return modelPage;
                 }
             }
         }
         
-        throw new Exception("Unable to find the page!");
+        throw new Exception("Unable to find the page!"); // TODO: Better error
     }
 
-    public SectionModel FindSectionForQuestion(string questionId)
+    public SectionModel FindSectionForPage(string pageId)
     {
         foreach (var section in Sections)
         {
-            if (section.Pages.Any(p => p.Question.Id == questionId))
+            if (section.Pages.Any(page => page.Id == pageId))
             {
                 return section;
             }
         }
         
-        throw new Exception("Unable to find the section for question"); // TODO: Better error
-    }
-
-    public TQuestion FindQuestion<TQuestion>(string questionId) where TQuestion : BaseQuestionModel
-    {
-        foreach (var section in Sections)
-        {
-            foreach (var page in section.Pages)
-            {
-                if (page.Question.Id == questionId && page.Question is TQuestion questionModel)
-                {
-                    return questionModel;
-                }
-            }
-        }
-        
-        throw new Exception("Unable to find question from Id"); // TODO: Better method!
+        throw new Exception("Unable to find the section for page."); // TODO: Better error
     }
 }

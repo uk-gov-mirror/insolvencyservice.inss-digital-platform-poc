@@ -4,31 +4,23 @@ namespace INSS.Web.Components.Services;
 
 public interface IJourneyService
 {
-    Navigation TransitionNext(FormModel form, PageModel? pageModel = null);
+    void TransitionNext(FormModel form, PageModel? pageModel = null);
 }
 
 public interface IJourneyResolver
 {
-    PageModel? Resolve(FormModel form, BaseQuestionModel question);
+    PageModel? Resolve(FormModel form, PageModel pageModel);
 }
 
-public interface IJourneyResolver<in TQuestion> : IJourneyResolver where TQuestion : BaseQuestionModel
+public interface IJourneyResolver<in TPageModel> : IJourneyResolver where TPageModel : PageModel
 {
 }
 
 public sealed class DefaultJourneyResolver : IJourneyResolver //<BaseQuestionModel>
 {
-    public PageModel? Resolve(FormModel form, BaseQuestionModel question)
+    public PageModel? Resolve(FormModel form, PageModel pageModel)
     {
-        var section = form.FindSectionForQuestion(question.Id);
-        return section.GetNextPageAfterQuestion(question.Id);
+        var section = form.FindSectionForPage(pageModel.Id);
+        return section.GetNextPage(pageModel.Id);
     }
 }
-
-// public sealed class ExampleJourneyResolver : IJourneyResolver<AddressModel>
-// {
-//     public PageModel? Resolve(FormModel form, BaseQuestionModel question)
-//     {
-//         throw new NotImplementedException();
-//     }
-// }

@@ -32,10 +32,11 @@ public sealed class FormService : IModelService<FormModel>
         return Task.CompletedTask;
     }
 
-    public async Task<Navigation> SaveAsync(FormModel model)
+    public Task<Navigation> SaveAsync(FormModel model)
     {
         // TODO: Do we need to get it?
-        var form = await _formStateService.GetAsync("0c4d0123-854b-4929-8a75-6b89c6619909");
-        return _journeyService.TransitionNext(form);
+        //var form = await _formStateService.GetAsync("0c4d0123-854b-4929-8a75-6b89c6619909");
+        //_journeyService.TransitionNext(form);
+        return Task.FromResult(new Navigation { Controller = "Form", Id = model.Id });
     }
 }

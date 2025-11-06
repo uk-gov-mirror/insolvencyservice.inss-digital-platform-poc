@@ -22,10 +22,9 @@ public class BankAccountService : IModelService<BankAccountModel>
     public async Task<BankAccountModel> LoadAsync(string? id)
     {
         var form = await _formStateService.GetAsync("0c4d0123-854b-4929-8a75-6b89c6619909");
-        var questionModel = form.FindQuestion<BankAccountModel>(id!);
-        var page = form.FindPageFromQuestion(questionModel.Id);
-        questionModel.Back = _journeyService.TransitionNext(form, page);
-        return questionModel;
+        var page = form.FindPage<BankAccountModel>(id!);
+        _journeyService.TransitionNext(form, page);
+        return page;
     }
 
     public async Task ValidateAsync(ModelStateDictionary modelState, BankAccountModel model)
@@ -48,8 +47,9 @@ public class BankAccountService : IModelService<BankAccountModel>
 
     public async Task<Navigation> SaveAsync(BankAccountModel model)
     {
-        // TODO: Save bank account
         var form = await _formStateService.GetAsync("0c4d0123-854b-4929-8a75-6b89c6619909");
-        return _journeyService.TransitionNext(form);
+        var page = form.FindPage<BankAccountModel>(model.Id);
+        _journeyService.TransitionNext(form, page);
+        return page.Next;
     }
 }

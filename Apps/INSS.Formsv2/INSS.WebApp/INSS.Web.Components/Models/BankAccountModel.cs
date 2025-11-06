@@ -2,7 +2,7 @@
 
 namespace INSS.Web.Components.Models;
 
-public sealed class BankAccountModel : BaseQuestionModel
+public sealed class BankAccountModel : PageModel
 {
     [Required(ErrorMessage = "You must enter an account number")]
     [RegularExpression("^[0-9]{8}$", ErrorMessage = "The account number must be 8 numbers")]

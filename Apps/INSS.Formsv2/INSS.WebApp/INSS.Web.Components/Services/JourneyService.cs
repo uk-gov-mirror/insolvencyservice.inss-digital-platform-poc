@@ -5,56 +5,44 @@ namespace INSS.Web.Components.Services;
 public sealed class JourneyService : IJourneyService
 {
     private readonly IServiceProvider _serviceProvider;
-    private string? _currentPageId;
 
     public JourneyService(IServiceProvider serviceProvider)
     {
         _serviceProvider = serviceProvider;
     }
     
-    public Navigation TransitionNext(FormModel form, PageModel? pageModel = null)
+    public void TransitionNext(FormModel form, PageModel? pageModel = null)
     {
-        PageModel? nextPage;
-        
-        if (_currentPageId is null && pageModel is null)
+        if (pageModel is null)
         {
+            // For the task list set all the section first questions to return to the task list
             foreach (var section in form.Sections)
             {
-                foreach (var page in section.Pages)
-                {
-                    page.Question.Back = form.Path;
-                }
+                section.Pages.First().Back = form.Path;
             }
-            
-            //nextPage = form.Sections.First().Pages.First();
         }
-        else if (pageModel is not null) // _currentPageId is null && 
+        else
         {
-            //var currentPage = form.FindPage(_currentPageId);
-
-            var resolver = GetJourneyResolver(pageModel.Question);
+            var resolver = GetJourneyResolver(pageModel);
             
-            nextPage = resolver.Resolve(form, pageModel.Question);
+            var nextPage = resolver.Resolve(form, pageModel);
 
             if (nextPage is null)
             {
                 // TODO: Probably go to the summary for the section. On summary the goto the form task list
-                _currentPageId = null;
-                return form.Path;
+                pageModel.Back = form.Path;
             }
-
-            nextPage.Question.Back = pageModel.Path;
-            
-            //_currentPageId = nextPage.Id;
-            return nextPage.Path;
+            else
+            {
+                pageModel.Next = nextPage.Path;
+                nextPage.Back = pageModel.Path;
+            }
         }
-
-        return form.Path;
     }
 
-    private IJourneyResolver GetJourneyResolver(BaseQuestionModel question)
+    private IJourneyResolver GetJourneyResolver(PageModel page)
     {
-        var resolverType = typeof(IJourneyResolver<>).MakeGenericType(question.GetType());
+        var resolverType = typeof(IJourneyResolver<>).MakeGenericType(page.GetType());
         return (IJourneyResolver)(_serviceProvider.GetService(resolverType) ?? new DefaultJourneyResolver());
     }
 }

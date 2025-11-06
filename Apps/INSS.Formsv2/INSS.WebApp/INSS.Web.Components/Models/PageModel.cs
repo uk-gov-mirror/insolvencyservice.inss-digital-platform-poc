@@ -1,10 +1,12 @@
 namespace INSS.Web.Components.Models;
 
-public sealed class PageModel : BaseModel
+public abstract class PageModel : BaseModel
 {
     public bool IsComplete { get; set; }
     
     public Navigation Path { get; init; } = Navigation.Default;
     
-    public BaseQuestionModel Question { get; init; } = null!;
+    public Navigation Next { get; set; } = Navigation.Default;
+    
+    public Navigation Back { get; set; } = Navigation.Default;
 }

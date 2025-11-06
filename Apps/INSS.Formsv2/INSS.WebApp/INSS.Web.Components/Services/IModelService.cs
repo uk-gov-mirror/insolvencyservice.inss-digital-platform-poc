@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace INSS.Web.Components.Services;
 
-public interface IModelService<T>
+public interface IModelService<TModel>
 {
-    Task<T> LoadAsync(string? id);
-    Task ValidateAsync(ModelStateDictionary modelState, T model);
-    Task<Navigation> SaveAsync(T model);
+    Task<TModel> LoadAsync(string? id);
+    Task ValidateAsync(ModelStateDictionary modelState, TModel model);
+    Task<Navigation> SaveAsync(TModel model);
 }

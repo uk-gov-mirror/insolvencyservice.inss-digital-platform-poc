@@ -1,6 +1,5 @@
 ﻿using INSS.Web.Components.Models;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace INSS.Web.Components.Services;
 
@@ -23,10 +22,9 @@ public class AddressService : IModelService<AddressModel>
     public async Task<AddressModel> LoadAsync(string? id)
     {
         var form = await _formStateService.GetAsync("0c4d0123-854b-4929-8a75-6b89c6619909");
-        var questionModel = form.FindQuestion<AddressModel>(id!);
-        var page = form.FindPageFromQuestion(questionModel.Id);
-        questionModel.Back = _journeyService.TransitionNext(form, page);
-        return questionModel;
+        var page = form.FindPage<AddressModel>(id!);
+        _journeyService.TransitionNext(form, page);
+        return page;
     }
  
     public async Task ValidateAsync(ModelStateDictionary modelState, AddressModel model)
@@ -41,28 +39,17 @@ public class AddressService : IModelService<AddressModel>
     public async Task<Navigation> SaveAsync(AddressModel model)
     {
         var form = await _formStateService.GetAsync("0c4d0123-854b-4929-8a75-6b89c6619909");
-
+        var page = form.FindPage<AddressModel>(model.Id);
         
-        // TODO: Resolve which address (or model) as it might appear multiple times!
+        page.AddressLine1 = model.AddressLine1;
+        page.AddressLine2 = model.AddressLine2;
+        page.TownCity = model.TownCity;
+        page.County = model.County;
+        page.Postcode = model.Postcode;
+        await _formStateService.SaveAsync("0c4d0123-854b-4929-8a75-6b89c6619909", form);
         
-        /*foreach (var section in form.Sections)
-        {
-            foreach (var page in section.Pages)
-            {
-                var question = page.Questions.FirstOrDefault(q => q is AddressModel);
-
-                if (question is AddressModel addressModel)
-                {
-                    addressModel.AddressLine1 = model.AddressLine1;
-                    addressModel.AddressLine2 = model.AddressLine2;
-                    addressModel.TownCity = model.TownCity;
-                    addressModel.County = model.County;
-                    addressModel.Postcode = model.Postcode;
-                    await _formStateService.SaveAsync("0c4d0123-854b-4929-8a75-6b89c6619909", form);
-                }
-            }
-        }*/
-
-        return _journeyService.TransitionNext(form);
+        _journeyService.TransitionNext(form, page);
+        
+        return page.Next;
     }
 }

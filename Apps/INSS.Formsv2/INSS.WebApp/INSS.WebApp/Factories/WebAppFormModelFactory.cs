@@ -10,21 +10,22 @@ public sealed class WebAppFormModelFactory : IFormModelFactory
         return Task.FromResult(new FormModel
         {
             Id = FormConstants.FormId,
-            Path = new Navigation { Controller = "Form" },
+            Path = new Navigation { Controller = "Form", Id = FormConstants.FormId },
             Sections = [
                 new SectionModel
                 {
                     Id = FormConstants.YourDetailsSectionId,
                     Name = "Your Details", 
                     Pages = [
-                        new PageModel
+                        new AddressModel
                         {
                             Id = FormConstants.YourDetailsPageId,
-                            Path = new Navigation { Controller = "Address" },
-                            Question = new AddressModel
-                            {
-                                Id = FormConstants.YourDetailsAddressId
-                            }
+                            Path = new Navigation { Controller = "Address", Id = FormConstants.YourDetailsPageId }
+                        },
+                        new BankAccountModel
+                        {
+                            Id = FormConstants.PersonalAssetsPageId,
+                            Path = new Navigation { Controller = "BankAccount", Id = FormConstants.PersonalAssetsPageId }
                         }]
                 }, 
                 new SectionModel
@@ -32,14 +33,10 @@ public sealed class WebAppFormModelFactory : IFormModelFactory
                     Id = FormConstants.AssetsSectionId,
                     Name = "Assets", 
                     Pages = [
-                        new PageModel
+                        new BankAccountModel
                         {
                             Id = FormConstants.AssetsPageId,
-                            Path = new Navigation { Controller = "BankAccount" },
-                            Question = new BankAccountModel
-                            {
-                                Id = FormConstants.AssetsBankAccountId
-                            }
+                            Path = new Navigation { Controller = "BankAccount",  Id = FormConstants.AssetsPageId }
                         }]
                 },
             ]

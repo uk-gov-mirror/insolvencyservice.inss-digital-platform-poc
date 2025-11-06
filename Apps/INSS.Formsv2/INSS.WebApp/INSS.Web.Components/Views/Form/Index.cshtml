@@ -10,6 +10,6 @@
 <inss-task-list>
     @foreach(var section in Model.Sections)
     {
-        <inss-task-list-item name="@(section.Name)" is-complete="@(section.IsComplete)" url="@Url.Action(section.FirstQuestion.Action, section.FirstQuestion.Controller, new { id = section.FirstQuestionId })" />
+        <inss-task-list-item name="@(section.Name)" is-complete="@(section.IsComplete)" url="@Url.Action(section.FirstPage.Action, section.FirstPage.Controller, new { id = section.FirstPageId })" />
     }
 </inss-task-list>
