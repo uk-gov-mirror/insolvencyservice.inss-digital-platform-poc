@@ -29,8 +29,11 @@ public class BankAccountService : IModelService<BankAccountModel>
 
     public async Task ValidateAsync(ModelStateDictionary modelState, BankAccountModel model)
     {
+        var form = await _formStateService.GetAsync("0c4d0123-854b-4929-8a75-6b89c6619909");
+        
         if (!modelState.IsValid)
         {
+            model.Previous = form.NavList.Last();
             return;
         }
 
@@ -41,6 +44,7 @@ public class BankAccountService : IModelService<BankAccountModel>
 
         if (!response.IsSuccessStatusCode || await response.Content.ReadAsStringAsync() == "null")
         {
+            model.Previous = form.NavList.Last();
             modelState.AddModelError(nameof(model.SortCode), "Bank account sort code not found");
         }
     }

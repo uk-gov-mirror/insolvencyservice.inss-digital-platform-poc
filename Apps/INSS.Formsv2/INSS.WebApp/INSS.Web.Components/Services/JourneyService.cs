@@ -18,7 +18,7 @@ public sealed class JourneyService : IJourneyService
             // For the task list set all the section first questions to return to the task list
             foreach (var section in form.Sections)
             {
-                section.Pages.First().Previous = form.Path;
+                //section.Pages.First().Previous = form.Path;
             }
         }
         else

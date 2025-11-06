@@ -31,6 +31,8 @@ public class AddressService : IModelService<AddressModel>
     {
         if (!modelState.IsValid)
         {
+            var form = await _formStateService.GetAsync("0c4d0123-854b-4929-8a75-6b89c6619909");
+            model.Previous = form.NavList.Last();
             return;
         }
         // Do some additonal validation if required
