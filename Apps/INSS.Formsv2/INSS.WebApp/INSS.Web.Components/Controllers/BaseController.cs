@@ -27,11 +27,8 @@ public class BaseController<T> : Controller
 
         if (ModelState.IsValid)
         {
-            await _modelService.SaveAsync(model);
-            
-            // TODO: Navigate to next page
-            //model = await _modelService.LoadAsync();
-            return View(model);
+            var navigateTo = await _modelService.SaveAsync(model);
+            return RedirectToAction(navigateTo.Action, navigateTo.Controller);
         }
 
         return View();

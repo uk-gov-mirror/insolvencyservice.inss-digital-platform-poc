@@ -8,5 +8,20 @@ public sealed class SectionModel : BaseModel
     
     public PageModel[] Pages { get; set; } = [];
 
-    public string FirstQuestionId => Pages.First().Questions.First().Id; // TODO: Clean up
+    public Navigation FirstQuestion => Pages.First().Path;
+    
+    public string FirstQuestionId => Pages.First().Question.Id;
+
+    public PageModel? GetNextPageAfterQuestion(string questionId)
+    {
+        for (var i = 0; i < Pages.Length; i++)
+        {
+            if (Pages[i].Question.Id == questionId && i < Pages.Length - 1)
+            {
+                return Pages[i + 1];
+            }
+        }
+
+        return null;
+    }
 }

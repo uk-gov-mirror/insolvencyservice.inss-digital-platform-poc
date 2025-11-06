@@ -24,6 +24,7 @@ public static class WebApplicationBuilderExtensions
         
         builder.Services.AddHttpClient();
         builder.Services.AddGovUkFrontend(options => options.Rebrand = true);
+        builder.Services.AddSingleton<IJourneyService, JourneyService>();
         builder.Services.AddTransient<IModelService<BankAccountModel>, BankAccountService>();
         builder.Services.AddTransient<IModelService<AddressModel>, AddressService>();
         builder.Services.AddTransient<IModelService<FormModel>, FormService>();

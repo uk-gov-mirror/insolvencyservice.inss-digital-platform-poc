@@ -8,11 +8,16 @@ public sealed class FormService : IModelService<FormModel>
 {
     private readonly IFormModelFactory _formModelFactory;
     private readonly IFormStateService _formStateService;
+    private readonly IJourneyService _journeyService;
 
-    public FormService(IFormModelFactory formModelFactory, IFormStateService  formStateService)
+    public FormService(
+        IFormModelFactory formModelFactory, 
+        IFormStateService  formStateService, 
+        IJourneyService  journeyService)
     {
         _formModelFactory = formModelFactory;
         _formStateService = formStateService;
+        _journeyService = journeyService;
     }
     
     public async Task<FormModel> LoadAsync(string? id)
@@ -27,8 +32,10 @@ public sealed class FormService : IModelService<FormModel>
         return Task.CompletedTask;
     }
 
-    public Task SaveAsync(FormModel model)
+    public async Task<Navigation> SaveAsync(FormModel model)
     {
-        return Task.CompletedTask;
+        // TODO: Do we need to get it?
+        var form = await _formStateService.GetAsync("0c4d0123-854b-4929-8a75-6b89c6619909");
+        return _journeyService.TransitionNext(form);
     }
 }

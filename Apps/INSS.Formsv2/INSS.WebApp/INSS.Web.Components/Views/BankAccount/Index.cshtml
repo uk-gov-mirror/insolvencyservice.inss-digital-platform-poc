@@ -7,7 +7,7 @@
  
 @model INSS.Web.Components.Models.BankAccountModel
 
-<govuk-back-link asp-controller="@Model.Url.Controller" asp-action="@Model.Url.Action" />
+<govuk-back-link asp-controller="@Model.Back.Controller" asp-action="@Model.Back.Action" />
 
 <form method="post">
     <govuk-input for="@Model.AccountNumber" input-class="govuk-input--width-10" inputmode="text" spellcheck="false">
