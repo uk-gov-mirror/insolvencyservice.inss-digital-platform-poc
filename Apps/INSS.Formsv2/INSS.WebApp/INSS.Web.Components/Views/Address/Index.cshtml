@@ -5,7 +5,7 @@
 @addTagHelper INSS.Web.Components.TagHelpers.*, INSS.Web.Components
 @model INSS.Web.Components.Models.AddressModel
 
-<govuk-back-link asp-controller="@Model.Back.Controller" asp-action="@Model.Back.Action" />
+<govuk-back-link asp-controller="@Model.Previous.Controller" asp-action="@Model.Previous.Action" asp-route-id="@Model.Previous.Id" />
 
 <form method="post">       
     <govuk-fieldset>

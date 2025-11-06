@@ -4,7 +4,10 @@ namespace INSS.Web.Components.Services;
 
 public interface IJourneyService
 {
-    void TransitionNext(FormModel form, PageModel? pageModel = null);
+    //void TransitionNext(FormModel form, PageModel? pageModel = null);
+    void TransitionPart1(FormModel form, PageModel? pageModel = null);
+
+    void TransitionPart2(FormModel form, PageModel pageModel);
 }
 
 public interface IJourneyResolver

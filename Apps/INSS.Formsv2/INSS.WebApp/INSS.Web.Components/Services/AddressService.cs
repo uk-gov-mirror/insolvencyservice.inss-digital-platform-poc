@@ -23,7 +23,7 @@ public class AddressService : IModelService<AddressModel>
     {
         var form = await _formStateService.GetAsync("0c4d0123-854b-4929-8a75-6b89c6619909");
         var page = form.FindPage<AddressModel>(id!);
-        _journeyService.TransitionNext(form, page);
+        _journeyService.TransitionPart1(form, page);
         return page;
     }
  
@@ -48,7 +48,7 @@ public class AddressService : IModelService<AddressModel>
         page.Postcode = model.Postcode;
         await _formStateService.SaveAsync("0c4d0123-854b-4929-8a75-6b89c6619909", form);
         
-        _journeyService.TransitionNext(form, page);
+        _journeyService.TransitionPart2(form, page);
         
         return page.Next;
     }

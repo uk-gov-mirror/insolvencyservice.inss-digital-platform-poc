@@ -18,7 +18,7 @@ public sealed class JourneyService : IJourneyService
             // For the task list set all the section first questions to return to the task list
             foreach (var section in form.Sections)
             {
-                section.Pages.First().Back = form.Path;
+                section.Pages.First().Previous = form.Path;
             }
         }
         else
@@ -30,16 +30,99 @@ public sealed class JourneyService : IJourneyService
             if (nextPage is null)
             {
                 // TODO: Probably go to the summary for the section. On summary the goto the form task list
-                pageModel.Back = form.Path;
+                pageModel.Previous = form.Path;
             }
             else
             {
                 pageModel.Next = nextPage.Path;
-                nextPage.Back = pageModel.Path;
+                nextPage.Previous = pageModel.Path;
             }
         }
     }
+    
+    public void TransitionPart2(FormModel form, PageModel pageModel)
+    {
+        var resolver = GetJourneyResolver(pageModel);
+            
+        var nextPage = resolver.Resolve(form, pageModel);
 
+        if (nextPage is not null)
+        {
+            pageModel.Next = nextPage.Path;
+            nextPage.Previous = pageModel.Path;    
+        }
+        else
+        {
+            pageModel.Next = form.Path;
+        }
+        
+        /*if (pageModel is null)
+        {
+            // For the task list set all the section first questions to return to the task list
+            foreach (var section in form.Sections)
+            {
+                section.Pages.First().Previous = form.Path;
+            }
+        }
+        else
+        {
+            var resolver = GetJourneyResolver(pageModel);
+
+            var nextPage = resolver.Resolve(form, pageModel);
+
+            if (nextPage is null)
+            {
+                // TODO: Probably go to the summary for the section. On summary the goto the form task list
+                pageModel.Previous = form.Path;
+            }
+            else
+            {
+                pageModel.Next = nextPage.Path;
+                nextPage.Previous = pageModel.Path;
+            }
+        }*/
+    }
+
+    
+    public void TransitionPart1(FormModel form, PageModel? pageModel = null)
+    {
+        // If we come from the form e.g. page model is null then return
+        if (pageModel is null)
+        {
+            // // For the task list set all the section first questions to return to the task list
+            // foreach (var section in form.Sections)
+            // {
+            //     section.Pages.First().Previous = form.Path;
+            // }
+        }
+        else
+        {
+            if (pageModel.Previous is null)
+            {
+                pageModel.Previous = form.Path;
+            }
+            else
+            {
+                pageModel.Path = pageModel.Previous;
+            }
+
+            /*var resolver = GetJourneyResolver(pageModel);
+
+            var nextPage = resolver.Resolve(form, pageModel);
+
+            if (nextPage is null)
+            {
+                // TODO: Probably go to the summary for the section. On summary the goto the form task list
+                pageModel.Previous = form.Path;
+            }
+            else
+            {
+                pageModel.Next = nextPage.Path;
+                nextPage.Previous = pageModel.Path;
+            }*/
+        }
+    }
+    
     private IJourneyResolver GetJourneyResolver(PageModel page)
     {
         var resolverType = typeof(IJourneyResolver<>).MakeGenericType(page.GetType());
