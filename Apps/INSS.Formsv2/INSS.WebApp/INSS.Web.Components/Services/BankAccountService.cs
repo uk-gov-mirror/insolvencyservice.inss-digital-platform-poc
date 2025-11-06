@@ -23,7 +23,7 @@ public class BankAccountService : IModelService<BankAccountModel>
     {
         var form = await _formStateService.GetAsync("0c4d0123-854b-4929-8a75-6b89c6619909");
         var page = form.FindPage<BankAccountModel>(id!);
-        _journeyService.TransitionPart1(form, page);
+        _journeyService.TransitionPrevious(form, page);
         return page;
     }
 
@@ -33,7 +33,7 @@ public class BankAccountService : IModelService<BankAccountModel>
         
         if (!modelState.IsValid)
         {
-            model.Previous = form.NavList.Last();
+            model.Previous = form.NavigationHistory.Last();
             return;
         }
 
@@ -44,7 +44,7 @@ public class BankAccountService : IModelService<BankAccountModel>
 
         if (!response.IsSuccessStatusCode || await response.Content.ReadAsStringAsync() == "null")
         {
-            model.Previous = form.NavList.Last();
+            model.Previous = form.NavigationHistory.Last();
             modelState.AddModelError(nameof(model.SortCode), "Bank account sort code not found");
         }
     }
@@ -53,8 +53,8 @@ public class BankAccountService : IModelService<BankAccountModel>
     {
         var form = await _formStateService.GetAsync("0c4d0123-854b-4929-8a75-6b89c6619909");
         var page = form.FindPage<BankAccountModel>(model.Id);
-        form.AddNav(page.Path);
-        _journeyService.TransitionPart2(form, page);
+        form.AddNavigation(page.Path);
+        _journeyService.TransitionNext(form, page);
         return page.Next;
     }
 }

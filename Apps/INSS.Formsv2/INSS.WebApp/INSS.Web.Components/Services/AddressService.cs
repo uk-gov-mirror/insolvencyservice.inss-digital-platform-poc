@@ -23,7 +23,7 @@ public class AddressService : IModelService<AddressModel>
     {
         var form = await _formStateService.GetAsync("0c4d0123-854b-4929-8a75-6b89c6619909");
         var page = form.FindPage<AddressModel>(id!);
-        _journeyService.TransitionPart1(form, page);
+        _journeyService.TransitionPrevious(form, page);
         return page;
     }
  
@@ -32,7 +32,7 @@ public class AddressService : IModelService<AddressModel>
         if (!modelState.IsValid)
         {
             var form = await _formStateService.GetAsync("0c4d0123-854b-4929-8a75-6b89c6619909");
-            model.Previous = form.NavList.Last();
+            model.Previous = form.NavigationHistory.Last();
             return;
         }
         // Do some additonal validation if required
@@ -42,7 +42,7 @@ public class AddressService : IModelService<AddressModel>
     {
         var form = await _formStateService.GetAsync("0c4d0123-854b-4929-8a75-6b89c6619909");
         var page = form.FindPage<AddressModel>(model.Id);
-        form.AddNav(page.Path);
+        form.AddNavigation(page.Path);
         
         page.AddressLine1 = model.AddressLine1;
         page.AddressLine2 = model.AddressLine2;
@@ -51,7 +51,7 @@ public class AddressService : IModelService<AddressModel>
         page.Postcode = model.Postcode;
         await _formStateService.SaveAsync("0c4d0123-854b-4929-8a75-6b89c6619909", form);
         
-        _journeyService.TransitionPart2(form, page);
+        _journeyService.TransitionNext(form, page);
         
         return page.Next;
     }

@@ -8,14 +8,14 @@ public class FormModel : BaseModel
     
     public Navigation Path { get; init; } = Navigation.Default;
 
-    public Navigation[] NavList => _navList.ToArray();
+    public Navigation[] NavigationHistory => _navList.ToArray();
 
-    public void AddNav(Navigation nav)
+    public void AddNavigation(Navigation nav)
     {
         _navList.Add(nav);
     }
 
-    public void PopLastNav()
+    public void PopLastNavigationHistory()
     {
         if (_navList.Count > 0)
         {
@@ -23,7 +23,7 @@ public class FormModel : BaseModel
         }
     }
 
-    public void PopAllNav()
+    public void PopAllNavigationHistory()
     {
         _navList.Clear();
     }
