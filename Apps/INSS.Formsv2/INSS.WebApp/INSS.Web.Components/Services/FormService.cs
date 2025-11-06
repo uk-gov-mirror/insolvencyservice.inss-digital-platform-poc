@@ -23,6 +23,8 @@ public sealed class FormService : IModelService<FormModel>
     public async Task<FormModel> LoadAsync(string? id)
     {
         var form = await _formModelFactory.CreateAsync();
+        form.PopAllNav();
+        form.AddNav(form.Path);
         await _formStateService.SaveAsync("0c4d0123-854b-4929-8a75-6b89c6619909", form);
         return  form;
     }

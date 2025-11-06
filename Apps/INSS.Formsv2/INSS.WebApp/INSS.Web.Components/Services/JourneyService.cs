@@ -49,7 +49,7 @@ public sealed class JourneyService : IJourneyService
         if (nextPage is not null)
         {
             pageModel.Next = nextPage.Path;
-            nextPage.Previous = pageModel.Path;    
+            //nextPage.Previous = pageModel.Path;    
         }
         else
         {
@@ -86,40 +86,17 @@ public sealed class JourneyService : IJourneyService
     
     public void TransitionPart1(FormModel form, PageModel? pageModel = null)
     {
-        // If we come from the form e.g. page model is null then return
-        if (pageModel is null)
+        if (pageModel is not null)
         {
-            // // For the task list set all the section first questions to return to the task list
-            // foreach (var section in form.Sections)
-            // {
-            //     section.Pages.First().Previous = form.Path;
-            // }
-        }
-        else
-        {
-            if (pageModel.Previous is null)
-            {
-                pageModel.Previous = form.Path;
-            }
-            else
-            {
-                pageModel.Path = pageModel.Previous;
-            }
+            var prev = form.NavList.Last();
 
-            /*var resolver = GetJourneyResolver(pageModel);
-
-            var nextPage = resolver.Resolve(form, pageModel);
-
-            if (nextPage is null)
+            // If we have navigated back and we are on the page of the last entry then we need to remove it
+            if (prev == pageModel.Path)
             {
-                // TODO: Probably go to the summary for the section. On summary the goto the form task list
-                pageModel.Previous = form.Path;
+                form.PopLastNav();
             }
-            else
-            {
-                pageModel.Next = nextPage.Path;
-                nextPage.Previous = pageModel.Path;
-            }*/
+            
+            pageModel.Previous = form.NavList.Last();
         }
     }
     
