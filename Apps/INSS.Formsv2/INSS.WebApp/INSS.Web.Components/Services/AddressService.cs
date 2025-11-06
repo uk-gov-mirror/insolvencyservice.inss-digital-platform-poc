@@ -23,20 +23,10 @@ public class AddressService : IModelService<AddressModel>
     public async Task<AddressModel> LoadAsync(string? id)
     {
         var form = await _formStateService.GetAsync("0c4d0123-854b-4929-8a75-6b89c6619909");
-
-       foreach (var section in form.Sections)
-        {
-            foreach (var page in section.Pages)
-            {
-                if (page.Question.Id == id && page.Question is AddressModel addressModel)
-                {
-                    addressModel.Back = _journeyService.TransitionNext(form, page);
-                    return addressModel;
-                }
-            }
-        }
-
-        throw new Exception("Unable to find question from Id"); // TODO: Better method!
+        var questionModel = form.FindQuestion<AddressModel>(id!);
+        var page = form.FindPageFromQuestion(questionModel.Id);
+        questionModel.Back = _journeyService.TransitionNext(form, page);
+        return questionModel;
     }
  
     public async Task ValidateAsync(ModelStateDictionary modelState, AddressModel model)

@@ -22,27 +22,15 @@ public class BankAccountService : IModelService<BankAccountModel>
     public async Task<BankAccountModel> LoadAsync(string? id)
     {
         var form = await _formStateService.GetAsync("0c4d0123-854b-4929-8a75-6b89c6619909");
-
-        //_journeyService.TransitionNext(form);
-        
-        foreach (var section in form.Sections)
-        {
-            foreach (var page in section.Pages)
-            {
-                if (page.Question.Id == id && page.Question is BankAccountModel bankAccountModel)
-                {
-                    bankAccountModel.Back = _journeyService.TransitionNext(form, page);
-                    return bankAccountModel;
-                }
-            }
-        }
-
-        throw new Exception("Unable to find question from Id"); // TODO: Better method!
+        var questionModel = form.FindQuestion<BankAccountModel>(id!);
+        var page = form.FindPageFromQuestion(questionModel.Id);
+        questionModel.Back = _journeyService.TransitionNext(form, page);
+        return questionModel;
     }
 
     public async Task ValidateAsync(ModelStateDictionary modelState, BankAccountModel model)
     {
-        if(!modelState.IsValid)
+        if (!modelState.IsValid)
         {
             return;
         }
