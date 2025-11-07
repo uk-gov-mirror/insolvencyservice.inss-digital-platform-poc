@@ -28,7 +28,7 @@ public class HomeValueService : IModelService<HomeValueModel>
         if (!modelState.IsValid)
         {
             var form = await _formStateService.GetAsync("0c4d0123-854b-4929-8a75-6b89c6619909");
-            model.Previous = form.NavigationHistory.Last();
+            model.PreviousPageUrl = form.NavigationHistory.Last();
             return;
         }
         // Do some additional validation if required
@@ -39,14 +39,14 @@ public class HomeValueService : IModelService<HomeValueModel>
         var form = await _formStateService.GetAsync("0c4d0123-854b-4929-8a75-6b89c6619909");
         var page = form.FindPage<HomeValueModel>(model.Id);
         var section = form.FindSectionForPage(page.Id);
-        page.Path.PageUrl = section.GetPageUrl(form, page);
-        form.AddNavigation(page.Path);
+        page.PageUrl = section.GetPageUrl(form, page);
+        form.AddNavigation(page.PageUrl);
         
         page.Value = model.Value;
         await _formStateService.SaveAsync("0c4d0123-854b-4929-8a75-6b89c6619909", form);
         
         _journeyService.TransitionNext(form, page);
         
-        return page.Next.PageUrl;
+        return page.NextPageUrl;
     }
 }

@@ -24,8 +24,8 @@ public sealed class FormService : IModelService<FormModel>
     {
         var form = await _formModelFactory.CreateAsync();
         form.PopAllNavigationHistory();
-        form.Path.PageUrl = $"/{form.PathName}";
-        form.AddNavigation(form.Path);
+        form.PageUrl = $"/{form.PathName}";
+        form.AddNavigation(form.PageUrl);
         form.Initialize();
         await _formStateService.SaveAsync("0c4d0123-854b-4929-8a75-6b89c6619909", form);
         return  form;

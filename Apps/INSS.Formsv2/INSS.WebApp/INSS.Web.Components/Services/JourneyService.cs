@@ -18,12 +18,12 @@ public sealed class JourneyService : IJourneyService
             var previousNavigation = form.NavigationHistory.Last();
 
             // If we have navigated back and we are on the page of the last entry then we need to remove it
-            if (previousNavigation == pageModel.Path)
+            if (previousNavigation == pageModel.PageUrl)
             {
                 form.PopLastNavigationHistory();
             }
             
-            pageModel.Previous = form.NavigationHistory.Last();
+            pageModel.PreviousPageUrl = form.NavigationHistory.Last();
         }
     }
     
@@ -36,8 +36,7 @@ public sealed class JourneyService : IJourneyService
         if (nextPage is not null)
         {
             var section = form.FindSectionForPage(nextPage.Id);
-            pageModel.Next = nextPage.Path; // TODO: Remove
-            pageModel.Next.PageUrl = section.GetPageUrl(form, nextPage);
+            pageModel.NextPageUrl = section.GetPageUrl(form, nextPage);
             return;
         }
         
@@ -45,13 +44,11 @@ public sealed class JourneyService : IJourneyService
 
         if (section2.IsLastPageInSection(pageModel))
         {
-            pageModel.Next = form.Path;
-            pageModel.Next.PageUrl = $"/{form.PathName}/{section2.PathName}";
+            pageModel.NextPageUrl = $"/{form.PathName}/{section2.PathName}";
         }
         else
         {
-            pageModel.Next = form.Path;
-            pageModel.Next.PageUrl = $"/{form.PathName}";
+            pageModel.NextPageUrl = $"/{form.PathName}";
         }
     }
     

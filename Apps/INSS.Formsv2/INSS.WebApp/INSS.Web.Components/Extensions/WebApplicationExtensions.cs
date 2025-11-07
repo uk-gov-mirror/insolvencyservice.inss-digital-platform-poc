@@ -17,7 +17,7 @@ public static class WebApplicationExtensions
 
         app.MapControllerRoute(name: form.PathName,
             pattern: $"{form.PathName}",
-            defaults: new { controller = form.Path.Controller, action = form.Path.Action });
+            defaults: new { controller = form.Controller, action = form.Action });
 
         foreach (var section in form.Sections)
         {
@@ -29,7 +29,7 @@ public static class WebApplicationExtensions
             {
                 app.MapControllerRoute(name: $"{section.PathName}-{page.PathName}",
                     pattern: section.GetPageUrl(form, page),
-                    defaults: new { controller = page.Path.Controller, action = page.Path.Action });
+                    defaults: new { controller = page.Controller, action = page.Action });
             }
         }
         

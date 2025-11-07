@@ -1,7 +1,4 @@
 using System.Reflection;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace INSS.Web.Components.Models;
 
@@ -11,11 +8,11 @@ public abstract class PageModel : BaseModel
 
     public string Title { get; set; } = "";
     
-    public Navigation Path { get; set; } = Navigation.Default; // TODO: Why is this needed? records anyhow
+    public string PageUrl { get; set; } = string.Empty;
     
-    public Navigation Next { get; set; } = Navigation.Default;
+    public string NextPageUrl { get; set; } = string.Empty;
     
-    public Navigation? Previous { get; set; }
+    public string PreviousPageUrl { get; set; } = string.Empty;
     
     public string PathName { get; init; } = "page";
 
@@ -46,10 +43,12 @@ public abstract class PageModel : BaseModel
             nameof(Id),
             nameof(Title),
             nameof(IsComplete),
-            nameof(Path),
-            nameof(Next),
-            nameof(Previous),
-            nameof(PathName)
+            nameof(PageUrl),
+            nameof(NextPageUrl),
+            nameof(PreviousPageUrl),
+            nameof(PathName),
+            nameof(Controller),
+            nameof(Action)
         ];
     }
 }

@@ -7,11 +7,7 @@ public sealed class SectionModel : BaseModel
     public bool IsComplete => Pages.All(p => p.IsComplete);
     
     public PageModel[] Pages { get; set; } = [];
-
-    //public Navigation FirstPage => Pages.First().Path;
     
-    //public string FirstPageId => Pages.First().Id;
-
     public string PathName { get; init; } = "Section";
     
     public PageModel? GetNextPage(string pageId)

@@ -6,9 +6,9 @@ public sealed class BankAccountModel : PageModel
 {
     public BankAccountModel()
     {
-        Path = new Navigation { Controller = "BankAccount" };
         PathName = "bank-account";
         Title = "Bank Account";
+        Controller = "BankAccount";
     }
     
     [Required(ErrorMessage = "You must enter an account number")]
