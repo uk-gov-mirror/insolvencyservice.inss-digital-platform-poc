@@ -8,5 +8,5 @@ public sealed class Navigation
 
     public string Action { get; init; } = "Index";
 
-    public string TempUrl { get; set; } = string.Empty; // TODO: Fix
+    public string PageUrl { get; set; } = string.Empty; // TODO: Fix
 }

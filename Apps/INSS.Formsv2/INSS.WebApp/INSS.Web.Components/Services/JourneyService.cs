@@ -37,12 +37,12 @@ public sealed class JourneyService : IJourneyService
         {
             var section = form.FindSectionForPage(nextPage.Id);
             pageModel.Next = nextPage.Path; // TODO: Remove
-            pageModel.Next.TempUrl = section.GetPageUrl(form, nextPage);
+            pageModel.Next.PageUrl = section.GetPageUrl(form, nextPage);
             return;
         }
 
         pageModel.Next = form.Path;
-        pageModel.Next.TempUrl = $"/{form.PathName}";
+        pageModel.Next.PageUrl = $"/{form.PathName}";
     }
     
     private IJourneyResolver GetJourneyResolver(PageModel page)

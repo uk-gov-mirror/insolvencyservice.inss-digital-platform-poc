@@ -7,6 +7,7 @@ public class AddressModel : PageModel
     public AddressModel()
     {
         Path = new Navigation { Controller = "Address" };
+        PathName = "address";
     }
     
     [Required(ErrorMessage = "Enter address line 1")]

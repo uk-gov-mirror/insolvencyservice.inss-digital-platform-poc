@@ -2,19 +2,25 @@
 
 public class FormModel : BaseModel
 {
-    private readonly List<Navigation> _navList = new();
+    private readonly List<Navigation> _navList = [];
+    
+    public FormModel()
+    {
+        Path = new Navigation { Controller = "Form" };
+        PathName = "tasks";
+    }
     
     public SectionModel[] Sections { get; init; } = [];
     
-    public Navigation Path { get; init; } = Navigation.Default;
+    public Navigation Path { get; init; }
 
     public Navigation[] NavigationHistory => _navList.ToArray();
 
-    public string PathName { get; init; } = "form";
+    public string PathName { get; init; }
     
-    public void AddNavigation(Navigation nav)
+    public void AddNavigation(Navigation navigation)
     {
-        _navList.Add(nav);
+        _navList.Add(navigation);
     }
 
     public void PopLastNavigationHistory()
