@@ -1,9 +1,7 @@
-﻿using INSS.Web.Components.Extensions;
-using INSS.Web.Components.Services;
+﻿using INSS.Web.Components.Services;
+using INSS.Web.Components.Utils;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.VisualBasic;
-using Newtonsoft.Json;
 
 // ReSharper disable Mvc.ViewNotResolved
 
@@ -35,7 +33,6 @@ public class BaseController<T> : Controller
         {
             var navigateTo = await _modelService.SaveAsync(model);
             return Redirect(navigateTo);
-            //return RedirectToAction(navigateTo.Action, navigateTo.Controller);//, new { Id = navigateTo.Id });
         }
 
         return View(model);
@@ -46,7 +43,7 @@ public class BaseController<T> : Controller
         string? routeId = null;
         var requestUrl = request.Path.Value;
         
-        if (requestUrl is not null && request.Cookies.TryGetValue("RouteId", out var cookieValue))
+        if (requestUrl is not null && request.Cookies.TryGetValue(RouteInfo.CookieName, out var cookieValue))
         {
             var routeInfoList = System.Text.Json.JsonSerializer.Deserialize<List<RouteInfo>>(cookieValue);
 

@@ -13,5 +13,5 @@
     {
         <inss-task-list-item name="@(section.Name)" is-complete="@(section.IsComplete)" url="@(section.GetPageUrl(Model, section.Pages.First()))" />
     }
-    @Url.OurUrl(Model)
+    @Url.FormCookieHelper(Model)
 </inss-task-list>
