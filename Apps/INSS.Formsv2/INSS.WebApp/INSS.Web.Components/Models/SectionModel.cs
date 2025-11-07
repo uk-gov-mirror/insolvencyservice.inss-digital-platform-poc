@@ -27,8 +27,8 @@ public sealed class SectionModel : BaseModel
         return null;
     }
 
-    public string GetPageUrl(PageModel page)
+    public string GetPageUrl(FormModel form, PageModel page)
     {
-        return $"/{PathName}/{page.PathName}";
+        return $"/{form.PathName}/{PathName}/{page.PathName}";
     }
 }

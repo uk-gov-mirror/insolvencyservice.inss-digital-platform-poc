@@ -44,7 +44,7 @@ public class AddressService : IModelService<AddressModel>
         var form = await _formStateService.GetAsync("0c4d0123-854b-4929-8a75-6b89c6619909");
         var page = form.FindPage<AddressModel>(model.Id);
         var section = form.FindSectionForPage(page.Id);
-        page.Path.TempUrl = section.GetPageUrl(page);
+        page.Path.TempUrl = section.GetPageUrl(form, page);
         form.AddNavigation(page.Path);
         
         page.AddressLine1 = model.AddressLine1;

@@ -11,7 +11,7 @@ public sealed class WebAppFormModelFactory : IFormModelFactory
         {
             Id = FormConstants.FormId,
             Path = new Navigation { Controller = "Form" },
-            PathName = "application",
+            PathName = "tasks",
             Sections = [
                 new SectionModel
                 {

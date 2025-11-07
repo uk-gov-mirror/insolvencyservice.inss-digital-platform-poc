@@ -16,7 +16,7 @@ public static class UrlHelperExtensions
                 var routeInfo = new RouteInfo
                 {
                     Id = page.Id,
-                    Url = section.GetPageUrl(page)
+                    Url = section.GetPageUrl(model, page)
                 };
                 routeInfoList.Add(routeInfo);
             }

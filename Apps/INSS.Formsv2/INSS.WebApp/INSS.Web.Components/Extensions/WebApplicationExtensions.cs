@@ -24,7 +24,7 @@ public static class WebApplicationExtensions
             foreach (var page in section.Pages)
             {
                 app.MapControllerRoute(name: $"{section.PathName}-{page.PathName}",
-                    pattern: $"{section.PathName}/{page.PathName}",
+                    pattern: section.GetPageUrl(form, page),
                     defaults: new { controller = page.Path.Controller, action = page.Path.Action });
             }
         }
