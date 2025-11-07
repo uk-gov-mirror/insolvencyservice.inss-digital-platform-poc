@@ -33,7 +33,16 @@ public sealed class JourneyService : IJourneyService
             
         var nextPage = resolver.Resolve(form, pageModel);
 
-        pageModel.Next = nextPage is not null ? nextPage.Path : form.Path;
+        if (nextPage is not null)
+        {
+            var section = form.FindSectionForPage(nextPage.Id);
+            pageModel.Next = nextPage.Path; // TODO: Remove
+            pageModel.Next.TempUrl = $"/{section.PathName}/{nextPage.PathName}";
+            return;
+        }
+
+        pageModel.Next = form.Path;
+        pageModel.Next.TempUrl = $"/{form.PathName}";
     }
     
     private IJourneyResolver GetJourneyResolver(PageModel page)

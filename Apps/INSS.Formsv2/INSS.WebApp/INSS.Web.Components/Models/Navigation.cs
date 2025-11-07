@@ -9,4 +9,6 @@ public sealed class Navigation
     public required string Controller { get; init; }
 
     public string Action { get; init; } = "Index";
+
+    public string TempUrl { get; set; } = string.Empty; // TODO: Fix
 }

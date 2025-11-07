@@ -5,11 +5,13 @@
 @addTagHelper GovUk.Frontend.AspNetCore.TagHelpers.*, GovUk.Frontend.AspNetCore
 @addTagHelper INSS.Web.Components.TagHelpers.*, INSS.Web.Components
 
+@using INSS.Web.Components.Extensions
 @model INSS.Web.Components.Models.FormModel
 
 <inss-task-list>
     @foreach(var section in Model.Sections)
     {
-        <inss-task-list-item name="@(section.Name)" is-complete="@(section.IsComplete)" url="@Url.Action(section.FirstPage.Action, section.FirstPage.Controller, new { id = section.FirstPageId })" />
+        <inss-task-list-item name="@(section.Name)" is-complete="@(section.IsComplete)" url="/@(section.PathName)/@(section.Pages.First().PathName)" />
     }
+    @Url.OurUrl(Model)
 </inss-task-list>
