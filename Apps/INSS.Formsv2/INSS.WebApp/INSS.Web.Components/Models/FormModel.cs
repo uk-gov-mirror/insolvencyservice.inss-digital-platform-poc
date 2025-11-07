@@ -3,7 +3,6 @@
 public class FormModel : BaseModel
 {
     private readonly List<string> _navList = [];
-    private readonly List<SectionModel> _sections = [];
     
     public FormModel()
     {
@@ -11,8 +10,8 @@ public class FormModel : BaseModel
         Controller = "Form";
         PageUrl = $"/{PathName}";
     }
-    
-    public SectionModel[] Sections => _sections.ToArray();
+
+    public SectionModel[] Sections { get; set; } = [];
     
     public string PageUrl { get; set; }
 
@@ -23,7 +22,7 @@ public class FormModel : BaseModel
     public void AddSection(SectionModel section)
     {
         section.PageUrl = $"/{PathName}/{section.PathName}";
-        _sections.Add(section);
+        Sections = Sections.Concat([section]).ToArray();
     }
     
     public void AddNavigation(string url)

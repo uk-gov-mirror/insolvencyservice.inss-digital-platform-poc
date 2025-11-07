@@ -15,6 +15,16 @@ public sealed class WebAppFormModelFactory : IFormModelFactory
         form.AddSection(section);
         section.AddPage(new BankAccountModel());
         section.AddPage(new HomeValueModel());
+
+        form.Initialize();
+
+        /*
+        var options = new JsonSerializerOptions { WriteIndented = true };
+        
+        var json = JsonSerializer.Serialize(form, options);
+        
+        var form2 = JsonSerializer.Deserialize<FormModel>(json, options);
+        */
         
         return Task.FromResult(form);
     }

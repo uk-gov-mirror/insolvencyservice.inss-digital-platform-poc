@@ -8,16 +8,11 @@ public sealed class FormService : IModelService<FormModel>
 {
     private readonly IFormModelFactory _formModelFactory;
     private readonly IFormStateService _formStateService;
-    private readonly IJourneyService _journeyService;
 
-    public FormService(
-        IFormModelFactory formModelFactory, 
-        IFormStateService  formStateService, 
-        IJourneyService  journeyService)
+    public FormService(IFormModelFactory formModelFactory, IFormStateService  formStateService)
     {
         _formModelFactory = formModelFactory;
         _formStateService = formStateService;
-        _journeyService = journeyService;
     }
     
     public async Task<FormModel> LoadAsync(string? id)
@@ -27,7 +22,6 @@ public sealed class FormService : IModelService<FormModel>
         if (form is null)
         {
             form = await _formModelFactory.CreateAsync();
-            form.Initialize();
         }
 
         form.PopAllNavigationHistory();

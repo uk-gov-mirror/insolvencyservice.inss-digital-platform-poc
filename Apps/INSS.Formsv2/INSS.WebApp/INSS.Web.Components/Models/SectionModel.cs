@@ -2,13 +2,11 @@ namespace INSS.Web.Components.Models;
 
 public sealed class SectionModel : BaseModel
 {
-    private readonly List<PageModel> _pages = [];
-    
     public string Name { get; set; } = string.Empty;
 
     public bool IsComplete => Pages.All(p => p.IsComplete);
-    
-    public PageModel[] Pages => _pages.ToArray();
+
+    public PageModel[] Pages { get; set; } = [];
     
     public string PathName { get; init; } = "Section";
     
@@ -19,7 +17,7 @@ public sealed class SectionModel : BaseModel
     public void AddPage(PageModel page)
     {
         page.PageUrl = $"{PageUrl}/{page.PathName}";
-        _pages.Add(page);
+        Pages = Pages.Concat([page]).ToArray();
     }
     
     public PageModel? GetNextPage(string pageId)
