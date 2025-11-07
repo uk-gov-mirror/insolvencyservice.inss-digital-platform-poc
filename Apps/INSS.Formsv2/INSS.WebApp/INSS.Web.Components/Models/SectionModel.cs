@@ -13,6 +13,8 @@ public sealed class SectionModel : BaseModel
     public string PathName { get; init; } = "Section";
     
     public string PageUrl { get; set; } = string.Empty;
+    
+    public string PreviousPageUrl { get; set; } = string.Empty;
 
     public void AddPage(PageModel page)
     {

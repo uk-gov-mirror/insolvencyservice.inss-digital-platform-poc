@@ -7,9 +7,14 @@ public sealed class TestFormStateService : IFormStateService
 {
     private readonly MemoryCache _cache = new(new MemoryCacheOptions());
     
-    public Task<FormModel> GetAsync(string sessionId)
+    public Task<FormModel?> GetAsync(string sessionId)
     {
-        return Task.FromResult(_cache.Get<FormModel>(sessionId)!);
+        if (_cache.TryGetValue(sessionId, out var model))
+        {
+            return Task.FromResult((FormModel?)model);
+        }
+
+        return Task.FromResult<FormModel?>(null);
     }
 
     public Task SaveAsync(string sessionId, FormModel model)

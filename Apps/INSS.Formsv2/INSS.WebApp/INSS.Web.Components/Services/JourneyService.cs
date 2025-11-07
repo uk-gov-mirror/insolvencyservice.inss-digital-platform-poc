@@ -39,11 +39,12 @@ public sealed class JourneyService : IJourneyService
             return;
         }
         
-        var section2 = form.FindSectionForPage(pageModel.Id);
+        var section = form.FindSectionForPage(pageModel.Id);
 
-        if (section2.IsLastPageInSection(pageModel))
+        if (section.IsLastPageInSection(pageModel))
         {
-            pageModel.NextPageUrl = $"/{form.PathName}/{section2.PathName}";
+            section.PreviousPageUrl = pageModel.PageUrl;
+            pageModel.NextPageUrl = section.PageUrl;
         }
         else
         {

@@ -9,11 +9,12 @@ public class FormModel : BaseModel
     {
         PathName = "tasks";
         Controller = "Form";
+        PageUrl = $"/{PathName}";
     }
     
     public SectionModel[] Sections => _sections.ToArray();
     
-    public string PageUrl { get; set; } = string.Empty;
+    public string PageUrl { get; set; }
 
     public string[] NavigationHistory => _navList.ToArray();
 

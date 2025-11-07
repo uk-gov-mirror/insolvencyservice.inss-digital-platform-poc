@@ -24,11 +24,13 @@ public sealed class SectionService : IModelService<SectionModel>
 
     public Task ValidateAsync(ModelStateDictionary modelState, SectionModel model)
     {
-        throw new NotImplementedException();
+        return Task.CompletedTask;
     }
 
-    public Task<string> SaveAsync(SectionModel model)
+    public async Task<string> SaveAsync(SectionModel model)
     {
-        throw new NotImplementedException();
+        var form = await _formStateService.GetAsync("0c4d0123-854b-4929-8a75-6b89c6619909");
+        await _formStateService.SaveAsync("0c4d0123-854b-4929-8a75-6b89c6619909", form);
+        return form.PageUrl;
     }
 }
