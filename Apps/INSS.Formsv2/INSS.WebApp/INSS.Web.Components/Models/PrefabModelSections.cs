@@ -11,6 +11,9 @@ public static class PrefabModelSections
     {
         Name = "Your Details",
         PathName = "your-details",
-        Pages = [new AddressModel(), new BankAccountModel()]
+        Pages = [
+            new AddressModel { Title = "Address" }, 
+            new BankAccountModel { Title = "Bank Account" } 
+        ]
     };
 }

@@ -40,9 +40,19 @@ public sealed class JourneyService : IJourneyService
             pageModel.Next.PageUrl = section.GetPageUrl(form, nextPage);
             return;
         }
+        
+        var section2 = form.FindSectionForPage(pageModel.Id);
 
-        pageModel.Next = form.Path;
-        pageModel.Next.PageUrl = $"/{form.PathName}";
+        if (section2.IsLastPageInSection(pageModel))
+        {
+            pageModel.Next = form.Path;
+            pageModel.Next.PageUrl = $"/{form.PathName}/{section2.PathName}";
+        }
+        else
+        {
+            pageModel.Next = form.Path;
+            pageModel.Next.PageUrl = $"/{form.PathName}";
+        }
     }
     
     private IJourneyResolver GetJourneyResolver(PageModel page)

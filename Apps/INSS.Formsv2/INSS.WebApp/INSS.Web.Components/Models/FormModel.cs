@@ -52,6 +52,13 @@ public class FormModel : BaseModel
         throw new Exception("Unable to find the page!"); // TODO: Better error
     }
 
+    public SectionModel FindSection(string sectionId)
+    {
+        var section = Sections.FirstOrDefault(s => s.Id == sectionId);
+        
+        return section ?? throw new Exception("Unable to find the section!"); // TODO: Better error
+    }
+    
     public SectionModel FindSectionForPage(string pageId)
     {
         foreach (var section in Sections)

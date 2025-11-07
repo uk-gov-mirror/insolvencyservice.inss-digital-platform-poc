@@ -8,9 +8,9 @@ public sealed class SectionModel : BaseModel
     
     public PageModel[] Pages { get; set; } = [];
 
-    public Navigation FirstPage => Pages.First().Path;
+    //public Navigation FirstPage => Pages.First().Path;
     
-    public string FirstPageId => Pages.First().Id;
+    //public string FirstPageId => Pages.First().Id;
 
     public string PathName { get; init; } = "Section";
     
@@ -27,8 +27,18 @@ public sealed class SectionModel : BaseModel
         return null;
     }
 
+    public string GetSectionUrl(FormModel form)
+    {
+        return $"/{form.PathName}/{PathName}";
+    }
+    
     public string GetPageUrl(FormModel form, PageModel page)
     {
         return $"/{form.PathName}/{PathName}/{page.PathName}";
+    }
+    
+    public bool IsLastPageInSection(PageModel page)
+    {
+        return Pages.Last().Id == page.Id;   
     }
 }

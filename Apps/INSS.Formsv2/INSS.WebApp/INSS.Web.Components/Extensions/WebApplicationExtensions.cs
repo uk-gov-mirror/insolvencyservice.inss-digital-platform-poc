@@ -15,11 +15,15 @@ public static class WebApplicationExtensions
 
         var form = modelDataFactory.CreateAsync().Result;
 
+        app.MapControllerRoute(name: form.PathName,
+            pattern: $"{form.PathName}",
+            defaults: new { controller = form.Path.Controller, action = form.Path.Action });
+
         foreach (var section in form.Sections)
         {
-            app.MapControllerRoute(name: form.PathName,
-                pattern: $"{form.PathName}",
-                defaults: new { controller = form.Path.Controller, action = form.Path.Action });
+            app.MapControllerRoute(name: "summary",
+                pattern: $"/{form.PathName}/{section.PathName}",
+                defaults: new { controller = "Summary", action = "Index" });
             
             foreach (var page in section.Pages)
             {

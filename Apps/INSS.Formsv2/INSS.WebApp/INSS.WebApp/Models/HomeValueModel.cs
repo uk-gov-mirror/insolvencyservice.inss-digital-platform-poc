@@ -9,6 +9,7 @@ public class HomeValueModel : PageModel
     {
         Path = new Navigation { Controller = "HomeValue" };
         PathName = "home-value";
+        Title = "Home Value";
     }
     
     [Required(ErrorMessage = "Enter your home value")]

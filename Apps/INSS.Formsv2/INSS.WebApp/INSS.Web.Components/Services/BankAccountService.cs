@@ -56,6 +56,11 @@ public class BankAccountService : IModelService<BankAccountModel>
         var form = await _formStateService.GetAsync("0c4d0123-854b-4929-8a75-6b89c6619909");
         var page = form.FindPage<BankAccountModel>(model.Id);
         form.AddNavigation(page.Path);
+        
+        page.AccountNumber = model.AccountNumber;
+        page.SortCode = model.SortCode;
+        await _formStateService.SaveAsync("0c4d0123-854b-4929-8a75-6b89c6619909", form);
+        
         _journeyService.TransitionNext(form, page);
         return page.Next.PageUrl;
     }
