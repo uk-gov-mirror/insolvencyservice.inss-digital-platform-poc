@@ -1,5 +1,4 @@
 ﻿using INSS.Web.Components.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace INSS.Web.Components.Extensions;
@@ -17,13 +16,12 @@ public static class UrlHelperExtensions
                 var routeInfo = new RouteInfo
                 {
                     Id = page.Id,
-                    Url = $"/{section.PathName}/{page.PathName}"
+                    Url = section.GetPageUrl(page)
                 };
                 routeInfoList.Add(routeInfo);
             }
         }
         
-        //var url = $"/{model.PathName}/{model.PathName}/{model.Pages.First().PathName}";
         var response = urlHelper.ActionContext.HttpContext.Response;
         
         response.Cookies.Append("RouteId", System.Text.Json.JsonSerializer.Serialize(routeInfoList));

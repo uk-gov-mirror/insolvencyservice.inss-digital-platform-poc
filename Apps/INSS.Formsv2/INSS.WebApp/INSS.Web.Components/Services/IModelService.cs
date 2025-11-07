@@ -7,5 +7,5 @@ public interface IModelService<TModel>
 {
     Task<TModel> LoadAsync(string? id);
     Task ValidateAsync(ModelStateDictionary modelState, TModel model);
-    Task<Navigation> SaveAsync(TModel model);
+    Task<string> SaveAsync(TModel model);
 }

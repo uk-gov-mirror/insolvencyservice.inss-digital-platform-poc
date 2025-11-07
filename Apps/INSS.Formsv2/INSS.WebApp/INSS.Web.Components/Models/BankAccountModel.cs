@@ -4,6 +4,11 @@ namespace INSS.Web.Components.Models;
 
 public sealed class BankAccountModel : PageModel
 {
+    public BankAccountModel()
+    {
+        Path = new Navigation { Controller = "BankAccount" };
+    }
+    
     [Required(ErrorMessage = "You must enter an account number")]
     [RegularExpression("^[0-9]{8}$", ErrorMessage = "The account number must be 8 numbers")]
     public string AccountNumber { get; set; } = string.Empty;

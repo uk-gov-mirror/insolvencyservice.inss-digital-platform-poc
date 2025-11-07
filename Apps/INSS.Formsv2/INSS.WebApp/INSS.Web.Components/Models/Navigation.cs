@@ -2,9 +2,7 @@
 
 public sealed class Navigation
 {
-    public static readonly Navigation Default = new Navigation { Controller = "Home", Action = "Index", Id = null };
-    
-    public required string? Id { get; init; }
+    public static readonly Navigation Default = new() { Controller = "Home", Action = "Index" };
     
     public required string Controller { get; init; }
 

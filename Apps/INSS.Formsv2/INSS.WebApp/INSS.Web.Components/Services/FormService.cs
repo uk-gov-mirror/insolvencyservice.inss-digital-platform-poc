@@ -24,6 +24,7 @@ public sealed class FormService : IModelService<FormModel>
     {
         var form = await _formModelFactory.CreateAsync();
         form.PopAllNavigationHistory();
+        form.Path.TempUrl = $"/{form.PathName}";
         form.AddNavigation(form.Path);
         await _formStateService.SaveAsync("0c4d0123-854b-4929-8a75-6b89c6619909", form);
         return  form;
@@ -34,11 +35,11 @@ public sealed class FormService : IModelService<FormModel>
         return Task.CompletedTask;
     }
 
-    public Task<Navigation> SaveAsync(FormModel model)
+    public Task<string> SaveAsync(FormModel model)
     {
         // TODO: Do we need to get it?
         //var form = await _formStateService.GetAsync("0c4d0123-854b-4929-8a75-6b89c6619909");
         //_journeyService.TransitionNext(form);
-        return Task.FromResult(new Navigation { Controller = "Form", Id = model.Id });
+        return Task.FromResult(model.PathName);
     }
 }

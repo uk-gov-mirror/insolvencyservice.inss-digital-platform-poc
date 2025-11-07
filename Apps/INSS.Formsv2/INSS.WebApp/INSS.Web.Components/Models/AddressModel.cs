@@ -4,6 +4,11 @@ namespace INSS.Web.Components.Models;
 
 public class AddressModel : PageModel
 {
+    public AddressModel()
+    {
+        Path = new Navigation { Controller = "Address" };
+    }
+    
     [Required(ErrorMessage = "Enter address line 1")]
     public string AddressLine1 { get; set; } = string.Empty;
 

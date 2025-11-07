@@ -34,7 +34,7 @@ public class BaseController<T> : Controller
         if (ModelState.IsValid)
         {
             var navigateTo = await _modelService.SaveAsync(model);
-            return Redirect(navigateTo.TempUrl);
+            return Redirect(navigateTo);
             //return RedirectToAction(navigateTo.Action, navigateTo.Controller);//, new { Id = navigateTo.Id });
         }
 

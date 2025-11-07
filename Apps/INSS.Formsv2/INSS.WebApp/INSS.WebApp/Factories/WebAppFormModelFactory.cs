@@ -10,7 +10,7 @@ public sealed class WebAppFormModelFactory : IFormModelFactory
         return Task.FromResult(new FormModel
         {
             Id = FormConstants.FormId,
-            Path = new Navigation { Controller = "Form", Id = FormConstants.FormId },
+            Path = new Navigation { Controller = "Form" },
             PathName = "application",
             Sections = [
                 new SectionModel
@@ -22,13 +22,11 @@ public sealed class WebAppFormModelFactory : IFormModelFactory
                         new AddressModel
                         {
                             Id = FormConstants.YourDetailsPageId,
-                            Path = new Navigation { Controller = "Address", Id = FormConstants.YourDetailsPageId },
                             PathName = "address"
                         },
                         new BankAccountModel
                         {
                             Id = FormConstants.PersonalAssetsPageId,
-                            Path = new Navigation { Controller = "BankAccount", Id = FormConstants.PersonalAssetsPageId },
                             PathName = "bank-account"
                         }]
                 }, 
@@ -41,7 +39,6 @@ public sealed class WebAppFormModelFactory : IFormModelFactory
                         new BankAccountModel
                         {
                             Id = FormConstants.AssetsPageId,
-                            Path = new Navigation { Controller = "BankAccount",  Id = FormConstants.AssetsPageId },
                             PathName = "bank-account"
                         }]
                 },

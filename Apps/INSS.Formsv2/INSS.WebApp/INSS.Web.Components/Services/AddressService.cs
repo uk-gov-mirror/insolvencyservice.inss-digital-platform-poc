@@ -1,5 +1,6 @@
 ﻿using INSS.Web.Components.Models;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.OutputCaching;
 
 namespace INSS.Web.Components.Services;
 
@@ -38,10 +39,12 @@ public class AddressService : IModelService<AddressModel>
         // Do some additonal validation if required
     }
  
-    public async Task<Navigation> SaveAsync(AddressModel model)
+    public async Task<string> SaveAsync(AddressModel model)
     {
         var form = await _formStateService.GetAsync("0c4d0123-854b-4929-8a75-6b89c6619909");
         var page = form.FindPage<AddressModel>(model.Id);
+        var section = form.FindSectionForPage(page.Id);
+        page.Path.TempUrl = section.GetPageUrl(page);
         form.AddNavigation(page.Path);
         
         page.AddressLine1 = model.AddressLine1;
@@ -53,6 +56,6 @@ public class AddressService : IModelService<AddressModel>
         
         _journeyService.TransitionNext(form, page);
         
-        return page.Next;
+        return page.Next.TempUrl;
     }
 }
