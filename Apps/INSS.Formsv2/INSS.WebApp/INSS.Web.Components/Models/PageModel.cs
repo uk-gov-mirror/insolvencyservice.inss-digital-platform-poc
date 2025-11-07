@@ -9,4 +9,6 @@ public abstract class PageModel : BaseModel
     public Navigation Next { get; set; } = Navigation.Default;
     
     public Navigation? Previous { get; set; }
+    
+    public string PathName { get; init; } = "page";
 }

@@ -11,15 +11,6 @@ public sealed class JourneyService : IJourneyService
         _serviceProvider = serviceProvider;
     }
     
-    public void TransitionNext(FormModel form, PageModel pageModel)
-    {
-        var resolver = GetJourneyResolver(pageModel);
-            
-        var nextPage = resolver.Resolve(form, pageModel);
-
-        pageModel.Next = nextPage is not null ? nextPage.Path : form.Path;
-    }
-    
     public void TransitionPrevious(FormModel form, PageModel? pageModel = null)
     {
         if (pageModel is not null)
@@ -34,6 +25,15 @@ public sealed class JourneyService : IJourneyService
             
             pageModel.Previous = form.NavigationHistory.Last();
         }
+    }
+    
+    public void TransitionNext(FormModel form, PageModel pageModel)
+    {
+        var resolver = GetJourneyResolver(pageModel);
+            
+        var nextPage = resolver.Resolve(form, pageModel);
+
+        pageModel.Next = nextPage is not null ? nextPage.Path : form.Path;
     }
     
     private IJourneyResolver GetJourneyResolver(PageModel page)

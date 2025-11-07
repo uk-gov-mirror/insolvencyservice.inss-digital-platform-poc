@@ -12,6 +12,8 @@ public sealed class SectionModel : BaseModel
     
     public string FirstPageId => Pages.First().Id;
 
+    public string PathName { get; init; } = "Section";
+    
     public PageModel? GetNextPage(string pageId)
     {
         for (var i = 0; i < Pages.Length; i++)

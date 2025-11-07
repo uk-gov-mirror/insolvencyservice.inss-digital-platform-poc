@@ -2,7 +2,7 @@
 
 public class FormModel : BaseModel
 {
-    private readonly List<Navigation> _navList = new List<Navigation>();
+    private readonly List<Navigation> _navList = new();
     
     public SectionModel[] Sections { get; init; } = [];
     
@@ -10,6 +10,8 @@ public class FormModel : BaseModel
 
     public Navigation[] NavigationHistory => _navList.ToArray();
 
+    public string PathName { get; init; } = "form";
+    
     public void AddNavigation(Navigation nav)
     {
         _navList.Add(nav);
