@@ -10,44 +10,27 @@ public sealed class WebAppFormModelFactory : IFormModelFactory
     {
         return Task.FromResult(new FormModel
         {
-            Id = FormConstants.FormId,
             Path = new Navigation { Controller = "Form" },
             PathName = "tasks",
             Sections = [
                 new SectionModel
                 {
-                    Id = FormConstants.YourDetailsSectionId,
                     Name = "Your Details", 
                     PathName = "your-details",
                     Pages = [
-                        new AddressModel
-                        {
-                            Id = FormConstants.YourDetailsPageId,
-                            PathName = "address"
-                        },
-                        new BankAccountModel
-                        {
-                            Id = FormConstants.PersonalAssetsPageId,
-                            PathName = "bank-account"
-                        }]
+                        new AddressModel { PathName = "address" },
+                        new BankAccountModel { PathName = "bank-account" }
+                    ]
                 }, 
                 new SectionModel
                 {
-                    Id = FormConstants.AssetsSectionId,
                     Name = "Assets",
                     PathName = "assets",
                     Pages = [
-                        new BankAccountModel
-                        {
-                            Id = FormConstants.AssetsPageId,
-                            PathName = "bank-account"
-                        },
-                        new HomeValueModel
-                        {
-                            Id = FormConstants.HomeValueId,
-                            PathName = "home-value"
-                        }]
-                },
+                        new BankAccountModel { PathName = "bank-account" },
+                        new HomeValueModel { PathName = "home-value" }
+                    ]
+                }
             ]
         });
     }

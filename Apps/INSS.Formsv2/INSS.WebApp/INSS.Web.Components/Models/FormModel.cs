@@ -58,4 +58,21 @@ public class FormModel : BaseModel
         
         throw new Exception("Unable to find the section for page."); // TODO: Better error
     }
+
+    public void Initialize()
+    {
+        Id = PathName;
+        
+        foreach (var section in Sections)
+        {
+            section.Id = $"{PathName}-{section.PathName}";
+            
+            foreach (var page in section.Pages)
+            {
+                page.Id = $"{section.Id}-{page.PathName}";
+            }
+        }
+        
+        // TODO: Could validate all paths are unique and throw exception if not
+    }
 }
