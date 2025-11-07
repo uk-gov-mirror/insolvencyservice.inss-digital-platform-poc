@@ -35,8 +35,7 @@ public sealed class JourneyService : IJourneyService
 
         if (nextPage is not null)
         {
-            var section = form.FindSectionForPage(nextPage.Id);
-            pageModel.NextPageUrl = section.GetPageUrl(form, nextPage);
+            pageModel.NextPageUrl = nextPage.PageUrl;
             return;
         }
         

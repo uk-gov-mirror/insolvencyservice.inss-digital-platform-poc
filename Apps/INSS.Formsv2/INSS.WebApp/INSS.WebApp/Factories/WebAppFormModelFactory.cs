@@ -8,17 +8,14 @@ public sealed class WebAppFormModelFactory : IFormModelFactory
 {
     public Task<FormModel> CreateAsync()
     {
-        return Task.FromResult(new FormModel
-        {
-            Sections = [
-                PrefabModelSections.YourDetails, 
-                new SectionModel
-                {
-                    Name = "Assets",
-                    PathName = "assets",
-                    Pages = [new BankAccountModel(), new HomeValueModel()]
-                }
-            ]
-        });
+        var form = new FormModel();
+        PrefabModelSections.AddYourDetails(form);
+
+        var section = new SectionModel { Name = "Assets", PathName = "assets" };
+        form.AddSection(section);
+        section.AddPage(new BankAccountModel());
+        section.AddPage(new HomeValueModel());
+        
+        return Task.FromResult(form);
     }
 }

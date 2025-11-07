@@ -11,7 +11,7 @@
 <inss-task-list>
     @foreach(var section in Model.Sections)
     {
-        <inss-task-list-item name="@(section.Name)" is-complete="@(section.IsComplete)" url="@(section.GetPageUrl(Model, section.Pages.First()))" />
+        <inss-task-list-item name="@(section.Name)" is-complete="@(section.IsComplete)" url="@(section.Pages.First().PageUrl)" />
     }
     @Url.FormCookieHelper(Model)
 </inss-task-list>

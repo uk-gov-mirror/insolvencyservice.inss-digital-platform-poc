@@ -7,13 +7,11 @@
 /// </summary>
 public static class PrefabModelSections
 {
-    public static readonly SectionModel YourDetails = new()
+    public static void AddYourDetails(FormModel form)
     {
-        Name = "Your Details",
-        PathName = "your-details",
-        Pages = [
-            new AddressModel { Title = "Address" }, 
-            new BankAccountModel { Title = "Bank Account" } 
-        ]
-    };
+        var section = new SectionModel { Name = "Your Details", PathName = "your-details" };
+        form.AddSection(section);
+        section.AddPage(new AddressModel { Title = "Address" });
+        section.AddPage(new BankAccountModel { Title = "Bank Account" });
+    }
 }

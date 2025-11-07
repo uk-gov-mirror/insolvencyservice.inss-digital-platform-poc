@@ -14,12 +14,12 @@ public static class UrlHelperExtensions
 
         foreach (var section in model.Sections)
         {
-            var routeInfo = new RouteInfo { Id = section.Id, Url = section.GetSectionUrl(model) };
+            var routeInfo = new RouteInfo { Id = section.Id, Url = section.PageUrl };
             routeInfoList.Add(routeInfo);
             
             foreach (var page in section.Pages)
             {
-                routeInfo = new RouteInfo { Id = page.Id, Url = section.GetPageUrl(model, page) };
+                routeInfo = new RouteInfo { Id = page.Id, Url = page.PageUrl };
                 routeInfoList.Add(routeInfo);
             }
         }

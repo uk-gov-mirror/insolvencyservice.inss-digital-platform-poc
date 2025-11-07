@@ -22,17 +22,17 @@ public static class WebApplicationExtensions
         foreach (var section in form.Sections)
         {
             app.MapControllerRoute(name: "summary",
-                pattern: $"/{form.PathName}/{section.PathName}",
+                pattern: section.PageUrl,
                 defaults: new { controller = "Summary", action = "Index" });
             
             foreach (var page in section.Pages)
             {
                 app.MapControllerRoute(name: $"{section.PathName}-{page.PathName}",
-                    pattern: section.GetPageUrl(form, page),
+                    pattern: page.PageUrl,
                     defaults: new { controller = page.Controller, action = page.Action });
             }
         }
-        
+
         app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}")
