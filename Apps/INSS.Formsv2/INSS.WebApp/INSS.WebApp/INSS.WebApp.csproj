@@ -2,4 +2,7 @@
   <ItemGroup>
     <ProjectReference Include="..\INSS.Web.Components\INSS.Web.Components.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Views\HomeValue\Index.cshtml" />
+  </ItemGroup>
 </Project>

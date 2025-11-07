@@ -8,4 +8,5 @@ public static class FormConstants
     public const string AssetsSectionId = "b84fde41-a4b9-4209-848b-fb0715dfc9a9";
     public const string AssetsPageId = "49fc4404-e7c4-440c-8a4e-7eab9880e8b7";
     public const string PersonalAssetsPageId = "02aac282-c479-41b7-acf2-81376a550415";
+    public const string HomeValueId = "e35b15a9-b66f-420a-841c-1aa39db8d162";
 }

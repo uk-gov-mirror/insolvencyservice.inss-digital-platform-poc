@@ -1,5 +1,6 @@
 ﻿using INSS.Web.Components.Factories;
 using INSS.Web.Components.Models;
+using INSS.WebApp.Models;
 
 namespace INSS.WebApp.Factories;
 
@@ -40,6 +41,11 @@ public sealed class WebAppFormModelFactory : IFormModelFactory
                         {
                             Id = FormConstants.AssetsPageId,
                             PathName = "bank-account"
+                        },
+                        new HomeValueModel
+                        {
+                            Id = FormConstants.HomeValueId,
+                            PathName = "home-value"
                         }]
                 },
             ]
