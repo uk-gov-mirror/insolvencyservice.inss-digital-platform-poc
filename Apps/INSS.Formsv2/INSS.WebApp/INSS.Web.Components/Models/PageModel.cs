@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.Reflection;
 
 namespace INSS.Web.Components.Models;
@@ -16,23 +18,47 @@ public abstract class PageModel : BaseModel
 
     public string[] GetValues()
     {
-        var list = new List<string>();
+        const BindingFlags propertyFlags = BindingFlags.Public | BindingFlags.Instance;
+        
+        // Ensure UK culture for formatting
+        Thread.CurrentThread.CurrentCulture = new CultureInfo("en-GB");
+        Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-GB");
 
-        var ignore = PropertiesToIgnore();
+        var displayValueList = new List<string>();
 
-        foreach (var property in GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
+        var propertiesToIgnore = PropertiesToIgnore();
+
+        foreach (var property in GetType().GetProperties(propertyFlags))
         {
-            if (ignore.Contains(property.Name)) continue;
+            if (propertiesToIgnore.Contains(property.Name))
+            {
+                continue;
+            }
             
             var value = property.GetValue(this, null);
 
-            if (value is not null)
+            if (value is null)
             {
-                list.Add(value.ToString());
+                continue;
+            }
+            
+            //var displayAttribute = property.GetCustomAttribute<DisplayAttribute>();
+            
+            //var displayName = displayAttribute?.Name ?? property.Name;
+
+            var displayValueFormat = property.GetCustomAttribute<DisplayFormatAttribute>();
+
+            var displayValue = displayValueFormat?.DataFormatString is not null
+                ? string.Format(displayValueFormat.DataFormatString, value)
+                : value.ToString();
+
+            if (!string.IsNullOrWhiteSpace(displayValue))
+            {
+                displayValueList.Add(displayValue);
             }
         }
 
-        return list.ToArray();
+        return displayValueList.ToArray();
     }
 
     protected virtual string[] PropertiesToIgnore()

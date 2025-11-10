@@ -10,7 +10,7 @@ public sealed class FormService : IModelService<FormModel>
     private readonly IFormModelFactory _formModelFactory;
     private readonly IFormStateService _formStateService;
     private readonly IUserSessionResolver _userSessionResolver;
-
+    
     public FormService(
         IFormModelFactory formModelFactory, 
         IFormStateService  formStateService,
@@ -41,8 +41,14 @@ public sealed class FormService : IModelService<FormModel>
         return Task.CompletedTask;
     }
 
-    public Task<string> SaveAsync(string requestPath, FormModel model)
+    public async Task<string> SaveAsync(string requestPath, FormModel model)
     {
-        return Task.FromResult(requestPath);
+        var form = await _formStateService.GetAsync(_userSessionResolver.GetUserId());
+        form.PopAllNavigationHistory();
+        await _formStateService.SaveAsync(_userSessionResolver.GetUserId(), form);
+        
+        // TODO: Push to an API
+        
+        return await Task.FromResult(requestPath);
     }
 }
