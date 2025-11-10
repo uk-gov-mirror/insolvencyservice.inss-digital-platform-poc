@@ -2,9 +2,6 @@ using System.Reflection;
 
 namespace INSS.Web.Components.Models;
 
-//[JsonPolymorphic]
-//[JsonDerivedType(typeof(AddressModel), "Address")]
-//[JsonDerivedType(typeof(BankAccountModel), "BackAccount")]
 public abstract class PageModel : BaseModel
 {
     public string Title { get; set; } = "";
@@ -41,7 +38,6 @@ public abstract class PageModel : BaseModel
     protected virtual string[] PropertiesToIgnore()
     {
         return [
-            nameof(Id),
             nameof(Title),
             nameof(PageUrl),
             nameof(NextPageUrl),

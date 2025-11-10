@@ -15,10 +15,10 @@ public class HomeValueService : IModelService<HomeValueModel>
         _journeyService = journeyService;
     }
     
-    public async Task<HomeValueModel> LoadAsync(string? id)
+    public async Task<HomeValueModel> LoadAsync(string? pageUrl)
     {
         var form = await _formStateService.GetAsync("0c4d0123-854b-4929-8a75-6b89c6619909");
-        var page = form.FindPage<HomeValueModel>(id!);
+        var page = form.FindPage<HomeValueModel>(pageUrl!);
         _journeyService.TransitionPrevious(form, page);
         return page;
     }
@@ -34,10 +34,10 @@ public class HomeValueService : IModelService<HomeValueModel>
         // Do some additional validation if required
     }
 
-    public async Task<string> SaveAsync(HomeValueModel model)
+    public async Task<string> SaveAsync(string requestPath, HomeValueModel model)
     {
         var form = await _formStateService.GetAsync("0c4d0123-854b-4929-8a75-6b89c6619909");
-        var page = form.FindPage<HomeValueModel>(model.Id);
+        var page = form.FindPage<HomeValueModel>(requestPath);
         form.AddNavigation(page.PageUrl);
         
         page.Value = model.Value;

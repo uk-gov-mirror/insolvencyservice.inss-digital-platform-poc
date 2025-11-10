@@ -19,10 +19,10 @@ public class AddressService : IModelService<AddressModel>
         _journeyService = journeyService;
     }
  
-    public async Task<AddressModel> LoadAsync(string? id)
+    public async Task<AddressModel> LoadAsync(string? pageUrl)
     {
         var form = await _formStateService.GetAsync("0c4d0123-854b-4929-8a75-6b89c6619909");
-        var page = form.FindPage<AddressModel>(id!);
+        var page = form.FindPage<AddressModel>(pageUrl!);
         _journeyService.TransitionPrevious(form, page);
         return page;
     }
@@ -35,13 +35,13 @@ public class AddressService : IModelService<AddressModel>
             model.PreviousPageUrl = form.NavigationHistory.Last();
             return;
         }
-        // Do some additonal validation if required
+        // Do some additional validation if required
     }
  
-    public async Task<string> SaveAsync(AddressModel model)
+    public async Task<string> SaveAsync(string requestPath, AddressModel model)
     {
         var form = await _formStateService.GetAsync("0c4d0123-854b-4929-8a75-6b89c6619909");
-        var page = form.FindPage<AddressModel>(model.Id);
+        var page = form.FindPage<AddressModel>(requestPath);
         form.AddNavigation(page.PageUrl);
         
         page.AddressLine1 = model.AddressLine1;

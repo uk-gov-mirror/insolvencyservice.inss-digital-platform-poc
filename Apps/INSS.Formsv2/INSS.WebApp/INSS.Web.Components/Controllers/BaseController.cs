@@ -1,6 +1,4 @@
 ﻿using INSS.Web.Components.Services;
-using INSS.Web.Components.Utils;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 // ReSharper disable Mvc.ViewNotResolved
@@ -19,8 +17,7 @@ public class BaseController<T> : Controller
     [HttpGet]
     public async Task<IActionResult> Index()
     {
-        var routeId = GetRouteId(Request);
-        var model = await _modelService.LoadAsync(routeId);
+        var model = await _modelService.LoadAsync(Request.Path.Value);
         return View(model);
     }
 
@@ -31,27 +28,10 @@ public class BaseController<T> : Controller
 
         if (ModelState.IsValid)
         {
-            var navigateTo = await _modelService.SaveAsync(model);
+            var navigateTo = await _modelService.SaveAsync(Request.Path.Value!, model);
             return Redirect(navigateTo);
         }
 
         return View(model);
-    }
-
-    private static string? GetRouteId(HttpRequest request)
-    {
-        string? routeId = null;
-        var requestUrl = request.Path.Value;
-        
-        if (requestUrl is not null && request.Cookies.TryGetValue(RouteInfo.CookieName, out var cookieValue))
-        {
-            var routeInfoList = System.Text.Json.JsonSerializer.Deserialize<List<RouteInfo>>(cookieValue);
-
-            var routeInfo = routeInfoList?.FirstOrDefault(ri => requestUrl.EndsWith(ri.Url));
-            
-            routeId = routeInfo?.Id;
-        }
-        
-        return routeId;
     }
 }

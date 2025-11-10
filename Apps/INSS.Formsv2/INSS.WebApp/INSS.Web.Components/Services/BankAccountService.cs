@@ -19,10 +19,10 @@ public class BankAccountService : IModelService<BankAccountModel>
         _journeyService = journeyService;
     }
 
-    public async Task<BankAccountModel> LoadAsync(string? id)
+    public async Task<BankAccountModel> LoadAsync(string? pageUrl)
     {
         var form = await _formStateService.GetAsync("0c4d0123-854b-4929-8a75-6b89c6619909");
-        var page = form.FindPage<BankAccountModel>(id!);
+        var page = form.FindPage<BankAccountModel>(pageUrl!);
         _journeyService.TransitionPrevious(form, page);
         return page;
     }
@@ -49,10 +49,10 @@ public class BankAccountService : IModelService<BankAccountModel>
         }
     }
 
-    public async Task<string> SaveAsync(BankAccountModel model)
+    public async Task<string> SaveAsync(string requestPath, BankAccountModel model)
     {
         var form = await _formStateService.GetAsync("0c4d0123-854b-4929-8a75-6b89c6619909");
-        var page = form.FindPage<BankAccountModel>(model.Id);
+        var page = form.FindPage<BankAccountModel>(requestPath);
         form.AddNavigation(page.PageUrl);
         
         page.AccountNumber = model.AccountNumber;

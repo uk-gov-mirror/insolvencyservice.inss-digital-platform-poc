@@ -20,11 +20,11 @@ public sealed class SectionModel : BaseModel
         Pages = Pages.Concat([page]).ToArray();
     }
     
-    public PageModel? GetNextPage(string pageId)
+    public PageModel? GetNextPage(string pageUrl)
     {
         for (var i = 0; i < Pages.Length; i++)
         {
-            if (Pages[i].Id == pageId && i < Pages.Length - 1)
+            if (Pages[i].PageUrl == pageUrl && i < Pages.Length - 1)
             {
                 return Pages[i + 1];
             }
@@ -35,6 +35,6 @@ public sealed class SectionModel : BaseModel
     
     public bool IsLastPageInSection(PageModel page)
     {
-        return Pages.Last().Id == page.Id;   
+        return Pages.Last().PageUrl == page.PageUrl;   
     }
 }

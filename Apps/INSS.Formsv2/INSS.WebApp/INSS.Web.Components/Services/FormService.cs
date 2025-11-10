@@ -15,7 +15,7 @@ public sealed class FormService : IModelService<FormModel>
         _formStateService = formStateService;
     }
     
-    public async Task<FormModel> LoadAsync(string? id)
+    public async Task<FormModel> LoadAsync(string? pageUrl)
     {
         var form = await _formStateService.GetAsync("0c4d0123-854b-4929-8a75-6b89c6619909");
 
@@ -35,8 +35,8 @@ public sealed class FormService : IModelService<FormModel>
         return Task.CompletedTask;
     }
 
-    public Task<string> SaveAsync(FormModel model)
+    public Task<string> SaveAsync(string requestPath, FormModel model)
     {
-        return Task.FromResult(model.PageUrl);
+        return Task.FromResult(requestPath);
     }
 }

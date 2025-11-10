@@ -1,11 +1,9 @@
 ﻿@{
-    ViewData["Title"] = "Bank Account Details";
+    ViewData["Title"] = "Form Task Summary";
 }
 
 @addTagHelper GovUk.Frontend.AspNetCore.TagHelpers.*, GovUk.Frontend.AspNetCore
 @addTagHelper INSS.Web.Components.TagHelpers.*, INSS.Web.Components
-
-@using INSS.Web.Components.Extensions
 @model INSS.Web.Components.Models.FormModel
 
 <inss-task-list>
@@ -13,5 +11,4 @@
     {
         <inss-task-list-item name="@(section.Name)" is-complete="@(section.IsComplete)" url="@(section.Pages.First().PageUrl)" />
     }
-    @Url.FormCookieHelper(Model)
 </inss-task-list>

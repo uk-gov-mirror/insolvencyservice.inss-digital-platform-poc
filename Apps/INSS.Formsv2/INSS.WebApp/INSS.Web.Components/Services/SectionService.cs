@@ -6,19 +6,16 @@ namespace INSS.Web.Components.Services;
 public sealed class SectionService : IModelService<SectionModel>
 {
     private readonly IFormStateService _formStateService;
-    private readonly IJourneyService _journeyService;
 
-    public SectionService(IFormStateService formStateService, IJourneyService  journeyService)
+    public SectionService(IFormStateService formStateService)
     {
         _formStateService = formStateService;
-        _journeyService = journeyService;
     }
     
-    public async Task<SectionModel> LoadAsync(string? id)
+    public async Task<SectionModel> LoadAsync(string? pageUrl)
     {
         var form = await _formStateService.GetAsync("0c4d0123-854b-4929-8a75-6b89c6619909");
-        var section = form.FindSection(id!);
-        //_journeyService.TransitionPrevious(form, page);
+        var section = form.FindSection(pageUrl!);
         return section;
     }
 
@@ -27,10 +24,10 @@ public sealed class SectionService : IModelService<SectionModel>
         return Task.CompletedTask;
     }
 
-    public async Task<string> SaveAsync(SectionModel model)
+    public async Task<string> SaveAsync(string requestPath, SectionModel model)
     {
         var form = await _formStateService.GetAsync("0c4d0123-854b-4929-8a75-6b89c6619909");
-        var section = form.FindSection(model.Id);
+        var section = form.FindSection(requestPath);
         section.IsComplete = true;
         await _formStateService.SaveAsync("0c4d0123-854b-4929-8a75-6b89c6619909", form);
         return form.PageUrl;

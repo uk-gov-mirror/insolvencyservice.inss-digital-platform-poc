@@ -47,13 +47,13 @@ public class FormModel : BaseModel
         _navList.Clear();
     }
     
-    public TPage FindPage<TPage>(string pageId) where TPage : PageModel
+    public TPage FindPage<TPage>(string pageUrl) where TPage : PageModel
     {
         foreach (var section in Sections)
         {
             foreach (var page in section.Pages)
             {
-                if (page.Id == pageId && page is TPage modelPage)
+                if (pageUrl.EndsWith(page.PageUrl)&& page is TPage modelPage)
                 {
                     return modelPage;
                 }
@@ -63,18 +63,18 @@ public class FormModel : BaseModel
         throw new Exception("Unable to find the page!"); // TODO: Better error
     }
 
-    public SectionModel FindSection(string sectionId)
+    public SectionModel FindSection(string pageUrl)
     {
-        var section = Sections.FirstOrDefault(s => s.Id == sectionId);
+        var section = Sections.FirstOrDefault(s => s.PageUrl == pageUrl);
         
         return section ?? throw new Exception("Unable to find the section!"); // TODO: Better error
     }
     
-    public SectionModel FindSectionForPage(string pageId)
+    public SectionModel FindSectionForPage(string pageUrl)
     {
         foreach (var section in Sections)
         {
-            if (section.Pages.Any(page => page.Id == pageId))
+            if (section.Pages.Any(page => page.PageUrl == pageUrl))
             {
                 return section;
             }
@@ -85,18 +85,6 @@ public class FormModel : BaseModel
 
     public void Initialize()
     {
-        Id = PathName;
-        
-        foreach (var section in Sections)
-        {
-            section.Id = $"{PathName}-{section.PathName}";
-            
-            foreach (var page in section.Pages)
-            {
-                page.Id = $"{section.Id}-{page.PathName}";
-            }
-        }
-
         _options ??= CreateOptions(this);
 
         // TODO: Could validate all paths are unique and throw exception if not
@@ -104,9 +92,9 @@ public class FormModel : BaseModel
 
     public static FormModel Deserialize(string json)
     {
-        //var options = CreateOptions(this);
-        return JsonSerializer.Deserialize<FormModel>(json, _options);
+        return JsonSerializer.Deserialize<FormModel>(json, _options)!;
     }
+    
     public string Serialize()
     {
         return JsonSerializer.Serialize(this, _options);

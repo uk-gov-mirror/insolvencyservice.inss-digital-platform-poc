@@ -39,7 +39,7 @@ public sealed class JourneyService : IJourneyService
             return;
         }
         
-        var section = form.FindSectionForPage(pageModel.Id);
+        var section = form.FindSectionForPage(pageModel.PageUrl);
 
         if (section.IsLastPageInSection(pageModel))
         {
