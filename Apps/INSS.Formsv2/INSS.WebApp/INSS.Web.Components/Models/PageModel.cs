@@ -6,7 +6,7 @@ namespace INSS.Web.Components.Models;
 
 public abstract class PageModel : BaseModel
 {
-    public string Title { get; set; } = "";
+    public string Title { get; set; } = string.Empty;
     
     public string PageUrl { get; set; } = string.Empty;
     
@@ -42,10 +42,6 @@ public abstract class PageModel : BaseModel
                 continue;
             }
             
-            //var displayAttribute = property.GetCustomAttribute<DisplayAttribute>();
-            
-            //var displayName = displayAttribute?.Name ?? property.Name;
-
             var displayValueFormat = property.GetCustomAttribute<DisplayFormatAttribute>();
 
             var displayValue = displayValueFormat?.DataFormatString is not null

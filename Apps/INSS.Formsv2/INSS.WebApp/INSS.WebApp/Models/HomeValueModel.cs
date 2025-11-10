@@ -14,7 +14,6 @@ public class HomeValueModel : PageModel
     
     [Required(ErrorMessage = "Enter your home value")]
     [Range(100, 1_000_000, ErrorMessage = "The value must between £100 and £1,000,000")]
-    //[Display(Name = "Property Value")]
     [DisplayFormat(DataFormatString = "{0:C}")]
     public int Value { get; set; }
 }
