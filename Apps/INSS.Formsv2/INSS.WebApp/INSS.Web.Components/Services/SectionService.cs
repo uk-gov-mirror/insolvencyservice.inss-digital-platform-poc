@@ -30,6 +30,8 @@ public sealed class SectionService : IModelService<SectionModel>
     public async Task<string> SaveAsync(SectionModel model)
     {
         var form = await _formStateService.GetAsync("0c4d0123-854b-4929-8a75-6b89c6619909");
+        var section = form.FindSection(model.Id);
+        section.IsComplete = true;
         await _formStateService.SaveAsync("0c4d0123-854b-4929-8a75-6b89c6619909", form);
         return form.PageUrl;
     }

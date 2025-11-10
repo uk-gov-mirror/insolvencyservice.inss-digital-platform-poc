@@ -7,8 +7,6 @@ namespace INSS.Web.Components.Models;
 //[JsonDerivedType(typeof(BankAccountModel), "BackAccount")]
 public abstract class PageModel : BaseModel
 {
-    public bool IsComplete { get; set; }
-
     public string Title { get; set; } = "";
     
     public string PageUrl { get; set; } = string.Empty;
@@ -45,7 +43,6 @@ public abstract class PageModel : BaseModel
         return [
             nameof(Id),
             nameof(Title),
-            nameof(IsComplete),
             nameof(PageUrl),
             nameof(NextPageUrl),
             nameof(PreviousPageUrl),

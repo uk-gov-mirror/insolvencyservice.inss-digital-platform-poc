@@ -19,13 +19,12 @@ public sealed class WebAppFormModelFactory : IFormModelFactory
         form.Initialize();
 
         /*
-        var options = new JsonSerializerOptions { WriteIndented = true };
+        // Example serialize and deserialize
+        var json = form.Serialize();
         
-        var json = JsonSerializer.Serialize(form, options);
-        
-        var form2 = JsonSerializer.Deserialize<FormModel>(json, options);
+        var form2 = FormModel.Deserialize(json);
         */
-        
+
         return Task.FromResult(form);
     }
 }

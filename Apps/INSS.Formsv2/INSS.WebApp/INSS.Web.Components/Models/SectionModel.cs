@@ -4,7 +4,7 @@ public sealed class SectionModel : BaseModel
 {
     public string Name { get; set; } = string.Empty;
 
-    public bool IsComplete => Pages.All(p => p.IsComplete);
+    public bool IsComplete { get; set; }
 
     public PageModel[] Pages { get; set; } = [];
     

@@ -1,8 +1,12 @@
-﻿namespace INSS.Web.Components.Models;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization.Metadata;
+
+namespace INSS.Web.Components.Models;
 
 public class FormModel : BaseModel
 {
     private readonly List<string> _navList = [];
+    private static JsonSerializerOptions? _options;
     
     public FormModel()
     {
@@ -92,7 +96,65 @@ public class FormModel : BaseModel
                 page.Id = $"{section.Id}-{page.PathName}";
             }
         }
-        
+
+        _options ??= CreateOptions(this);
+
         // TODO: Could validate all paths are unique and throw exception if not
+    }
+
+    public static FormModel Deserialize(string json)
+    {
+        //var options = CreateOptions(this);
+        return JsonSerializer.Deserialize<FormModel>(json, _options);
+    }
+    public string Serialize()
+    {
+        return JsonSerializer.Serialize(this, _options);
+    }
+
+    private static JsonSerializerOptions CreateOptions(FormModel form)
+    {
+        var derivedPageModelTypes = new List<JsonDerivedType>();
+
+        foreach (var section in form.Sections)
+        {
+            foreach (var page in section.Pages)
+            {
+                if (derivedPageModelTypes.Any(t => 
+                        t.TypeDiscriminator?.ToString() == page.GetType().Name))
+                {
+                    continue;
+                }
+                
+                derivedPageModelTypes.Add(new JsonDerivedType(page.GetType(), page.GetType().Name));
+            }
+        }
+        
+        var options = new JsonSerializerOptions
+        {
+            TypeInfoResolver = new DefaultJsonTypeInfoResolver
+            {
+                Modifiers =
+                {
+                    typeInfo =>
+                    {
+                        if (typeInfo.Type == typeof(PageModel))
+                        {
+                            typeInfo.PolymorphismOptions = new JsonPolymorphismOptions
+                            {
+                                TypeDiscriminatorPropertyName = "$type"
+                            };
+
+                            foreach (var type in derivedPageModelTypes)
+                            {
+                                typeInfo.PolymorphismOptions.DerivedTypes.Add(type);
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        return options;
     }
 }
