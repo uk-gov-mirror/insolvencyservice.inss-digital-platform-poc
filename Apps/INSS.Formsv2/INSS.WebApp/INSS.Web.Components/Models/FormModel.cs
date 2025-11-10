@@ -23,6 +23,8 @@ public class FormModel : BaseModel
 
     public string PathName { get; init; }
 
+    public bool CanSubmit => Sections.All(s => s.IsComplete);
+    
     public void AddSection(SectionModel section)
     {
         section.PageUrl = $"/{PathName}/{section.PathName}";
