@@ -1,6 +1,6 @@
 ﻿using INSS.Web.Components.Models;
 
-namespace INSS.Web.Components.Services;
+namespace INSS.Web.Components.Resolvers;
 
 public sealed class DefaultJourneyResolver : IJourneyResolver
 {

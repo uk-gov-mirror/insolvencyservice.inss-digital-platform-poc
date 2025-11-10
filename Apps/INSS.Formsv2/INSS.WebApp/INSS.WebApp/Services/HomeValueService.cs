@@ -1,4 +1,5 @@
-﻿using INSS.Web.Components.Services;
+﻿using INSS.Web.Components.Resolvers;
+using INSS.Web.Components.Services;
 using INSS.WebApp.Models;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
@@ -8,16 +9,21 @@ public class HomeValueService : IModelService<HomeValueModel>
 {
     private readonly IFormStateService _formStateService;
     private readonly IJourneyService _journeyService;
+    private readonly IUserSessionResolver _userSessionResolver;
 
-    public HomeValueService(IFormStateService formStateService, IJourneyService  journeyService)
+    public HomeValueService(
+        IFormStateService formStateService,
+        IJourneyService  journeyService,
+        IUserSessionResolver  userSessionResolver)
     {
         _formStateService = formStateService;
         _journeyService = journeyService;
+        _userSessionResolver = userSessionResolver;
     }
     
     public async Task<HomeValueModel> LoadAsync(string? pageUrl)
     {
-        var form = await _formStateService.GetAsync("0c4d0123-854b-4929-8a75-6b89c6619909");
+        var form = await _formStateService.GetAsync(_userSessionResolver.GetUserId());
         var page = form.FindPage<HomeValueModel>(pageUrl!);
         _journeyService.TransitionPrevious(form, page);
         return page;
@@ -27,7 +33,7 @@ public class HomeValueService : IModelService<HomeValueModel>
     {
         if (!modelState.IsValid)
         {
-            var form = await _formStateService.GetAsync("0c4d0123-854b-4929-8a75-6b89c6619909");
+            var form = await _formStateService.GetAsync(_userSessionResolver.GetUserId());
             model.PreviousPageUrl = form.NavigationHistory.Last();
             return;
         }
@@ -36,12 +42,12 @@ public class HomeValueService : IModelService<HomeValueModel>
 
     public async Task<string> SaveAsync(string requestPath, HomeValueModel model)
     {
-        var form = await _formStateService.GetAsync("0c4d0123-854b-4929-8a75-6b89c6619909");
+        var form = await _formStateService.GetAsync(_userSessionResolver.GetUserId());
         var page = form.FindPage<HomeValueModel>(requestPath);
         form.AddNavigation(page.PageUrl);
         
         page.Value = model.Value;
-        await _formStateService.SaveAsync("0c4d0123-854b-4929-8a75-6b89c6619909", form);
+        await _formStateService.SaveAsync(_userSessionResolver.GetUserId(), form);
         
         _journeyService.TransitionNext(form, page);
         

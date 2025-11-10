@@ -1,5 +1,6 @@
 ﻿using INSS.Web.Components.Factories;
 using INSS.Web.Components.Models;
+using INSS.Web.Components.Resolvers;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace INSS.Web.Components.Services;
@@ -8,16 +9,21 @@ public sealed class FormService : IModelService<FormModel>
 {
     private readonly IFormModelFactory _formModelFactory;
     private readonly IFormStateService _formStateService;
+    private readonly IUserSessionResolver _userSessionResolver;
 
-    public FormService(IFormModelFactory formModelFactory, IFormStateService  formStateService)
+    public FormService(
+        IFormModelFactory formModelFactory, 
+        IFormStateService  formStateService,
+        IUserSessionResolver userSessionResolver)
     {
         _formModelFactory = formModelFactory;
         _formStateService = formStateService;
+        _userSessionResolver = userSessionResolver;
     }
     
     public async Task<FormModel> LoadAsync(string? pageUrl)
     {
-        var form = await _formStateService.GetAsync("0c4d0123-854b-4929-8a75-6b89c6619909");
+        var form = await _formStateService.GetAsync(_userSessionResolver.GetUserId());
 
         if (form is null)
         {
@@ -26,7 +32,7 @@ public sealed class FormService : IModelService<FormModel>
 
         form.PopAllNavigationHistory();
         form.AddNavigation(form.PageUrl);
-        await _formStateService.SaveAsync("0c4d0123-854b-4929-8a75-6b89c6619909", form);
+        await _formStateService.SaveAsync(_userSessionResolver.GetUserId(), form);
         return  form;
     }
 

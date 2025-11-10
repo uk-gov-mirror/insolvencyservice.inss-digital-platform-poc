@@ -1,6 +1,7 @@
 ﻿using GovUk.Frontend.AspNetCore;
 using INSS.Web.Components.Controllers;
 using INSS.Web.Components.Models;
+using INSS.Web.Components.Resolvers;
 using INSS.Web.Components.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation;
@@ -30,6 +31,7 @@ public static class WebApplicationBuilderExtensions
         builder.Services.AddTransient<IModelService<SectionModel>, SectionService>();
         builder.Services.AddTransient<IModelService<FormModel>, FormService>();
         builder.Services.AddSingleton<IFormStateService, TestFormStateService>();
+        builder.Services.AddSingleton<IUserSessionResolver, TestUserSessionResolver>();
         return builder;
     }
 }
