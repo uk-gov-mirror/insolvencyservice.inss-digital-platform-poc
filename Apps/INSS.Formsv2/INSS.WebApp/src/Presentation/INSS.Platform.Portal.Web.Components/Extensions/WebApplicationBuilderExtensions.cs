@@ -1,6 +1,6 @@
 ﻿using GovUk.Frontend.AspNetCore;
-using INSS.Platform.Infrastructure.Extensions;
 using INSS.Platform.Portal.Application.Extensions;
+using INSS.Platform.Portal.Infrastructure.Extensions;
 using INSS.Platform.Portal.Web.Components.Controllers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation;

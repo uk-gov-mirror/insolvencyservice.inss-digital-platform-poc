@@ -49,7 +49,7 @@ public sealed class JourneyService : IJourneyService
         }
         else
         {
-            pageModel.NextPageUrl = $"/{form.PathName}";
+            pageModel.NextPageUrl = $"/{form.PageUrl}";
         }
     }
     
