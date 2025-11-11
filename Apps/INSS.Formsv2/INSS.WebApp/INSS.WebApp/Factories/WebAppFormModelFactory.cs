@@ -16,6 +16,10 @@ public sealed class WebAppFormModelFactory : IFormModelFactory
         section.AddPage(new BankAccountModel());
         section.AddPage(new HomeValueModel());
 
+        var sectionAboutYou = new SectionModel { Name = "About You", PathName = "about-you" };
+        form.AddSection(sectionAboutYou);
+        sectionAboutYou.AddPage(new FullNameModel());
+
         form.Initialize();
 
         /*
