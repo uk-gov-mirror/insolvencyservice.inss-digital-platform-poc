@@ -28,6 +28,7 @@ public static class WebApplicationBuilderExtensions
         builder.Services.AddSingleton<IJourneyService, JourneyService>();
         builder.Services.AddTransient<IModelService<BankAccountModel>, BankAccountService>();
         builder.Services.AddTransient<IModelService<AddressModel>, AddressService>();
+        builder.Services.AddTransient<IModelService<FullNameModel>, FullNameService>();
         builder.Services.AddTransient<IModelService<SectionModel>, SectionService>();
         builder.Services.AddTransient<IModelService<FormModel>, FormService>();
         builder.Services.AddSingleton<IFormStateService, TestFormStateService>();
