@@ -18,7 +18,8 @@ public sealed class WebAppFormModelFactory : IFormModelFactory
 
         var sectionAboutYou = new SectionModel { Name = "About You", PathName = "about-you" };
         form.AddSection(sectionAboutYou);
-        sectionAboutYou.AddPage(new FullNameModel());
+        sectionAboutYou.AddPage(new FullNameModel { Title = "Full Name"});
+        sectionAboutYou.AddPage(new AddressModel { Title = "Address"});
 
         form.Initialize();
 
