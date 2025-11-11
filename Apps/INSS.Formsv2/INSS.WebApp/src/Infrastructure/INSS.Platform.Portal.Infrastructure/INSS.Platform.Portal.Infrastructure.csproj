@@ -1,12 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
-    <PropertyGroup>
-        <TargetFramework>net9.0</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
-        <RootNamespace>INSS.Platform.Infrastructure</RootNamespace>
-    </PropertyGroup>
-
+    
     <ItemGroup>
       <ProjectReference Include="..\..\Application\INSS.Platform.Portal.Application\INSS.Platform.Portal.Application.csproj" />
     </ItemGroup>

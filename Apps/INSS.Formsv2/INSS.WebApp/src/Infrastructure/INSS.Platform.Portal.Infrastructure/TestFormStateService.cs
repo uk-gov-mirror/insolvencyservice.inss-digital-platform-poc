@@ -2,7 +2,7 @@
 using INSS.Platform.Portal.Domain;
 using Microsoft.Extensions.Caching.Memory;
 
-namespace INSS.Platform.Infrastructure;
+namespace INSS.Platform.Portal.Infrastructure;
 
 public sealed class TestFormStateService : IFormStateService
 {
