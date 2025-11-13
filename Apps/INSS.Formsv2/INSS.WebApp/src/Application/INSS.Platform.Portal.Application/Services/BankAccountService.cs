@@ -1,4 +1,5 @@
-﻿using INSS.Platform.Portal.Application.Resolvers;
+﻿using INSS.Platform.Portal.Application.Clients;
+using INSS.Platform.Portal.Application.Resolvers;
 using INSS.Platform.Portal.Domain;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
@@ -7,28 +8,23 @@ namespace INSS.Platform.Portal.Application.Services;
 public class BankAccountService : BasePageModelService<BankAccountModel>
 {
     private readonly IHttpClientFactory _clientFactory;
+    private readonly IBankAccountClient _bankAccountClient;
 
     public BankAccountService(
         IHttpClientFactory clientFactory, 
         IFormStateService  formStateService, 
         IJourneyService  journeyService,
-        IUserSessionResolver userSessionResolver)
+        IUserSessionResolver userSessionResolver,
+        IBankAccountClient bankAccountClient)
         : base(formStateService, journeyService, userSessionResolver)
     {
         _clientFactory = clientFactory;
+        _bankAccountClient = bankAccountClient;
     }
     
     protected override async Task ValidateAdditionalAsync(ModelStateDictionary modelState, BankAccountModel model)
     {
-        var client = _clientFactory.CreateClient();
-        client.BaseAddress = new Uri("https://vseries.bottomline.com/api/");
-
-        var response = await client.GetAsync($"getukbankbranch/?apikey=2T2-2E42AEF5-3CF8-4FD9-B1A5-09A9BF03551D&sortCode={model.SortCode}");
-
-        if (!response.IsSuccessStatusCode || await response.Content.ReadAsStringAsync() == "null")
-        {
-            modelState.AddModelError(nameof(model.SortCode), "Bank account sort code not found");
-        }
+        await _bankAccountClient.ValidateBankDetailsAsync(modelState, model);
     }
 
     protected override void CopySourceToTargetModel(BankAccountModel sourceModel, BankAccountModel targetModel)
