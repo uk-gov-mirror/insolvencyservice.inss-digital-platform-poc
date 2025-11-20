@@ -35,4 +35,9 @@ public sealed class SectionService : IModelService<SectionModel>
         await _formStateService.SaveAsync(_userSessionResolver.GetUserId(), form);
         return form.PageUrl;
     }
+
+    public async Task<FormModel> GetFormModelAsync()
+    {
+        return await _formStateService.GetAsync(_userSessionResolver.GetUserId());
+    }
 }

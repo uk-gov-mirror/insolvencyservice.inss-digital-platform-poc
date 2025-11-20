@@ -102,6 +102,13 @@ public class FormModel : BaseModel
         return JsonSerializer.Serialize(this, _options);
     }
 
+    public void AddPreviousPageToSummaryList(SummaryListModel summaryList)
+    {
+        var section = FindSectionForPage(summaryList.PageUrl);
+        var previousPage = section.GetPreviousPage(summaryList.PageUrl)!;
+        summaryList.AddPage(previousPage);
+    }
+    
     private static JsonSerializerOptions CreateOptions(FormModel form)
     {
         var derivedPageModelTypes = new List<JsonDerivedType>();

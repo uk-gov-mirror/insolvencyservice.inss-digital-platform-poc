@@ -15,7 +15,7 @@ public class BaseController<T> : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> Index()
+    public virtual async Task<IActionResult> Index()
     {
         var model = await _modelService.LoadAsync(Request.Path.Value);
         return View(model);

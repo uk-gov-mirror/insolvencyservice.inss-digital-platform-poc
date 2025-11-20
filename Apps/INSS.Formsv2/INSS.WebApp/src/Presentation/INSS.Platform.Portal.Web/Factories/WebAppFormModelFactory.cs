@@ -20,6 +20,7 @@ public sealed class WebAppFormModelFactory : IFormModelFactory
         form.AddSection(sectionAboutYou);
         sectionAboutYou.AddPage(new FullNameModel { Title = "Full Name"});
         sectionAboutYou.AddPage(new AddressModel { Title = "Address"});
+        sectionAboutYou.AddPage(new SummaryListModel { Title = "Address List" });
 
         form.Initialize();
 

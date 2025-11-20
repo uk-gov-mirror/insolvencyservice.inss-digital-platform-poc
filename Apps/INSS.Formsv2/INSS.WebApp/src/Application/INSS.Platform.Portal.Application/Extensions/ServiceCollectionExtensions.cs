@@ -9,6 +9,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
         services.AddSingleton<IJourneyService, JourneyService>();
+        services.AddTransient<IModelService<SummaryListModel>, SummaryListService>();
         services.AddTransient<IModelService<BankAccountModel>, BankAccountService>();
         services.AddTransient<IModelService<AddressModel>, AddressService>();
         services.AddTransient<IModelService<FullNameModel>, FullNameService>();

@@ -4,6 +4,8 @@ using System.Reflection;
 
 namespace INSS.Platform.Portal.Domain;
 
+public sealed class PropertyBag : Dictionary<string, string>;
+
 public abstract class PageModel : BaseModel
 {
     public string Title { get; set; } = string.Empty;
@@ -16,6 +18,8 @@ public abstract class PageModel : BaseModel
     
     public string PathName { get; init; } = "page";
 
+    public PropertyBag Properties { get; init; } = new();
+    
     public string[] GetValues()
     {
         const BindingFlags propertyFlags = BindingFlags.Public | BindingFlags.Instance;

@@ -20,6 +20,19 @@ public sealed class SectionModel : BaseModel
         Pages = Pages.Concat([page]).ToArray();
     }
     
+    public PageModel? GetPreviousPage(string pageUrl)
+    {
+        for (var i = 0; i < Pages.Length; i++)
+        {
+            if (Pages[i].PageUrl == pageUrl && i > 0)
+            {
+                return Pages[i - 1];
+            }
+        }
+
+        return null;
+    }
+    
     public PageModel? GetNextPage(string pageUrl)
     {
         for (var i = 0; i < Pages.Length; i++)

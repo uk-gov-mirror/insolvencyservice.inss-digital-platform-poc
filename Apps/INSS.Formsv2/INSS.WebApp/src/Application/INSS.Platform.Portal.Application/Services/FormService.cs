@@ -51,4 +51,9 @@ public sealed class FormService : IModelService<FormModel>
         
         return await Task.FromResult(requestPath);
     }
+    
+    public async Task<FormModel> GetFormModelAsync()
+    {
+        return await _formStateService.GetAsync(_userSessionResolver.GetUserId());
+    }
 }

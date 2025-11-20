@@ -17,6 +17,7 @@
       <EmbeddedResource Include="Views\BankAccount\Index.cshtml" />
       <EmbeddedResource Include="Views\Form\Index.cshtml" />
       <EmbeddedResource Include="Views\FullName\Index.cshtml" />
+      <EmbeddedResource Include="Views\SummaryList\Index.cshtml" />
       <EmbeddedResource Include="Views\Summary\Index.cshtml" />
     </ItemGroup>
 
