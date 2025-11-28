@@ -1,0 +1,21 @@
+﻿@model INSS.Forms.Analytics.Models.CompanyDetailsViewModel
+
+<form method="post">
+    <govuk-radios for="@Model.IsCharityOrLtd" orientation="Vertical">
+        <govuk-radios-fieldset>
+            <govuk-radios-fieldset-legend is-page-heading="true" class="govuk-fieldset__legend--l">
+                Are you a charity or limited company?
+            </govuk-radios-fieldset-legend>
+
+            <govuk-radios-hint>
+                Select one option.
+            </govuk-radios-hint>
+
+            <govuk-radios-item value="charity">Charity</govuk-radios-item>
+            <govuk-radios-item value="limited">Limited</govuk-radios-item>
+            <govuk-radios-divider>or</govuk-radios-divider>
+            <govuk-radios-item value="none">None of the above</govuk-radios-item>
+        </govuk-radios-fieldset>
+    </govuk-radios>
+    <govuk-button type="submit">Continue</govuk-button>
+</form>
