@@ -10,7 +10,13 @@ namespace INSS.Forms.Analytics
 
             builder.Services.AddControllersWithViews();
 
+            builder.Services.AddHttpClient();
+
             builder.Services.AddSession();
+
+            builder.Services.AddAuthenticationConfiguration(builder.Configuration);
+
+            builder.Services.AddAnalyticsConfiguration(builder.Configuration);
 
             builder.Services.AddGovUkFrontend(options =>
             {
@@ -32,6 +38,7 @@ namespace INSS.Forms.Analytics
 
             app.UseSession();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapStaticAssets();

@@ -1,5 +1,10 @@
-﻿@{
-    Layout = "_GovUkPageTemplate";
+﻿@using INSS.Forms.Analytics.Options
+@using Microsoft.Extensions.Options
+@inject IOptions<AnalyticsOptions> _analyticsOptions;
+
+@{
+    bool _isSignedIn = User.Identity?.IsAuthenticated is true;
+    bool _isEntraUser = _isSignedIn && User.HasClaim(c => c.Type.EndsWith("auth_provider") && c.Value == "Entra");
 
     bool activeHome = ViewContext.RouteData.Values["controller"]?.ToString() == "Home";
     
@@ -8,37 +13,97 @@
     bool activeRegisterCompany = ViewContext.RouteData.Values["controller"]?.ToString() == "CompanyDetails"
         && ViewContext.RouteData.Values["action"]?.ToString() == "CompanyName";
 
-    bool activeReportDirector = ViewContext.RouteData.Values["controller"]?.ToString() == "Report"
-        && ViewContext.RouteData.Values["action"]?.ToString() == "Director";
-    
-        bool _isSignedIn = User.Identity?.IsAuthenticated is true;
+    bool activeRegisterDirector = ViewContext.RouteData.Values["controller"]?.ToString() == "RegisterDirector"
+        && ViewContext.RouteData.Values["action"]?.ToString() == "DirectorName";
 }
 
-@section BodyStart {
-}
+<!DOCTYPE html>
+<html lang="en" class="govuk-template govuk-template--rebranded">
 
-@section Header {
+<head>
+    <meta charset="utf-8">
+    <title>GOV.UK - The best place to find government services and information</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#1d70b8">
+    <link rel="icon" sizes="48x48" href="/assets/rebrand/images/favicon.ico">
+    <link rel="icon" sizes="any" href="/assets/rebrand/images/favicon.svg" type="image/svg+xml">
+    <link rel="mask-icon" href="/assets/rebrand/images/govuk-icon-mask.svg" color="#1d70b8">
+    <link rel="apple-touch-icon" href="/assets/rebrand/images/govuk-icon-180.png">
+    <link rel="manifest" href="/assets/rebrand/manifest.json">
+
+    <link href="/frontend/govuk-frontend-5.11.1.min.css" rel="stylesheet" />
+    <script src="/frontend/govuk-frontend-5.11.1.min.js"></script>
+
     <link href="/css/service-header.css" rel="stylesheet" />
     <link rel="stylesheet" href="/css/site.css" />
 
-    <!-- Privacy-friendly analytics by Plausible -->
-    <script async src="https://plausible.io/js/pa-hPTZap3XgzBSQeq_yZ36A.js"></script>
-    <script>
-        window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
-        plausible.init()
-    </script>
+    @if (_analyticsOptions.Value.PlausibleEnabled)
+    {
+        <script async src="@($"{_analyticsOptions.Value.PlausibleBaseUrl}/js/pa-A6u7ljD2w6P55bamGAlpz.js")"></script>
+        <script>
+            window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+            plausible.init()
+        </script>
+        <script src="/js/plausible-events.js"></script>
+    }
 
-    <noscript>
-        <div style="background-color: #ddffdd; color:  #070; padding: 10px; text-align: center;">
-            JavaScript is currently turned off in your browser. You can still access and use all site features with JavaScript disabled.
-        </div>
-    </noscript>
-    <div id="js-enabled-message" style="display:none; background-color: #ffdddd; color: #900; padding: 10px; text-align: center;">
-        JavaScript is enabled in your browser, disable it to ensure that this application still works with JavaScript disabled.
-    </div>
-    <script>
-        document.getElementById('js-enabled-message').style.display = 'block';
-    </script>
+    @if (_analyticsOptions.Value.RybbitEnabled)
+    {
+        <script src="/js/rybbit-events.js"></script>
+        <script src="@($"{_analyticsOptions.Value.RybbitBaseUrl}/api/script.js")"
+                data-site-id="@_analyticsOptions.Value.RybbitSiteId">
+        </script>
+    }
+
+    <!-- 
+    Don't confuse Google Analytics (GA) with Google Tag Manager (GTM) 
+    They are separate products that can work together.
+    GA is used to collect and analyse data about website traffic and user behaviour.
+    GTM is a tag management system that allows you to manage and deploy marketing tags (snippets of code or tracking pixels) on your website without modifying the codebase.
+
+    You can use GTM to send data to GA, but you can also use GTM to manage other tags from different vendors.
+    -->
+
+    @if (_analyticsOptions.Value.GA4Enabled)
+    {
+        <!-- Google tag (gtag.js) NOTE: gtag.js is the global site tag for Google Analytics and not related to GTM -->
+        <!-- Do not enable both GA4 & GTM, use one or the other otherwise we will double count -->
+        <script async src="@($"{_analyticsOptions.Value.GoogleTagBaseUrl}/gtag/js?id={_analyticsOptions.Value.GA4SiteId}")"></script>
+            <script>
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+
+                gtag('config', '@_analyticsOptions.Value.GA4SiteId');
+            </script>
+    }
+
+    @if (_analyticsOptions.Value.GTMEnabled)
+    {
+        <!-- Google Tag Manager -->
+        <script>
+            (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+            '@($"{_analyticsOptions.Value.GoogleTagBaseUrl}")/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+            })(window,document,'script','dataLayer','@_analyticsOptions.Value.GTMSiteId');</script>
+        <!-- End Google Tag Manager -->
+    }
+
+</head>
+
+<body>
+
+    @if (_analyticsOptions.Value.GTMEnabled)
+    {
+        <!-- Google Tag Manager (noscript) -->
+        <noscript>
+            <iframe src="@($"{_analyticsOptions.Value.GoogleTagBaseUrl}/ns.html?id={_analyticsOptions.Value.GTMSiteId}")"
+                    height="0" width="0" style="display:none;visibility:hidden"></iframe>
+        </noscript>
+        <!-- End Google Tag Manager (noscript) -->
+    }
+
 
     <header class="rebranded-cross-service-header" data-module="one-login-header">
         <div class="rebranded-one-login-header" data-one-login-header-nav>
@@ -95,15 +160,32 @@
                         {
                             <li class="rebranded-one-login-header__nav__list-item">
                                 <form asp-controller="Account" asp-action="Login" method="post">
-                                    <button type="submit" class="rebranded-one-login-header__nav__link">
-                                        <span class="rebranded-one-login-header__nav__link-content">
-                                            <svg focusable="false" xmlns="http://www.w3.org/2000/svg" width="15" height="30" viewBox="150 150 250 250" fill="currentcolor" class="rebranded-cross-service-header__logo rebranded-cross-service-header__logo--nav" aria-hidden="true">
-                                                <path d="M300.002 312.261C249.445 312.261 208.346 271.165 208.346 220.608C208.346 170.051 249.445 128.954 300.002 128.954C350.559 128.954 391.655 170.051 391.655 220.608C391.655 271.165 350.559 312.261 300.002 312.261ZM300.002 170.892C272.673 170.892 250.389 193.175 250.389 220.504C250.389 247.83 272.673 270.113 300.002 270.113C327.33 270.113 349.611 247.83 349.611 220.504C349.611 193.175 327.33 170.892 300.002 170.892Z" />
-                                                <path d="M221.275 471.046H179.231V365.202H420.769V407.246H221.275V471.046Z" />
-                                            </svg>
-                                            GOV.UK One Login
-                                        </span>
-                                    </button>
+                                    <div class="govuk-grid-row">
+                                        <div class="govuk-grid-column-two-thirds">
+                                            <govuk-select name="AuthProvider">
+                                                <govuk-select-label></govuk-select-label>
+                                                <govuk-select-item value="OneLogin" selected="@(!_isEntraUser)">One Login</govuk-select-item>
+                                                <govuk-select-item value="Entra" selected="@(_isEntraUser)">Entra</govuk-select-item>
+                                            </govuk-select>
+                                        </div>
+                                        <div class="govuk-grid-column-one-half">
+                                            <button type="submit" class="rebranded-one-login-header__nav__link" data-rybbit-event="signin_clicked">
+@*                                                 <span class="rebranded-one-login-header__nav__link-content">
+                                                    <svg focusable="false" xmlns="http://www.w3.org/2000/svg" width="15" height="30" viewBox="150 150 250 250" fill="currentcolor" class="rebranded-cross-service-header__logo rebranded-cross-service-header__logo--nav" aria-hidden="true">
+                                                        <path d="M300.002 312.261C249.445 312.261 208.346 271.165 208.346 220.608C208.346 170.051 249.445 128.954 300.002 128.954C350.559 128.954 391.655 170.051 391.655 220.608C391.655 271.165 350.559 312.261 300.002 312.261ZM300.002 170.892C272.673 170.892 250.389 193.175 250.389 220.504C250.389 247.83 272.673 270.113 300.002 270.113C327.33 270.113 349.611 247.83 349.611 220.504C349.611 193.175 327.33 170.892 300.002 170.892Z" />
+                                                        <path d="M221.275 471.046H179.231V365.202H420.769V407.246H221.275V471.046Z" />
+                                                    </svg>
+                                                    Sign In
+                                                </span>
+ *@
+
+                                                <span class="rebranded-one-login-header__nav__link-content rebranded-one-login-header__nav__link-content--sign-out">
+                                                    Sign In
+                                                </span>
+
+                                                </button>
+                                        </div>
+                                    </div>
                                 </form>
                             </li>
                         }
@@ -111,11 +193,22 @@
                         {
                             <li class="rebranded-one-login-header__nav__list-item">
                                 <form asp-controller="Account" asp-action="Logout" method="post">
-                                    <button type="submit" class="rebranded-one-login-header__nav__link">
-                                        <span class="rebranded-one-login-header__nav__link-content rebranded-one-login-header__nav__link-content--sign-out">
-                                            Sign out
-                                        </span>
-                                    </button>
+                                    <div class="govuk-grid-row">
+                                        <div class="govuk-grid-column-two-thirds">
+                                            <govuk-select name="AuthProvider">
+                                                <govuk-select-label></govuk-select-label>
+                                                <govuk-select-item value="OneLogin" selected="@(!_isEntraUser)">One Login</govuk-select-item>
+                                                <govuk-select-item value="Entra" selected="@(_isEntraUser)">Entra</govuk-select-item>
+                                            </govuk-select>
+                                        </div>
+                                        <div class="govuk-grid-column-one-half">
+                                            <button type="submit" class="rebranded-one-login-header__nav__link" data-rybbit-event="signout_clicked">
+                                                <span class="rebranded-one-login-header__nav__link-content rebranded-one-login-header__nav__link-content--sign-out">
+                                                    Sign out
+                                                </span>
+                                            </button>
+                                        </div>
+                                    </div>
                                 </form>
                             </li>
                         }
@@ -132,32 +225,34 @@
             <govuk-service-navigation-nav>
                 <govuk-service-navigation-nav-item href="/Home" active="@activeHome">Home</govuk-service-navigation-nav-item>
                 <govuk-service-navigation-nav-item href="/AboutYou/Title" active="@activeAboutYou">About You</govuk-service-navigation-nav-item>
-                <govuk-service-navigation-nav-item href="/Company/CompanyName" active="@activeRegisterCompany">Register Company</govuk-service-navigation-nav-item>
-                <govuk-service-navigation-nav-item href="/Report/Director" active="@activeReportDirector">Report Director</govuk-service-navigation-nav-item>
+                <govuk-service-navigation-nav-item href="/CompanyDetails/CompanyName" active="@activeRegisterCompany">Register Company</govuk-service-navigation-nav-item>
+                <govuk-service-navigation-nav-item href="/RegisterDirector/DirectorName" active="@activeRegisterDirector">Register a Director</govuk-service-navigation-nav-item>
             </govuk-service-navigation-nav>
         }
         else
         {
             <govuk-service-navigation-nav>
                 <govuk-service-navigation-nav-item href="/Home" active="@activeHome">Home</govuk-service-navigation-nav-item>
-                <govuk-service-navigation-nav-item href="/AboutYou/Title" active="@activeAboutYou">About You</govuk-service-navigation-nav-item>
-                <govuk-service-navigation-nav-item href="/CompanyDetails/CompanyName" active="@activeRegisterCompany">Register Your Company</govuk-service-navigation-nav-item>
-                <govuk-service-navigation-nav-item href="/Report/Director" active="@activeReportDirector">Report a Director</govuk-service-navigation-nav-item>
             </govuk-service-navigation-nav>
         }
     </govuk-service-navigation>
-}
 
-@RenderBody()
+    <div class="govuk-width-container">
+        <main class="govuk-main-wrapper" id="main-content" role="main">
+            @RenderBody()
+        </main>
+    </div>
 
-@section Footer {
     <govuk-footer>
         <govuk-footer-meta>
             <govuk-footer-meta-items>
-                <govuk-footer-meta-item href="#">Contact Us</govuk-footer-meta-item>
-                <govuk-footer-meta-item href="#">Report an Issue</govuk-footer-meta-item>
-                <govuk-footer-meta-item href="#">Site Map</govuk-footer-meta-item>
+                <govuk-footer-meta-item href="/Home/ContactUs">Contact Us</govuk-footer-meta-item>
+                <govuk-footer-meta-item href="/Home/ReportIssue">Report an Issue</govuk-footer-meta-item>
+                <govuk-footer-meta-item href="/Home/SiteMap">Site Map</govuk-footer-meta-item>
             </govuk-footer-meta-items>
         </govuk-footer-meta>
     </govuk-footer>
-}
+
+</body>
+
+</html>

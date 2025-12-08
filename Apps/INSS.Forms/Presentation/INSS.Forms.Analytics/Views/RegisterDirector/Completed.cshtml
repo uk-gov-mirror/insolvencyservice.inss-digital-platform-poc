@@ -1,18 +1,10 @@
-﻿@model INSS.Forms.Analytics.Models.CompanyDetailsViewModel
+﻿@model INSS.Forms.Analytics.Models.RegisterDirectorViewModel
 
-@{
-    var companyType = !string.IsNullOrWhiteSpace(Model.CharityNumber)
-        ? "Charity"
-        : !string.IsNullOrWhiteSpace(Model.LimitedNumber)
-            ? "Limited Company"
-            : "";
-}
-
-@* Note the data-company-type attribute that is picked up as a custom event and sent to the analytics provider *@
-<div id="analytics-form-completed" data-company-type="@companyType">
+@* Note the data-* attributes that are picked up as custom events and sent to the analytics provider *@
+<div id="analytics-form-completed" data-major-shareholder="@Model.IsMajorityShareholder" data-share-percentage="@Model.SharePercentage">
     <div class="govuk-panel govuk-panel--confirmation">
         <h1 class="govuk-panel__title">
-           @Model.CompanyName
+           @Model.DirectorName
            <br/>
            Application complete
         </h1>
@@ -32,6 +24,6 @@
     <p class="govuk-body">
         Why not try another service:<br /><br />
         <a href="/AboutYou/Title" class="govuk-link">About You</a><br />
-        <a href="/RegisterDirector/DirectorName" class="govuk-link">Register a Director</a>
+        <a href="/CompanyDetails/CompanyName" class="govuk-link">Register a Company</a>
     </p>
 </div>
