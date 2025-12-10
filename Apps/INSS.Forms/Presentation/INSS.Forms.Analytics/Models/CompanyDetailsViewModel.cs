@@ -20,7 +20,6 @@ namespace INSS.Forms.Analytics.Models
         /// <summary>
         /// Gets or sets the charity registration number.
         /// </summary>
-        [Required()]
         public string? CharityNumber { get; set; }
         
         /// <summary>

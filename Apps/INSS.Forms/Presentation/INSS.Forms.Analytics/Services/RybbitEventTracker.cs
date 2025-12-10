@@ -27,9 +27,10 @@ namespace INSS.Forms.Analytics.Services
                 ["properties"] = JsonSerializer.Serialize(properties)
             };
 
-            var content = new StringContent(JsonSerializer.Serialize(eventData), Encoding.UTF8, "application/json");
+            using StringContent content = new(JsonSerializer.Serialize(eventData), Encoding.UTF8, "application/json");
 
-            var response = await _httpClient.PostAsync($"{_options.RybbitBaseUrl}/api/track", content);
+            using HttpResponseMessage response = await _httpClient.PostAsync($"{_options.RybbitBaseUrl}/api/track", content);
+
             if (!response.IsSuccessStatusCode)
             {
                 var error = await response.Content.ReadAsStringAsync();
