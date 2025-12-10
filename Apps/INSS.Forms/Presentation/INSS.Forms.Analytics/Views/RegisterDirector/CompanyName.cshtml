@@ -1,0 +1,9 @@
+﻿@model INSS.Forms.Analytics.Models.RegisterDirectorViewModel
+
+<form method="post">
+    <govuk-input for="@Model.CompanyName" input-class="govuk-input--width-30" inputmode="text" spellcheck="false">
+        <govuk-input-label is-page-heading="true" class="govuk-label--l">What is the director's company name?</govuk-input-label>
+        <govuk-input-hint>Enter the director's company name</govuk-input-hint>
+    </govuk-input>
+    <govuk-button type="submit">Continue</govuk-button>
+</form>

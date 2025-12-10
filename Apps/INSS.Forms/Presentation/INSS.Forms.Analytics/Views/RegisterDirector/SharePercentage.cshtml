@@ -1,0 +1,11 @@
+﻿@model INSS.Forms.Analytics.Models.RegisterDirectorViewModel
+
+<form method="post">
+
+    <govuk-input for="@Model.SharePercentage" input-class="govuk-input--width-5" spellcheck="false">
+        <govuk-input-label is-page-heading="true" class="govuk-label--l">What is the director's share percentage?</govuk-input-label>
+        <govuk-input-hint>Enter the director's share percentage</govuk-input-hint>
+        <govuk-input-suffix>%</govuk-input-suffix>
+    </govuk-input>
+    <govuk-button type="submit">Continue</govuk-button>
+</form>

@@ -1,0 +1,9 @@
+﻿@model INSS.Forms.Analytics.Models.AboutYouViewModel
+
+<form method="post">
+    <govuk-input for="@Model.Title" input-class="govuk-input--width-10" inputmode="text" spellcheck="true">
+        <govuk-input-label is-page-heading="true" class="govuk-label--l">What is your title?</govuk-input-label>
+        <govuk-input-hint>Enter your title</govuk-input-hint>
+    </govuk-input>
+    <govuk-button type="submit">Continue</govuk-button>
+</form>

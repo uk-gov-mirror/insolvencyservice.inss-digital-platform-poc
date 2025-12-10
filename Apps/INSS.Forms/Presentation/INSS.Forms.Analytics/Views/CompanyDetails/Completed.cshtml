@@ -1,0 +1,37 @@
+﻿@model INSS.Forms.Analytics.Models.CompanyDetailsViewModel
+
+@{
+    var companyType = !string.IsNullOrWhiteSpace(Model.CharityNumber)
+        ? "Charity"
+        : !string.IsNullOrWhiteSpace(Model.LimitedNumber)
+            ? "Limited Company"
+            : "";
+}
+
+@* Note the data-company-type attribute that is picked up as a custom event and sent to the analytics provider *@
+<div id="analytics-form-completed" data-company-type="@companyType">
+    <div class="govuk-panel govuk-panel--confirmation">
+        <h1 class="govuk-panel__title">
+           @Model.CompanyName
+           <br/>
+           Application complete
+        </h1>
+        <div class="govuk-panel__body">
+            Your reference number<br><strong>@(Guid.NewGuid().ToString().Split('-').Last().ToUpperInvariant())</strong>
+        </div>
+    </div>
+    <p class="govuk-body">We have sent you a confirmation email.</p>
+    <h2 class="govuk-heading-m">What happens next</h2>
+    <p class="govuk-body">
+        We’ve sent your application to the applicable service.
+    </p>
+    <p class="govuk-body">
+        They will contact you either to confirm your registration, or to ask for more information.
+    </p>
+    <br /><br /><br />
+    <p class="govuk-body">
+        Why not try another service:<br /><br />
+        <a href="/AboutYou/Title" class="govuk-link">About You</a><br />
+        <a href="/RegisterDirector/DirectorName" class="govuk-link">Register a Director</a>
+    </p>
+</div>
